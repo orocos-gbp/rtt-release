@@ -1,0 +1,27 @@
+From d3050292ac177a99052e1839dda78aba937e11c5 Mon Sep 17 00:00:00 2001
+From: Ruben Smits <ruben.smits@intermodalics.eu>
+Date: Thu, 10 Oct 2013 21:29:06 +0200
+Subject: [PATCH] Enabled corba in debian build
+
+Signed-off-by: Ruben Smits <ruben.smits@intermodalics.eu>
+---
+ debian/rules.em | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/debian/rules.em b/debian/rules.em
+index d45dd5f..5d2a7f8 100755
+--- a/debian/rules.em
++++ b/debian/rules.em
+@@ -27,7 +27,8 @@ override_dh_auto_configure:
+ 	dh_auto_configure -- \
+ 		-DCATKIN_BUILD_BINARY_PACKAGE="1" \
+ 		-DCMAKE_INSTALL_PREFIX="@(InstallationPrefix)" \
+-		-DCMAKE_PREFIX_PATH="@(InstallationPrefix)"
++		-DCMAKE_PREFIX_PATH="@(InstallationPrefix)" \
++		-DENABLE_CORBA=TRUE -DCORBA_IMPLEMENTATION=OMNIORB
+ 
+ override_dh_auto_build:
+ 	# In case we're installing to a non-standard location, look for a setup.sh
+-- 
+1.8.1.2
+
