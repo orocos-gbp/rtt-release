@@ -1,0 +1,2856 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="rtt_cheat_sheet.svg">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.04"
+     inkscape:cx="680.42843"
+     inkscape:cy="396.2135"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1152"
+     inkscape:window-x="1677"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-global="true"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-nodes="true">
+    <sodipodi:guide
+       orientation="1,0"
+       position="17.156595,490.47677"
+       id="guide6596" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-97.27365,650.14532"
+       id="guide5984" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="169.73259,610.44179"
+       id="guide5986" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="774.85995,375.49825"
+       id="guide3542" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="774.85995,357.95161"
+       id="guide3544" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="780.47488,414.10088"
+       id="guide3546" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 372.04724 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1052.3622 : 372.04724 : 1"
+       inkscape:persp3d-origin="526.18109 : 248.03149 : 1"
+       id="perspective687" />
+    <marker
+       style="overflow:visible"
+       id="TriangleOutM"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="TriangleOutM">
+      <path
+         transform="scale(0.4)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         id="path8383" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleInM"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="TriangleInM">
+      <path
+         transform="scale(-0.4)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;marker-start:none"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         id="path8374" />
+    </marker>
+    <linearGradient
+       id="linearGradient10796">
+      <stop
+         id="stop10798"
+         offset="0"
+         style="stop-color:#ff7e7e;stop-opacity:1;" />
+      <stop
+         id="stop10800"
+         offset="1"
+         style="stop-color:#ff7e7e;stop-opacity:1;" />
+    </linearGradient>
+    <marker
+       style="overflow:visible"
+       id="TriangleInMz"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="TriangleInMz">
+      <path
+         transform="scale(-0.4)"
+         style="marker-start:none;stroke:#848484;stroke-width:1.0pt;fill:#848484;fill-rule:evenodd"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         id="path9155" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleOutMa"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="TriangleOutMa">
+      <path
+         transform="scale(0.4)"
+         style="marker-start:none;stroke:#848484;stroke-width:1.0pt;fill:#848484;fill-rule:evenodd"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         id="path9158" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="TriangleOutMm"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="TriangleOutMm">
+      <path
+         transform="scale(0.4)"
+         style="marker-start:none;stroke:#848484;stroke-width:1.0pt;fill:#848484;fill-rule:evenodd"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         id="path11092" />
+    </marker>
+    <linearGradient
+       id="linearGradient6412-3"
+       inkscape:collect="always">
+      <stop
+         id="stop6414-4"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop6416-6"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2220-5"
+       inkscape:collect="always">
+      <stop
+         id="stop2222-6"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop2224-1"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient9114-2">
+      <stop
+         id="stop9116-2"
+         offset="0"
+         style="stop-color:#4f5de9;stop-opacity:0.16470589;" />
+      <stop
+         id="stop9118-9"
+         offset="1"
+         style="stop-color:#1c4eff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2220-1-8"
+       inkscape:collect="always">
+      <stop
+         id="stop2222-9-6"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop2224-0-3"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6412-7-9-7"
+       id="linearGradient16885-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3076275,0,0,0.80966425,364.01018,-249.27913)"
+       x1="184.88797"
+       y1="600.76672"
+       x2="184.88797"
+       y2="670.78815" />
+    <linearGradient
+       id="linearGradient6412-7-9-7"
+       inkscape:collect="always">
+      <stop
+         id="stop6414-8-3-2"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop6416-7-2-3"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2220-1-3-2"
+       id="linearGradient16893-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(4.061918,0,0,0.979955,-1757.9685,-202.66333)"
+       x1="464.3125"
+       y1="346"
+       x2="464.3125"
+       y2="361.85828" />
+    <linearGradient
+       id="linearGradient2220-1-3-2"
+       inkscape:collect="always">
+      <stop
+         id="stop2222-9-7-5"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop2224-0-1-3"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       y2="675.6051"
+       x2="67.6754"
+       y1="600.76672"
+       x1="67.675797"
+       gradientTransform="matrix(2.1398226,0,0,0.79481779,226.38254,-80.12877)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient12211-8"
+       xlink:href="#linearGradient6412-3"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="361.85828"
+       x2="464.3125"
+       y1="346"
+       x1="464.3125"
+       gradientTransform="matrix(3.024211,0,0,0.979955,-1277.972,-169.919)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient12213-1"
+       xlink:href="#linearGradient2220-5"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient6412-7-7">
+      <stop
+         id="stop6414-8-4"
+         offset="0"
+         style="stop-color:#ff7e7e;stop-opacity:1;" />
+      <stop
+         id="stop6416-7-5"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2220-1-5"
+       inkscape:collect="always">
+      <stop
+         id="stop2222-9-4"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop2224-0-7"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       y2="509.50372"
+       x2="369.14645"
+       y1="461.40939"
+       x1="369.14645"
+       gradientTransform="matrix(2.0597344,0,0,0.80403581,-324.59875,64.510793)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient12199-7-9"
+       xlink:href="#linearGradient9114-2-6"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient9114-2-6">
+      <stop
+         id="stop9116-2-0"
+         offset="0"
+         style="stop-color:#4f5de9;stop-opacity:0.16470589;" />
+      <stop
+         id="stop9118-9-7"
+         offset="1"
+         style="stop-color:#1c4eff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient9114-2"
+       id="linearGradient3644"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.0597344,0,0,0.80403581,-324.59875,64.510793)"
+       x1="369.14645"
+       y1="461.40939"
+       x2="369.14645"
+       y2="509.50372" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2220-1-8"
+       id="linearGradient3689"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.399111,0,0,0.33754147,40.157635,-71.912415)"
+       x1="464.3125"
+       y1="346"
+       x2="464.3125"
+       y2="361.85828" />
+    <linearGradient
+       id="linearGradient2220-1-8-2"
+       inkscape:collect="always">
+      <stop
+         id="stop2222-9-6-3"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:1;" />
+      <stop
+         id="stop2224-0-3-1"
+         offset="1"
+         style="stop-color:#ffffff;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       y2="361.85828"
+       x2="464.3125"
+       y1="346"
+       x1="464.3125"
+       gradientTransform="matrix(1.399111,0,0,0.33754147,40.157635,-71.912415)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient3713"
+       xlink:href="#linearGradient2220-1-8-2"
+       inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6412-7-7"
+       id="linearGradient5871"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(2.2547434,0,0,0.77043893,520.44518,-373.83384)"
+       x1="184.88797"
+       y1="600.76672"
+       x2="184.88797"
+       y2="684.25763" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2220-1-5"
+       id="linearGradient5873"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(4.061918,0,0,0.979955,-1760.0422,-200.5896)"
+       x1="464.3125"
+       y1="346"
+       x2="464.3125"
+       y2="361.85828" />
+    <filter
+       id="filter6672">
+      <feGaussianBlur
+         stdDeviation="1.8967272e-17"
+         id="feGaussianBlur6674" />
+    </filter>
+    <filter
+       id="filter6678">
+      <feGaussianBlur
+         stdDeviation="3.7934545e-17"
+         id="feGaussianBlur6680" />
+    </filter>
+    <filter
+       id="filter6684">
+      <feGaussianBlur
+         stdDeviation="5.6901817e-17"
+         id="feGaussianBlur6686" />
+    </filter>
+    <filter
+       id="filter6690">
+      <feGaussianBlur
+         stdDeviation="7.5869089e-17"
+         id="feGaussianBlur6692" />
+    </filter>
+    <filter
+       id="filter6696">
+      <feGaussianBlur
+         stdDeviation="9.4836362e-17"
+         id="feGaussianBlur6698" />
+    </filter>
+    <marker
+       inkscape:stockid="Arrow1Sstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Sstart"
+       style="overflow:visible">
+      <path
+         id="path3345"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.2,0,0,0.2,1.2,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible">
+      <path
+         id="path3342"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+    <radialGradient
+       r="39.747601"
+       id="XMLID_9_"
+       gradientUnits="userSpaceOnUse"
+       cy="40.038601"
+       cx="40.189499">
+      <stop
+         style="stop-color:#FFFA5F"
+         offset="0"
+         id="stop8" />
+      <stop
+         style="stop-color:#B53A00"
+         offset="1"
+         id="stop10" />
+    </radialGradient>
+    <linearGradient
+       y2="462.69379"
+       y1="462.69379"
+       x2="-243.01469"
+       x1="-243.9702"
+       id="XMLID_10_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(776.0099,550.007,550.007,-776.0099,-65411.414,493075.94)">
+      <stop
+         style="stop-color:#FFFFFF"
+         offset="0"
+         id="stop15" />
+      <stop
+         style="stop-color:#000000"
+         offset="1"
+         id="stop17" />
+    </linearGradient>
+    <linearGradient
+       y2="476.68991"
+       y1="476.68991"
+       x2="-242.3132"
+       x1="-243.2471"
+       id="XMLID_11_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,-214.9991,-214.9991,0,102527.3,-52175.832)">
+      <stop
+         style="stop-color:#FFFFFF"
+         offset="0"
+         id="stop22" />
+      <stop
+         style="stop-color:#000000"
+         offset="1"
+         id="stop24" />
+    </linearGradient>
+    <radialGradient
+       r="21.1"
+       id="XMLID_12_"
+       gradientUnits="userSpaceOnUse"
+       cy="39.519001"
+       cx="39.623001">
+      <stop
+         style="stop-color:#FFFA5F"
+         offset="0"
+         id="stop29" />
+      <stop
+         style="stop-color:#FEF85E"
+         offset="0.3945"
+         id="stop31" />
+      <stop
+         style="stop-color:#FCF15B"
+         offset="0.5366"
+         id="stop33" />
+      <stop
+         style="stop-color:#F7E655"
+         offset="0.6379"
+         id="stop35" />
+      <stop
+         style="stop-color:#F1D54C"
+         offset="0.7199"
+         id="stop37" />
+      <stop
+         style="stop-color:#E8BF42"
+         offset="0.7901"
+         id="stop39" />
+      <stop
+         style="stop-color:#DEA334"
+         offset="0.8522"
+         id="stop41" />
+      <stop
+         style="stop-color:#D18324"
+         offset="0.9084"
+         id="stop43" />
+      <stop
+         style="stop-color:#C35F12"
+         offset="0.9583"
+         id="stop45" />
+      <stop
+         style="stop-color:#B53A00"
+         offset="1"
+         id="stop47" />
+    </radialGradient>
+    <radialGradient
+       r="39.746799"
+       id="XMLID_13_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9774,-0.2115,0.2115,0.9774,-204.4903,341.9193)"
+       cy="-178.1563"
+       cx="336.2793">
+      <stop
+         style="stop-color:#FFFA5F"
+         offset="0"
+         id="stop96" />
+      <stop
+         style="stop-color:#B53A00"
+         offset="1"
+         id="stop98" />
+    </radialGradient>
+    <linearGradient
+       y2="-178.022"
+       y1="-178.022"
+       x2="892.42572"
+       x1="-20.3428"
+       id="XMLID_14_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9774,-0.2115,0.2115,0.9774,-204.4903,341.9193)">
+      <stop
+         style="stop-color:#FFFFFF"
+         offset="0"
+         id="stop103" />
+      <stop
+         style="stop-color:#000000"
+         offset="1"
+         id="stop105" />
+    </linearGradient>
+    <linearGradient
+       y2="-178.67529"
+       y1="-178.67529"
+       x2="461.86221"
+       x1="247.46581"
+       id="XMLID_15_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9774,-0.2115,0.2115,0.9774,-204.4903,341.9193)">
+      <stop
+         style="stop-color:#FFFFFF"
+         offset="0"
+         id="stop110" />
+      <stop
+         style="stop-color:#000000"
+         offset="1"
+         id="stop112" />
+    </linearGradient>
+    <radialGradient
+       r="21.099501"
+       id="XMLID_16_"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.9774,-0.2115,0.2115,0.9774,-204.4903,341.9193)"
+       cy="-178.67529"
+       cx="335.71289">
+      <stop
+         style="stop-color:#FFFA5F"
+         offset="0"
+         id="stop117" />
+      <stop
+         style="stop-color:#FEF85E"
+         offset="0.3945"
+         id="stop119" />
+      <stop
+         style="stop-color:#FCF15B"
+         offset="0.5366"
+         id="stop121" />
+      <stop
+         style="stop-color:#F7E655"
+         offset="0.6379"
+         id="stop123" />
+      <stop
+         style="stop-color:#F1D54C"
+         offset="0.7199"
+         id="stop125" />
+      <stop
+         style="stop-color:#E8BF42"
+         offset="0.7901"
+         id="stop127" />
+      <stop
+         style="stop-color:#DEA334"
+         offset="0.8522"
+         id="stop129" />
+      <stop
+         style="stop-color:#D18324"
+         offset="0.9084"
+         id="stop131" />
+      <stop
+         style="stop-color:#C35F12"
+         offset="0.9583"
+         id="stop133" />
+      <stop
+         style="stop-color:#B53A00"
+         offset="1"
+         id="stop135" />
+    </radialGradient>
+    <inkscape:perspective
+       id="perspective3504"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter6690-0">
+      <feGaussianBlur
+         stdDeviation="7.5869089e-17"
+         id="feGaussianBlur6692-5" />
+    </filter>
+    <inkscape:perspective
+       id="perspective3574"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter6690-7">
+      <feGaussianBlur
+         stdDeviation="7.5869089e-17"
+         id="feGaussianBlur6692-57" />
+    </filter>
+    <inkscape:perspective
+       id="perspective3613"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4690"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       style="overflow:visible"
+       id="TriangleOutM-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="TriangleOutM">
+      <path
+         transform="scale(0.4,0.4)"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         id="path8383-8" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4718"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3353"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient10796"
+       id="linearGradient3398"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.2783092,0,0,2.3335881,473.34862,39.140444)"
+       x1="334.45001"
+       y1="199.45"
+       x2="334.54999"
+       y2="318.54999" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-308.2677)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1"
+     style="display:inline">
+    <g
+       transform="matrix(2.294787,0,0,2.306725,217.75023,-364.77242)"
+       id="g8928" />
+    <g
+       inkscape:export-ydpi="100"
+       inkscape:export-xdpi="100"
+       inkscape:export-filename="/home/sebastien/Workspace/VCS-Evaluation/Mercurial-Usage-v0.9-100dpi.png"
+       transform="translate(-267.13123,-314.64817)"
+       id="g6195">
+      <text
+         xml:space="preserve"
+         style="font-size:45.31815338px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         x="305.46457"
+         y="676.89648"
+         id="text4235"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4237"
+           x="305.46457"
+           y="676.89648"><tspan
+             id="tspan5631"
+             style="font-size:45.31815338px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#1c4eff;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans Bold"><tspan
+   id="tspan12937"
+   style="font-size:45.31815338px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans Bold">RTT</tspan> Cheat Sheet</tspan></tspan></text>
+    </g>
+    <rect
+       inkscape:export-ydpi="100"
+       inkscape:export-xdpi="100"
+       inkscape:export-filename="/home/sebastien/Workspace/VCS-Evaluation/Mercurial-Usage-v0.9-100dpi.png"
+       y="402.21686"
+       x="16.964573"
+       height="39.703522"
+       width="990.85992"
+       id="rect8310"
+       style="fill:#1c4eff;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <path
+       inkscape:export-ydpi="100"
+       inkscape:export-xdpi="100"
+       inkscape:export-filename="/home/sebastien/Workspace/VCS-Evaluation/Mercurial-Usage-v0.9-100dpi.png"
+       id="path5418"
+       d="m 243.02373,452.99858 0,573.94702"
+       style="fill:#1c4eff;fill-opacity:1;fill-rule:evenodd;stroke:#1c4eff;stroke-width:0.98715049px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <text
+       inkscape:export-ydpi="100"
+       inkscape:export-xdpi="100"
+       inkscape:export-filename="/home/sebastien/Workspace/VCS-Evaluation/Mercurial-Usage-v0.9-100dpi.png"
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#1c4eff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="168.90216"
+       y="369.97928"
+       id="text5402"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5404"
+         x="168.90216"
+         y="369.97928" /><tspan
+         id="tspan5406"
+         sodipodi:role="line"
+         x="168.90216"
+         y="387.47928">RTT v2.5 / sheet v1.3</tspan></text>
+    <g
+       transform="translate(1137.8302,249.30855)"
+       id="g2755" />
+    <text
+       xml:space="preserve"
+       style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="24.687248"
+       y="481.41687"
+       id="text9319-0-7-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan9321-8-6-3"
+         x="24.687248"
+         y="481.41687">TaskContext</tspan></text>
+    <rect
+       ry="6.5120306"
+       rx="4.9418092"
+       y="484.76611"
+       x="18.40357"
+       height="173.27039"
+       width="213.72763"
+       id="rect2021-08-4"
+       style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="27.918465"
+       y="496.72607"
+       id="text9128-0-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="27.918465"
+         y="496.72607"
+         id="tspan12215-1-0">1 component type == 1 TaskContext</tspan></text>
+    <text
+       sodipodi:linespacing="115%"
+       id="text9142-1-8"
+       y="509.42645"
+       x="36.416924"
+       style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       xml:space="preserve"><tspan
+         id="tspan12241-5-5"
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="509.42645"
+         x="36.416924"
+         sodipodi:role="line">#include &lt;rtt/RTT.hpp&gt;</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="520.72748"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6592">using namespace RTT;</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="532.0285"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan5961" /><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="543.32947"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6572">class MyComp : public TaskContext</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="554.63049"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6574">{</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="565.93152"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6576">     public:</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="577.23254"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6578">     MyComp(string name)</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="588.53357"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6582">          : TaskContext(name, </tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="599.83459"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6594">                                PreOperational)</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="611.13556"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6584">     {}</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="622.43658"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6586">};</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="633.73761"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6588" /><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="645.03864"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6590">ORO_CREATE_COMPONENT(MyComp)</tspan><tspan
+         style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:114.99999762%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#0737e3;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+         y="656.33966"
+         x="36.416924"
+         sodipodi:role="line"
+         id="tspan6580" /></text>
+    <g
+       transform="translate(391.80436,-162.94484)"
+       id="g12829-9" />
+    <g
+       id="g7417"
+       transform="translate(0,-18)">
+      <g
+         transform="translate(0,-46.101525)"
+         id="g3370">
+        <rect
+           ry="6.5120306"
+           rx="4.9418092"
+           y="653.48035"
+           x="251.44493"
+           height="249.34508"
+           width="228.95303"
+           id="rect2021-4"
+           style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+        <text
+           sodipodi:linespacing="94.999999%"
+           id="text9142-3"
+           y="667.09705"
+           x="261.58096"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+           xml:space="preserve"><tspan
+             id="tspan7163"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="667.09705"
+             x="261.58096"
+             sodipodi:role="line">// class member variable:</tspan><tspan
+             id="tspan7316"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="676.88586"
+             x="261.58096"
+             sodipodi:role="line">InputPort&lt;Type&gt; name;</tspan><tspan
+             id="tspan12807"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="686.67462"
+             x="261.58096"
+             sodipodi:role="line" /><tspan
+             id="tspan7312"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="696.46344"
+             x="261.58096"
+             sodipodi:role="line" /><tspan
+             id="tspan7314"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="706.25226"
+             x="261.58096"
+             sodipodi:role="line">// in constructor or configureHook():</tspan><tspan
+             id="tspan7308"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="716.04102"
+             x="261.58096"
+             sodipodi:role="line">addPort(&quot;name&quot;,name).doc(&quot;...&quot;);</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="725.82983"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan5959">addEventPort(&quot;name&quot;,name).doc(&quot;...&quot;);</tspan><tspan
+             id="tspan7359"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="735.61865"
+             x="261.58096"
+             sodipodi:role="line" /><tspan
+             id="tspan7361"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="745.40747"
+             x="261.58096"
+             sodipodi:role="line">Type sample;</tspan><tspan
+             id="tspan7363"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="755.19623"
+             x="261.58096"
+             sodipodi:role="line">if (name.read(sample) != RTT::NoData)</tspan><tspan
+             id="tspan7365"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="764.98505"
+             x="261.58096"
+             sodipodi:role="line">{</tspan><tspan
+             id="tspan7367"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="774.77386"
+             x="261.58096"
+             sodipodi:role="line">    // either a new, or an already-read</tspan><tspan
+             id="tspan7369"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="784.56262"
+             x="261.58096"
+             sodipodi:role="line">    // sample on name.</tspan><tspan
+             id="tspan7371"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="794.35144"
+             x="261.58096"
+             sodipodi:role="line">}</tspan><tspan
+             id="tspan7373"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="804.14026"
+             x="261.58096"
+             sodipodi:role="line">if (name.read(sample) == RTT::NewData)</tspan><tspan
+             id="tspan7375"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="813.92902"
+             x="261.58096"
+             sodipodi:role="line">{</tspan><tspan
+             id="tspan7377"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="823.71783"
+             x="261.58096"
+             sodipodi:role="line">    // there was a never-read sample</tspan><tspan
+             id="tspan7379"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="833.50665"
+             x="261.58096"
+             sodipodi:role="line">    // on name</tspan><tspan
+             id="tspan7381"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="843.29547"
+             x="261.58096"
+             sodipodi:role="line">}</tspan><tspan
+             id="tspan7383"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="853.08423"
+             x="261.58096"
+             sodipodi:role="line">if (name.connected())</tspan><tspan
+             id="tspan7385"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="862.87305"
+             x="261.58096"
+             sodipodi:role="line">{</tspan><tspan
+             id="tspan7387"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="872.66187"
+             x="261.58096"
+             sodipodi:role="line">    // do something only if the port</tspan><tspan
+             id="tspan7389"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="882.45062"
+             x="261.58096"
+             sodipodi:role="line">    // is connected</tspan><tspan
+             id="tspan7391"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="892.23944"
+             x="261.58096"
+             sodipodi:role="line">}</tspan></text>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9319-0-7-9-1"
+         y="604.02954"
+         x="257.54437"
+         style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="604.02954"
+           x="257.54437"
+           id="tspan9321-8-6-3-2"
+           sodipodi:role="line">Input Ports</tspan></text>
+    </g>
+    <g
+       id="g7447"
+       transform="translate(0,-6)">
+      <g
+         id="g12866"
+         transform="translate(379.96906,15.29875)">
+        <rect
+           ry="6.5120311"
+           rx="4.9418092"
+           y="855.38452"
+           x="-128.52412"
+           height="164.90912"
+           width="230.35677"
+           id="rect2021-4-7"
+           style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+        <text
+           sodipodi:linespacing="94.999999%"
+           id="text9142-3-8"
+           y="867.2182"
+           x="-118.28746"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+           xml:space="preserve"><tspan
+             id="tspan12241-4-9"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="867.2182"
+             x="-118.28746"
+             sodipodi:role="line">// class member variable:</tspan><tspan
+             id="tspan7401"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="877.00702"
+             x="-118.28746"
+             sodipodi:role="line">OutputPort&lt;Type&gt; name;</tspan><tspan
+             id="tspan7393"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="886.79578"
+             x="-118.28746"
+             sodipodi:role="line" /><tspan
+             id="tspan7395"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="896.58459"
+             x="-118.28746"
+             sodipodi:role="line">// in constructor or configureHook():</tspan><tspan
+             id="tspan7403"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="906.37341"
+             x="-118.28746"
+             sodipodi:role="line">addPort(&quot;name&quot;,name).doc(&quot;...&quot;);</tspan><tspan
+             id="tspan7397"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="916.16217"
+             x="-118.28746"
+             sodipodi:role="line" /><tspan
+             id="tspan7399"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="925.95099"
+             x="-118.28746"
+             sodipodi:role="line">Type sample;</tspan><tspan
+             id="tspan12735"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="935.73981"
+             x="-118.28746"
+             sodipodi:role="line">// write data into 'sample'</tspan><tspan
+             id="tspan12737"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="945.52863"
+             x="-118.28746"
+             sodipodi:role="line">name.write(sample);</tspan><tspan
+             id="tspan12639-3"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="955.31738"
+             x="-118.28746"
+             sodipodi:role="line" /><tspan
+             id="tspan12789"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="965.1062"
+             x="-118.28746"
+             sodipodi:role="line" /><tspan
+             id="tspan12783"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="974.89502"
+             x="-118.28746"
+             sodipodi:role="line">if (name.connected())</tspan><tspan
+             id="tspan12785"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="984.68378"
+             x="-118.28746"
+             sodipodi:role="line">{</tspan><tspan
+             id="tspan12809"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="994.4726"
+             x="-118.28746"
+             sodipodi:role="line">    // do something only if the port</tspan><tspan
+             id="tspan12811"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="1004.2614"
+             x="-118.28746"
+             sodipodi:role="line">    // is connected</tspan><tspan
+             id="tspan12787"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="1014.0502"
+             x="-118.28746"
+             sodipodi:role="line">}</tspan></text>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9319-0-7-9-1-2"
+         y="865.41614"
+         x="258.26965"
+         style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="865.41614"
+           x="258.26965"
+           id="tspan9321-8-6-3-2-6"
+           sodipodi:role="line">Output Ports</tspan></text>
+    </g>
+    <g
+       id="g7405"
+       transform="translate(0,-12)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text9319-0-7-9-1-7"
+         y="493.41687"
+         x="257.54437"
+         style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="493.41687"
+           x="257.54437"
+           id="tspan9321-8-6-3-2-4"
+           sodipodi:role="line">Properties</tspan></text>
+      <g
+         transform="translate(-13.282213,-0.889769)"
+         id="g16055">
+        <rect
+           style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="rect2021-4-1"
+           width="229.34662"
+           height="69.73156"
+           x="264.72714"
+           y="497.65579"
+           rx="4.9418092"
+           ry="6.5120311" />
+        <text
+           sodipodi:linespacing="115%"
+           id="text9128-63-0"
+           y="513.7915"
+           x="273.92737"
+           style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+           xml:space="preserve"><tspan
+             id="tspan12215-3-4"
+             y="513.7915"
+             x="273.92737"
+             sodipodi:role="line"
+             style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans">// class member variable:</tspan><tspan
+             id="tspan7155"
+             y="525.09253"
+             x="273.92737"
+             sodipodi:role="line"
+             style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans">int myprop;</tspan></text>
+        <text
+           sodipodi:linespacing="115%"
+           id="text9128-63-0-0"
+           y="545.90015"
+           x="273.92737"
+           style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+           xml:space="preserve"><tspan
+             id="tspan12215-3-4-8"
+             y="545.90015"
+             x="273.92737"
+             sodipodi:role="line"
+             style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans">// in constructor or configureHook():</tspan><tspan
+             id="tspan7157"
+             y="557.20117"
+             x="273.92737"
+             sodipodi:role="line"
+             style="font-size:9.82696915px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:114.99999762%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans">addProperty(&quot;myprop&quot;,myprop).doc(&quot;...&quot;);</tspan></text>
+      </g>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="500.98172"
+       y="538.55566"
+       id="text9319-0-7-9-1-2-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan9321-8-6-3-2-6-2"
+         x="500.98172"
+         y="538.55566">UseOrocos-RTT.cmake</tspan></text>
+    <g
+       id="g6661"
+       inkscape:tile-cx="622.14286"
+       inkscape:tile-cy="262.33729"
+       inkscape:tile-w="235.97169"
+       inkscape:tile-h="37.375507"
+       inkscape:tile-x0="504.15701"
+       inkscape:tile-y0="243.64954"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,75.27076)">
+      <rect
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect2021-4-7-7"
+         width="235.97169"
+         height="37.375507"
+         x="504.15701"
+         y="551.91724"
+         rx="5.3833785"
+         ry="7.0939045" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-63-2-4"
+         y="568.05292"
+         x="513.72449"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan12215-3-5-1"
+           y="568.05292"
+           x="513.72449"
+           sodipodi:role="line"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans">orocos_component( name files.cpp )<tspan
+   style="fill:#000000"
+   id="tspan3550">*</tspan></tspan></text>
+      <text
+         sodipodi:linespacing="123%"
+         id="text9128-17"
+         y="581.51282"
+         x="508.59799"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan16245"
+           y="581.51282"
+           x="508.59799"
+           sodipodi:role="line">Creates a component library</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:17.23002243px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+       x="153.08997"
+       y="427.11676"
+       id="text6068-5-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6070-4-0"
+         x="153.08997"
+         y="427.11676">C++ Implementation</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4197"
+       style="font-size:85px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial"><flowRegion
+         id="flowRegion4199"><rect
+           id="rect4201"
+           width="135.36044"
+           height="91.923882"
+           x="-203.04066"
+           y="382.45987" /></flowRegion><flowPara
+         id="flowPara4203" /></flowRoot>    <rect
+       style="fill:#f0f0f0;fill-opacity:0.95454544;fill-rule:nonzero;stroke:none"
+       id="rect5517-8"
+       width="564.11682"
+       height="200.29102"
+       x="484.64737"
+       y="315.82056"
+       rx="7.0814705"
+       ry="7.08147" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.62486553px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#1c4eff;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+       x="953.85181"
+       y="508.61264"
+       id="text3614-3-43-9"
+       sodipodi:linespacing="80.000001%"><tspan
+         id="tspan7805-1-4"
+         sodipodi:role="line"
+         x="953.85181"
+         y="508.61264"
+         style="font-size:9.62486553px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#1c4eff;fill-opacity:1;font-family:ProggyTinyTT" /></text>
+    <path
+       style="fill:#ff7e7e;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 765.3125,525.50312 0,27.40625 261.9184,0 0,-27.40625 -261.9184,0 z"
+       id="rect8310-6" />
+    <path
+       style="fill:none;stroke:url(#linearGradient3398);stroke-width:3.79133844;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 765.25,525.56563 0,236.30648 c 0,8.96703 2.47235,16.17724 5.54858,16.17724 l 256.43232,0 0,-252.48372 -261.9809,0 z"
+       id="rect9825" />
+    <text
+       xml:space="preserve"
+       style="font-size:17.23002243px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr;text-anchor:start;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+       x="784.37067"
+       y="545.13849"
+       id="text6068-5-0-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6070-4-0-0"
+         x="784.37067"
+         y="545.13849">Deployment scripts</tspan></text>
+    <rect
+       style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect2021-4-7-7-2"
+       width="250.11383"
+       height="50.495255"
+       x="774.85992"
+       y="558.90887"
+       rx="4.9418092"
+       ry="6.5120301" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text9128-63-2-4-58"
+       y="575.04456"
+       x="780.59711"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+       xml:space="preserve"><tspan
+         id="tspan12215-3-5-1-95"
+         y="575.04456"
+         x="780.59711"
+         sodipodi:role="line"
+         style="font-size:12px;fill:#ff1515;fill-opacity:1;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%">import(&quot;package&quot;)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="774.85992"
+       y="588.50439"
+       id="text9128-17-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="774.85992"
+         y="588.50439"
+         id="tspan16615">Imports all component libraries from a package</tspan><tspan
+         sodipodi:role="line"
+         x="774.85992"
+         y="600.49017"
+         id="tspan5877">located in your component path</tspan></text>
+    <g
+       id="g5730"
+       transform="translate(-1.1324198,-4)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="781.6073"
+         y="630.60297"
+         id="text9128-63-2-4-58-3"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="781.6073"
+           y="630.60297">path(&quot;prefix/lib/orocos&quot;)</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1"
+         y="645.33002"
+         x="775.38776"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2"
+           y="645.33002"
+           x="775.38776"
+           sodipodi:role="line">Adds a directory to your component path</tspan></text>
+    </g>
+    <g
+       id="g5988"
+       transform="translate(-8,0)">
+      <rect
+         ry="6.5120301"
+         rx="4.9418092"
+         y="653.72955"
+         x="779.0296"
+         height="32.689644"
+         width="250.11383"
+         id="rect2021-4-7-7-2-9"
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="788.47485"
+         y="666.43378"
+         id="text9128-63-2-4-58-3-5"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-0"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="788.47485"
+           y="666.43378">displayComponentTypes()</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7"
+         y="681.16083"
+         x="782.11737"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5"
+           y="681.16083"
+           x="782.11737"
+           sodipodi:role="line">Prints all imported component types</tspan></text>
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="text9128-63-2-4-58-3-5-2"
+       y="702.76538"
+       x="780.47485"
+       style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+       xml:space="preserve"><tspan
+         y="702.76538"
+         x="780.47485"
+         sodipodi:role="line"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         id="tspan16654-0-3">loadComponent(&quot;Name&quot;,&quot;Type&quot;)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+       x="774.91626"
+       y="717.49243"
+       id="text9128-17-0-1-7-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="774.91626"
+         y="717.49243"
+         id="tspan5877-2-5-0">Creates a new component (or proxy to existing</tspan><tspan
+         id="tspan6489"
+         sodipodi:role="line"
+         x="774.91626"
+         y="729.47821">component if Type is &quot;CORBA&quot;)</tspan></text>
+    <g
+       transform="translate(-7.8620341,80.091702)"
+       style="display:inline"
+       id="g5988-1">
+      <rect
+         ry="6.5120301"
+         rx="4.9418092"
+         y="655.13324"
+         x="779.0296"
+         height="37.95364"
+         width="250.11383"
+         id="rect2021-4-7-7-2-9-3"
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="788.33691"
+         y="666.43378"
+         id="text9128-63-2-4-58-3-5-23"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-0-6"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="788.33691"
+           y="666.43378">loadService(&quot;Component&quot;,&quot;Service&quot;)</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7-3"
+         y="681.16083"
+         x="782.11737"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5-5"
+           y="681.16083"
+           x="782.11737"
+           sodipodi:role="line">Loads a service in a component</tspan></text>
+    </g>
+    <path
+       style="fill:#1c4eff;fill-opacity:1;fill-rule:nonzero;stroke:#1c4eff;stroke-width:1;stroke-opacity:1"
+       d="m 765.22697,784.76818 0,27.40625 263.40733,0 0,-27.40625 -263.40733,0 z"
+       id="rect8310-6-5" />
+    <path
+       style="fill:none;stroke:#1c4eff;stroke-width:3.79133868;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 765.16447,784.83071 0,224.97189 c 0,8.5369 2.47235,15.4013 5.54859,15.4013 l 256.43234,0 0,-240.37319 -261.98093,0 z"
+       id="rect9825-2" />
+    <text
+       xml:space="preserve"
+       style="font-size:17.23002243px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr;text-anchor:start;color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Sans;-inkscape-font-specification:Sans"
+       x="784.28516"
+       y="804.40356"
+       id="text6068-5-0-6-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6070-4-0-0-9"
+         x="784.28516"
+         y="804.40356">TaskBrowser</tspan></text>
+    <rect
+       style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect2021-4-7-7-2-8"
+       width="250.11383"
+       height="36.366295"
+       x="770.94409"
+       y="818.17395"
+       rx="4.9418092"
+       ry="6.5120301" />
+    <g
+       id="g6300"
+       transform="translate(-11.483485,0)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="791.95837"
+         y="834.30963"
+         id="text9128-63-2-4-58-5"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="791.95837"
+           y="834.30963"
+           id="tspan12215-3-5-1-95-5">.types</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-2"
+         y="847.76947"
+         x="786.34344"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-4"
+           y="847.76947"
+           x="786.34344"
+           sodipodi:role="line">Prints all known types</tspan></text>
+    </g>
+    <g
+       id="g6294"
+       transform="translate(-11.400661,-22)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="791.87555"
+         y="889.86804"
+         id="text9128-63-2-4-58-3-2"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-6"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="791.87555"
+           y="889.86804">.services</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-79"
+         y="904.59509"
+         x="786.26062"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-8"
+           y="904.59509"
+           x="786.26062"
+           sodipodi:role="line">Prints all known services</tspan></text>
+    </g>
+    <rect
+       style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect2021-4-7-7-2-9-1"
+       width="250.11383"
+       height="30.801985"
+       x="770.94409"
+       y="888.50391"
+       rx="4.9418092"
+       ry="6.5120301" />
+    <g
+       id="g6381"
+       transform="translate(-9.7276279,0)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="790.20251"
+         y="897.69885"
+         id="text9128-63-2-4-58-3-5-6"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-0-7"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="790.20251"
+           y="897.69885">cd Name</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7-1"
+         y="912.4259"
+         x="784.58759"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5-00"
+           y="912.4259"
+           x="784.58759"
+           sodipodi:role="line">Changes to a component</tspan></text>
+    </g>
+    <g
+       id="g6306"
+       transform="translate(-8.9291639,-30)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="789.40405"
+         y="962.03046"
+         id="text9128-63-2-4-58-3-5-2-0"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-0-3-3"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="789.40405"
+           y="962.03046">help [service|operation]</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7-6-3"
+         y="976.75751"
+         x="783.78912"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5-0-5"
+           y="976.75751"
+           x="783.78912"
+           sodipodi:role="line">Help</tspan></text>
+    </g>
+    <rect
+       style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect2021-4-7-7-2-9-3-0"
+       width="250.11383"
+       height="30.233114"
+       x="770.12024"
+       y="957.89374"
+       rx="4.9418092"
+       ry="6.5120301" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text9128-63-2-4-58-3-5-23-0"
+       y="967.08868"
+       x="787.42755"
+       style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:OldSansBlack"
+       xml:space="preserve"><tspan
+         y="967.08868"
+         x="787.42755"
+         sodipodi:role="line"
+         style="font-size:10.3039999px;fill:#ff1515;fill-opacity:1"
+         id="tspan16654-0-6-9" /></text>
+    <g
+       id="g6387"
+       transform="translate(-9.3064222,0)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7-3-5"
+         y="981.81573"
+         x="784.16638"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5-5-9"
+           y="981.81573"
+           x="784.16638"
+           sodipodi:role="line">Lists interface of current or peer component</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-63-2-4-58-3-5-2-0-1"
+         y="967.31952"
+         x="788.78638"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           y="967.31952"
+           x="788.78638"
+           sodipodi:role="line"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           id="tspan16654-0-3-3-4">ls [Peer]</tspan></text>
+    </g>
+    <g
+       style="display:inline"
+       id="g6306-0"
+       transform="translate(-8.063005,37.46575)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="788.5379"
+         y="962.03046"
+         id="text9128-63-2-4-58-3-5-2-0-2"
+         sodipodi:linespacing="125%"><tspan
+           id="tspan16654-0-3-3-3"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="788.5379"
+           y="962.03046">.provide &lt;servicename&gt;</tspan></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9128-17-0-1-7-6-3-8"
+         y="976.75751"
+         x="782.92297"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"><tspan
+           id="tspan5877-2-5-0-5-2"
+           y="976.75751"
+           x="782.92297"
+           sodipodi:role="line">Adds a service to the current component</tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 484.4215,0.30563671 0,740.93436329"
+       id="path6600"
+       transform="translate(0,308.2677)" />
+    <g
+       inkscape:tile-y0="243.64954"
+       inkscape:tile-x0="504.15701"
+       id="use6670"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,109.58056)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="513.72449"
+         y="568.05292"
+         id="text6752"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="513.72449"
+           y="568.05292"
+           id="tspan6754">orocos_install_headers( headers.hpp )<tspan
+   style="fill:#000000"
+   id="tspan3552">*</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="508.59799"
+         y="581.51282"
+         id="text6756"
+         sodipodi:linespacing="123%"><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="581.51282"
+           id="tspan6758">Installs headers in <tspan
+   style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan3540">include/orocos/projectname</tspan></tspan><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="593.30682"
+           id="tspan3538">during 'make install'</tspan></text>
+    </g>
+    <g
+       inkscape:tile-y0="243.64954"
+       inkscape:tile-x0="504.15701"
+       id="use6676"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,154.90606)">
+      <rect
+         ry="7.0939045"
+         rx="5.3833785"
+         y="551.91724"
+         x="504.15701"
+         height="47.467621"
+         width="235.97169"
+         id="rect6738"
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="513.72449"
+         y="568.05292"
+         id="text6740"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="513.72449"
+           y="568.05292"
+           id="tspan6742">orocos_typegen_headers( datatypes.hpp )</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="508.59799"
+         y="581.51282"
+         id="text6744"
+         sodipodi:linespacing="123%"><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="581.51282"
+           id="tspan6746">Creates one typekit from data types compatible</tspan><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="593.30682"
+           id="tspan6818">with the <tspan
+   style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan3562">typegen<tspan
+   style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan3564"> tool</tspan></tspan></tspan></text>
+    </g>
+    <g
+       inkscape:tile-y0="243.64954"
+       inkscape:tile-x0="504.15701"
+       id="use6682"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,200.23156)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="513.72449"
+         y="568.05292"
+         id="text6728"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="513.72449"
+           y="568.05292"
+           id="tspan6730">orocos_library( name files.cpp)<tspan
+   style="fill:#000000"
+   id="tspan3554">*</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="508.59799"
+         y="581.51282"
+         id="text6732"
+         sodipodi:linespacing="123%"><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="581.51282"
+           id="tspan6734">Creates a support library (no components)</tspan></text>
+    </g>
+    <g
+       inkscape:tile-y0="393.15157"
+       inkscape:tile-x0="504.15701"
+       id="use6688"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,234.54136)"
+       inkscape:tile-cx="622.14286"
+       inkscape:tile-cy="411.83932"
+       inkscape:tile-w="235.97169"
+       inkscape:tile-h="37.375507">
+      <rect
+         ry="7.0939045"
+         rx="5.3833785"
+         y="551.91724"
+         x="504.15701"
+         height="37.375507"
+         width="235.97169"
+         id="rect6714"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans" />
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="513.72449"
+         y="568.05292"
+         id="text6716"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="513.72449"
+           y="568.05292"
+           id="tspan6718">orocos_service( name files.cpp)<tspan
+   style="fill:#000000"
+   id="tspan3556">*</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         x="508.59799"
+         y="581.51282"
+         id="text6720"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="581.51282"
+           id="tspan6722"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:FreeSans;-inkscape-font-specification:FreeSans">Creates a service library containing one service</tspan></text>
+    </g>
+    <g
+       inkscape:tile-y0="243.64954"
+       inkscape:tile-x0="504.15701"
+       id="use6694"
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,268.85117)">
+      <text
+         xml:space="preserve"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="513.72449"
+         y="568.05292"
+         id="text6704"
+         sodipodi:linespacing="125%"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           sodipodi:role="line"
+           x="513.72449"
+           y="568.05292"
+           id="tspan6706">orocos_plugin( name files.cpp)<tspan
+   style="fill:#000000"
+   id="tspan3558">*</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         x="508.59799"
+         y="581.51282"
+         id="text6708"
+         sodipodi:linespacing="123%"><tspan
+           sodipodi:role="line"
+           x="508.59799"
+           y="581.51282"
+           id="tspan6710">Creates a plugin library containing one plugin</tspan></text>
+    </g>
+    <g
+       transform="matrix(0.91797546,0,0,0.91797546,31.353249,303.16096)"
+       id="use6788"
+       inkscape:tile-x0="504.15701"
+       inkscape:tile-y0="393.15157">
+      <rect
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect6796"
+         width="235.97169"
+         height="37.375507"
+         x="504.15701"
+         y="551.91724"
+         rx="5.3833785"
+         ry="7.0939045" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text6798"
+         y="568.05292"
+         x="513.72449"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan6800"
+           y="568.05292"
+           x="513.72449"
+           sodipodi:role="line"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans">orocos_typekit( name files.cpp)<tspan
+   style="fill:#000000"
+   id="tspan3560">*</tspan></tspan></text>
+      <text
+         sodipodi:linespacing="123%"
+         id="text6802"
+         y="581.51282"
+         x="508.59799"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan6804"
+           y="581.51282"
+           x="508.59799"
+           sodipodi:role="line">Compiles a hand written typekit</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="515.70703"
+       y="537.20612"
+       id="text6820"
+       transform="translate(0,308.2677)"><tspan
+         sodipodi:role="line"
+         id="tspan6822"
+         x="515.70703"
+         y="537.20612" /></text>
+    <text
+       sodipodi:linespacing="123%"
+       id="text6802-9"
+       y="554.32178"
+       x="501.30322"
+       style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+       xml:space="preserve"><tspan
+         id="tspan6804-6"
+         y="554.32178"
+         x="501.30322"
+         sodipodi:role="line">You may mix these Orocos specific macros with</tspan><tspan
+         y="566.11578"
+         x="501.30322"
+         sodipodi:role="line"
+         id="tspan6849">standard CMake commands. A CMake TARGET name</tspan><tspan
+         y="577.90979"
+         x="501.30322"
+         sodipodi:role="line"
+         id="tspan6851">is created for each 'name' argument.</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot7098"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:14"><flowRegion
+         id="flowRegion7100"><rect
+           id="rect7102"
+           width="306.85672"
+           height="159.85094"
+           x="9.9906836"
+           y="681.2959" /></flowRegion><flowPara
+         id="flowPara7104" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="190.91898"
+       y="691.22461"
+       id="text7124"
+       transform="translate(0,308.2677)"><tspan
+         sodipodi:role="line"
+         id="tspan7126"
+         x="190.91898"
+         y="691.22461" /><tspan
+         sodipodi:role="line"
+         id="tspan7128" /></text>
+    <g
+       style="display:inline"
+       id="g7417-1"
+       transform="translate(-234.28834,88.69283)">
+      <rect
+         style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         id="rect2021-4-2"
+         width="213.45305"
+         height="196.22951"
+         x="251.44493"
+         y="607.37885"
+         rx="4.9418092"
+         ry="6.5120306" />
+      <text
+         xml:space="preserve"
+         style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+         x="261.58096"
+         y="620.99554"
+         id="text9142-3-2"
+         sodipodi:linespacing="94.999999%"><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="620.99554"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7163-4">// class member Function:</tspan><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="630.78436"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7316-9">bool checkFoo(double arg) { .... }</tspan><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="640.57312"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7312-2" /><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="650.36194"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7314-8">// in constructor or configureHook():</tspan><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="660.15076"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7308-5">addOperation(&quot;checkFoo&quot;,</tspan><tspan
+           id="tspan7619"
+           sodipodi:role="line"
+           x="261.58096"
+           y="669.93951"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      &amp;MyComp::checkFoo, this)</tspan><tspan
+           id="tspan7621"
+           sodipodi:role="line"
+           x="261.58096"
+           y="679.72833"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      .doc(&quot;...&quot;).arg(&quot;arg&quot;,&quot;...&quot;);</tspan><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="689.51715"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7359-3" /><tspan
+           sodipodi:role="line"
+           x="261.58096"
+           y="699.30597"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan7391-9">// Add C function:</tspan><tspan
+           id="tspan7758"
+           sodipodi:role="line"
+           x="261.58096"
+           y="709.09473"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">addOperation(&quot;cFoo&quot;,</tspan><tspan
+           id="tspan7760"
+           sodipodi:role="line"
+           x="261.58096"
+           y="718.88354"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      &amp;cFoo)</tspan><tspan
+           id="tspan7762"
+           sodipodi:role="line"
+           x="261.58096"
+           y="728.67236"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      .doc(&quot;...&quot;).arg(&quot;arg&quot;,&quot;...&quot;);</tspan><tspan
+           id="tspan7764"
+           sodipodi:role="line"
+           x="261.58096"
+           y="738.46112"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT" /><tspan
+           id="tspan7766"
+           sodipodi:role="line"
+           x="261.58096"
+           y="748.24994"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">// Execute in own thread:</tspan><tspan
+           id="tspan7774"
+           sodipodi:role="line"
+           x="261.58096"
+           y="758.03876"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">addOperation(&quot;checkFoo&quot;,</tspan><tspan
+           id="tspan7768"
+           sodipodi:role="line"
+           x="261.58096"
+           y="767.82751"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      &amp;MyComp::checkFoo, this</tspan><tspan
+           id="tspan7776"
+           sodipodi:role="line"
+           x="261.58096"
+           y="777.61633"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      OwnThread)</tspan><tspan
+           id="tspan7770"
+           sodipodi:role="line"
+           x="261.58096"
+           y="787.40515"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT">                      .doc(&quot;...&quot;).arg(&quot;arg&quot;,&quot;...&quot;);</tspan><tspan
+           id="tspan7772"
+           sodipodi:role="line"
+           x="261.58096"
+           y="797.19397"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT" /></text>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9319-0-7-9-1-6"
+         y="604.02954"
+         x="257.54437"
+         style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="604.02954"
+           x="257.54437"
+           id="tspan9321-8-6-3-2-1"
+           sodipodi:role="line">Defining Operations</tspan></text>
+    </g>
+    <g
+       style="display:inline"
+       id="g7417-1-2"
+       transform="translate(-234.28834,315.69044)">
+      <g
+         transform="translate(0,-46.101525)"
+         id="g3370-6-0">
+        <rect
+           ry="6.5120306"
+           rx="4.9418092"
+           y="653.48035"
+           x="251.44493"
+           height="106.52314"
+           width="213.45305"
+           id="rect2021-4-2-1"
+           style="fill:#f0f0f0;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+        <text
+           sodipodi:linespacing="94.999999%"
+           id="text9142-3-2-9"
+           y="667.09705"
+           x="261.58096"
+           style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+           xml:space="preserve"><tspan
+             id="tspan7163-4-3"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="667.09705"
+             x="261.58096"
+             sodipodi:role="line">// class member:</tspan><tspan
+             id="tspan7316-9-2"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="676.88586"
+             x="261.58096"
+             sodipodi:role="line">OperationCaller&lt;bool(double)&gt; cFoo;</tspan><tspan
+             id="tspan7312-2-1"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="686.67462"
+             x="261.58096"
+             sodipodi:role="line" /><tspan
+             id="tspan7314-8-4"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="696.46344"
+             x="261.58096"
+             sodipodi:role="line">// in configureHook():</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="706.25226"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7941">if ( getPeer(&quot;Foo&quot;) )</tspan><tspan
+             id="tspan7359-3-3"
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="716.04102"
+             x="261.58096"
+             sodipodi:role="line">    cFoo = getPeer(&quot;Foo&quot;)</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="725.82983"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7883">             -&gt;getOperation(&quot;checkFoo&quot;);</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="735.61865"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7881" /><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="745.40747"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7770-6">if ( cFoo.ready() )</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="755.19623"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7939">    bool ret = cFoo( 1.234 );</tspan><tspan
+             style="font-size:10.3039999px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:94.99999881%;writing-mode:lr-tb;text-anchor:start;fill:#0737e3;fill-opacity:1;font-family:ProggyTinyTT"
+             y="764.98505"
+             x="261.58096"
+             sodipodi:role="line"
+             id="tspan7772-0" /></text>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text9319-0-7-9-1-6-9"
+         y="604.02954"
+         x="257.54437"
+         style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="604.02954"
+           x="257.54437"
+           id="tspan9321-8-6-3-2-1-0"
+           sodipodi:role="line">Calling Operations</tspan></text>
+    </g>
+    <text
+       sodipodi:linespacing="123%"
+       id="text6802-9-5"
+       y="884.07172"
+       x="606.95703"
+       style="font-size:8.0360775px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+       xml:space="preserve"><tspan
+         y="884.07172"
+         x="606.95703"
+         sodipodi:role="line"
+         id="tspan6851-0">*Takes optional <tspan
+   style="font-size:8.0360775px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan3548">INSTALL <tspan
+   style="font-size:8.0360775px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan4756">path</tspan></tspan> argument.</tspan></text>
+    <text
+       sodipodi:linespacing="123%"
+       id="text6802-9-1"
+       y="926.93433"
+       x="501.66025"
+       style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+       xml:space="preserve"><tspan
+         y="926.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan6851-8"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">prefix/</tspan><tspan
+         y="937.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3655"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">  include/orocos/package/headers.hpp</tspan><tspan
+         y="948.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3635"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">  lib/                                     support<tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4769"> libraries</tspan></tspan><tspan
+         y="959.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3641"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">      orocos/                          <tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4771">global components</tspan></tspan><tspan
+         y="970.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3643"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">         package/                    <tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4773">component package</tspan></tspan><tspan
+         y="981.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3649"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">              componentlib.so   <tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4775">component libraries</tspan></tspan><tspan
+         y="992.93433"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan4748"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">              types/                    <tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4777">typekits and transports</tspan></tspan><tspan
+         y="1003.9343"
+         x="501.66025"
+         sodipodi:role="line"
+         id="tspan3647"
+         style="font-size:9.58861351000000006px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123%;writing-mode:lr;text-anchor:start;font-family:FreeSans;-inkscape-font-specification:FreeSans;">              plugins/                 <tspan
+   style="font-style:normal;-inkscape-font-specification:FreeSans;font-family:FreeSans;font-weight:normal;font-stretch:normal;font-variant:normal;font-size:9.58861351000000006px;text-anchor:start;text-align:start;writing-mode:lr;line-height:123%;"
+   id="tspan4779">services and plugins</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:17.54213714999999851px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans Bold;"
+       x="501.66025"
+       y="909.51013"
+       id="text9319-0-7-9-1-2-2-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan9321-8-6-3-2-6-2-3"
+         x="501.66025"
+         y="909.51013">Package Layout</tspan></text>
+    <g
+       id="g4735"
+       transform="translate(-18.000008,-9.1242567)">
+      <path
+         id="path3657"
+         d="m 540.01435,972.45504 0,63.29096"
+         style="fill:none;stroke:#000000;stroke-width:0.99999988px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutM)" />
+      <text
+         id="text4669"
+         y="1046.6187"
+         x="511.83102"
+         style="font-size:9.41243935px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ff1818;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           style="font-size:9.41243935px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ff1818;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+           y="1046.6187"
+           x="511.83102"
+           id="tspan4671"
+           sodipodi:role="line"><tspan
+   style="font-size:9.41243935px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan4762">in</tspan> RTT_COMPONENT_PATH <tspan
+   style="font-size:9.41243935px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+   id="tspan4760">or using</tspan> path(&quot;prefix/lib/orocos&quot;)</tspan></text>
+    </g>
+    <g
+       id="g4764"
+       transform="translate(-4,-4)">
+      <path
+         id="path3657-8"
+         d="m 538.15727,980.55482 0,35.26628"
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#TriangleOutM);display:inline;" />
+      <text
+         id="text4669-5"
+         y="1027.6266"
+         x="529.02405"
+         style="font-size:14px;font-style:normal;font-weight:normal;fill:#ff1515;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans;"
+         xml:space="preserve"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans;"
+           y="1027.6266"
+           x="529.02405"
+           id="tspan4671-0"
+           sodipodi:role="line">import(&quot;package&quot;)</tspan></text>
+    </g>
+    <g
+       style="display:inline"
+       transform="matrix(0.91797546,0,0,0.91797546,32.525205,335.98477)"
+       id="use6788-2"
+       inkscape:tile-x0="504.15701"
+       inkscape:tile-y0="393.15157">
+      <text
+         sodipodi:linespacing="125%"
+         id="text6798-4"
+         y="568.05292"
+         x="513.72449"
+         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan6800-3"
+           y="568.05292"
+           x="513.72449"
+           sodipodi:role="line"
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1515;fill-opacity:1;font-family:FreeSans;-inkscape-font-specification:FreeSans">orocos_generate_package( )<tspan
+   style="fill:#000000"
+   id="tspan3560-5" /></tspan></text>
+      <text
+         sodipodi:linespacing="123%"
+         id="text6802-1"
+         y="581.51282"
+         x="508.59799"
+         style="font-size:9.58861351px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:123.00000191%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:FreeSans;-inkscape-font-specification:FreeSans"
+         xml:space="preserve"><tspan
+           id="tspan6804-7"
+           y="581.51282"
+           x="508.59799"
+           sodipodi:role="line">Last statement which generates &amp; installs a .pc file</tspan></text>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="FlowDiagram"
+     style="display:inline">
+    <text
+       transform="translate(0,-308.2677)"
+       sodipodi:linespacing="125%"
+       id="text6432-9"
+       y="341.73489"
+       x="497.09073"
+       style="font-size:17.54213715px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#aaaaaa;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       xml:space="preserve"><tspan
+         y="341.73489"
+         x="497.09073"
+         id="tspan6434-0"
+         sodipodi:role="line">Development</tspan><tspan
+         y="366.02945"
+         x="497.09073"
+         sodipodi:role="line"
+         id="tspan16889-8">Workflow</tspan></text>
+    <g
+       transform="translate(260.39262,-393.8298)"
+       id="g7692-3">
+      <rect
+         ry="7.0814695"
+         rx="7.08147"
+         y="435.50052"
+         x="381.75433"
+         height="38.669552"
+         width="107.97923"
+         id="rect8184-8"
+         style="fill:url(#linearGradient3644);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <g
+         id="g8187-7"
+         transform="matrix(0.63019307,0,0,0.63019307,347.06177,279.66107)">
+        <g
+           id="g8189-3"
+           transform="matrix(1.596732,0,0,0.565934,358.9378,63.47176)" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+         x="436.62167"
+         y="457.42389"
+         id="text3483-7-0"
+         sodipodi:linespacing="80.000001%"><tspan
+           sodipodi:role="line"
+           x="436.62167"
+           y="457.42389"
+           style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan6393">typegen_headers</tspan><tspan
+           sodipodi:role="line"
+           x="436.62167"
+           y="464.85208"
+           style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan6399" /><tspan
+           sodipodi:role="line"
+           x="436.62167"
+           y="472.28027"
+           style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan6401">write a typekit</tspan></text>
+    </g>
+    <g
+       id="g3752">
+      <g
+         transform="matrix(1.2798731,0,0,1,-187.90184,-0.17337948)"
+         id="g3680">
+        <g
+           transform="matrix(0.95449848,0,0,0.3566472,816.87785,-75.173215)"
+           id="g6619-8-10">
+          <rect
+             style="fill:#ddd1d2;fill-opacity:1;fill-rule:nonzero;stroke:#62d5e1;stroke-width:1.32020688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+             id="rect6621-4-3"
+             width="43.164307"
+             height="30.000004"
+             x="-153.27124"
+             y="335.54358"
+             ry="6.2449493"
+             rx="1.8602642" />
+        </g>
+        <rect
+           rx="1.7756193"
+           ry="2.2272434"
+           y="44.876884"
+           x="670.87866"
+           height="9.5873814"
+           width="39.734993"
+           id="rect6627-1-84"
+           style="fill:url(#linearGradient3689);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      </g>
+      <text
+         transform="scale(1.0101237,0.98997776)"
+         sodipodi:linespacing="125%"
+         id="text6623-3-59"
+         y="52.503212"
+         x="668.4931"
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="52.503212"
+           x="668.4931"
+           id="tspan6625-7-4"
+           sodipodi:role="line">DATA TYPES</tspan></text>
+    </g>
+    <g
+       transform="translate(207.34706,-142.27256)"
+       id="g7824-2-2">
+      <rect
+         ry="7.08147"
+         rx="7.08147"
+         y="237.13977"
+         x="570.43701"
+         height="40.14658"
+         width="70.674614"
+         id="rect3707-8-2-9"
+         style="fill:url(#linearGradient16885-7);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <g
+         id="g3538-8-0-0"
+         transform="matrix(0.63019307,0,0,0.63019307,558.74779,45.89618)">
+        <g
+           transform="matrix(0.546572,0,0,0.546572,3.4635,240.2276)"
+           id="g6617-5-2-3">
+          <g
+             id="g6619-8-1-0"
+             transform="matrix(2.771113,0,0,1.035423,497.0162,-210.0564)">
+            <rect
+               rx="2.3809021"
+               ry="6.2449493"
+               y="335.54358"
+               x="-153.27124"
+               height="30.000004"
+               width="43.164307"
+               id="rect6621-4-7-3"
+               style="fill:#ddd1d2;fill-opacity:1;fill-rule:nonzero;stroke:#62d5e1;stroke-width:1.49356949;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+          </g>
+          <rect
+             style="fill:url(#linearGradient16893-7);fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="rect6627-1-7-9"
+             width="115.35917"
+             height="27.834217"
+             x="73.149391"
+             y="136.40097"
+             ry="6.4661636"
+             rx="6.5977483" />
+          <text
+             transform="scale(1.0101237,0.98997776)"
+             sodipodi:linespacing="125%"
+             id="text6623-3-5-3"
+             y="160.69844"
+             x="100.42042"
+             style="font-size:17.41928192px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+             xml:space="preserve"><tspan
+               y="160.69844"
+               x="100.42042"
+               id="tspan6625-7-1-7"
+               sodipodi:role="line">BUILD</tspan></text>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:9.62486552999999923px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+         x="606.30408"
+         y="265.86597"
+         id="text3614-3-4-4"
+         sodipodi:linespacing="80.000001%"><tspan
+           id="tspan7978-2"
+           sodipodi:role="line"
+           x="606.30408"
+           y="265.86597"
+           style="font-size:9.62486552999999923px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;font-family:ProggyTinyTT">make install</tspan></text>
+    </g>
+    <path
+       id="path8022-5"
+       d="m 619.39986,95.174721 13.21431,-13.21431"
+       style="color:#000000;fill:none;stroke:#848484;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutMm);visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <g
+       transform="translate(184.17742,-302.50428)"
+       id="g7676-9">
+      <rect
+         ry="7.08147"
+         rx="7.0814695"
+         y="397.37149"
+         x="313.36935"
+         height="39.410473"
+         width="115.65307"
+         id="rect1676-5"
+         style="fill:url(#linearGradient12211-8);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <g
+         id="g3491-6"
+         transform="matrix(0.63019307,0,0,0.63019307,298.29126,320.0282)">
+        <g
+           transform="matrix(0.546572,0,0,0.546572,41.90385,37.9497)"
+           id="g6535-1">
+          <g
+             id="use8176-1"
+             transform="matrix(2.898605,0,0,1.035423,528.972,-178.9438)">
+            <rect
+               rx="2.2761807"
+               ry="6.2449493"
+               y="335.54358"
+               x="-153.27124"
+               height="30.000004"
+               width="29.996441"
+               id="rect2102-4"
+               style="fill:#ddd1d2;fill-opacity:1;fill-rule:nonzero;stroke:#62d5e1;stroke-width:1.46035373;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+          </g>
+          <rect
+             style="fill:url(#linearGradient12213-1);fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="rect5648-2"
+             width="85.888107"
+             height="27.834217"
+             x="85.346992"
+             y="169.14542"
+             ry="6.4661636"
+             rx="6.5977483" />
+          <text
+             transform="scale(1.0101237,0.98997773)"
+             sodipodi:linespacing="125%"
+             id="text8178-3"
+             y="192.12589"
+             x="87.779633"
+             style="font-size:17.41928101px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+             xml:space="preserve"><tspan
+               y="192.12589"
+               x="87.779633"
+               id="tspan8180-7"
+               sodipodi:role="line">CREATE</tspan></text>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:9.28523730999999941px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+         x="368.93521"
+         y="423.06805"
+         id="text3483-73"
+         sodipodi:linespacing="80.000001%"><tspan
+           sodipodi:role="line"
+           x="368.93521"
+           y="423.06805"
+           style="font-size:9.28523730999999941px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan3592-3">orocreate-pkg &lt;name&gt;</tspan></text>
+    </g>
+    <g
+       id="g5857"
+       transform="translate(0,5.8473893)">
+      <g
+         id="g5847">
+        <rect
+           style="fill:url(#linearGradient5871);fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="rect3707-8-4"
+           width="121.8643"
+           height="38.201622"
+           x="876.38715"
+           y="89.019821"
+           rx="7.0814695"
+           ry="7.08147" />
+        <g
+           transform="matrix(0.63019307,0,0,0.63019307,889.63845,-105.08092)"
+           id="g3538-8-3">
+          <g
+             id="g6617-5-0"
+             transform="matrix(0.546572,0,0,0.546572,3.4635,240.2276)">
+            <g
+               transform="matrix(2.771113,0,0,1.035423,497.0162,-210.0564)"
+               id="g6619-8-7">
+              <rect
+                 style="fill:#ddd1d2;fill-opacity:1;fill-rule:nonzero;stroke:#62d5e1;stroke-width:1.49356949;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+                 id="rect6621-4-8"
+                 width="43.164307"
+                 height="30.000004"
+                 x="-153.27124"
+                 y="335.54358"
+                 ry="6.2449493"
+                 rx="2.3809021" />
+            </g>
+            <rect
+               rx="6.5977483"
+               ry="6.4661636"
+               y="138.47469"
+               x="71.075661"
+               height="27.834217"
+               width="115.35917"
+               id="rect6627-1-8"
+               style="fill:url(#linearGradient5873);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+            <text
+               xml:space="preserve"
+               style="font-size:17.41928219px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+               x="108.2216"
+               y="160.69844"
+               id="text6623-3-6"
+               sodipodi:linespacing="125%"
+               transform="scale(1.0101237,0.98997773)"><tspan
+                 sodipodi:role="line"
+                 id="tspan6625-7-8"
+                 x="108.2216"
+                 y="160.69844">RUN</tspan></text>
+          </g>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:9.62486552999999923px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+         x="929.57538"
+         y="114.88887"
+         id="text3614-3-43"
+         sodipodi:linespacing="80.000001%"><tspan
+           id="tspan7805-1"
+           sodipodi:role="line"
+           x="931.10748"
+           y="114.88887"
+           style="font-size:9.62486552999999923px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;font-family:ProggyTinyTT">deployer-&lt;target&gt; </tspan><tspan
+           sodipodi:role="line"
+           x="929.57538"
+           y="122.58876"
+           style="font-size:9.62486552999999923px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119000000609%;writing-mode:lr-tb;text-anchor:middle;fill:#0636e0;fill-opacity:1;font-family:ProggyTinyTT"
+           id="tspan5542">           -s script-or-xml-file</tspan></text>
+    </g>
+    <path
+       style="color:#000000;fill:none;stroke:#848484;stroke-width:1.06299996;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-start:url(#TriangleInMz);marker-end:url(#TriangleOutMa);visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       d="m 855.9148,115.25896 13.93849,0"
+       id="path10229-9" />
+    <g
+       id="g3627">
+      <g
+         id="g7692-3-0"
+         transform="translate(260.39262,-300.40531)">
+        <rect
+           style="fill:url(#linearGradient12199-7-9);fill-opacity:1;fill-rule:nonzero;stroke:none"
+           id="rect8184-8-1"
+           width="107.97923"
+           height="38.669552"
+           x="381.75433"
+           y="435.50052"
+           rx="7.08147"
+           ry="7.0814695" />
+        <g
+           transform="matrix(0.63019307,0,0,0.63019307,347.06177,279.66107)"
+           id="g8187-7-0">
+          <g
+             transform="matrix(1.596732,0,0,0.565934,358.9378,63.47176)"
+             id="g8189-3-1" />
+        </g>
+        <text
+           sodipodi:linespacing="80.000001%"
+           id="text3483-7-0-3"
+           y="459.42389"
+           x="436.62167"
+           style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:ProggyTinyTT"
+           xml:space="preserve"><tspan
+             style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+             y="459.42389"
+             x="436.62167"
+             sodipodi:role="line"
+             id="tspan7864-1-7">implement hooks</tspan><tspan
+             style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+             y="466.85208"
+             x="436.62167"
+             sodipodi:role="line"
+             id="tspan7862-8-2" /></text>
+      </g>
+      <g
+         id="g3538-8-7-6"
+         transform="matrix(0.63019307,0,0,0.63019307,643.49999,-60.78543)">
+        <g
+           transform="matrix(0.546572,0,0,0.546572,3.4635,240.2276)"
+           id="g6617-5-9-4">
+          <g
+             id="g6619-8-10-5"
+             transform="matrix(2.771113,0,0,1.035423,497.0162,-210.0564)" />
+        </g>
+      </g>
+    </g>
+    <path
+       id="path8022-5-1"
+       d="m 619.39986,133.03005 13.21431,13.21431"
+       style="color:#000000;fill:none;stroke:#848484;stroke-width:1.0629921;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;marker-end:url(#TriangleOutMm);visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+    <g
+       id="g3744">
+      <g
+         transform="matrix(1.2798731,0,0,1,-184.97859,95.163096)"
+         id="g3680-8"
+         style="display:inline">
+        <g
+           transform="matrix(0.95449848,0,0,0.3566472,816.87785,-75.173215)"
+           id="g6619-8-10-7">
+          <rect
+             style="fill:#ddd1d2;fill-opacity:1;fill-rule:nonzero;stroke:#62d5e1;stroke-width:1.32020688;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+             id="rect6621-4-3-4"
+             width="43.164307"
+             height="30.000004"
+             x="-153.27124"
+             y="335.54358"
+             ry="6.2449493"
+             rx="1.8602642" />
+        </g>
+        <rect
+           rx="1.7756193"
+           ry="2.2272434"
+           y="44.876884"
+           x="670.87866"
+           height="9.5873814"
+           width="39.734993"
+           id="rect6627-1-84-1"
+           style="fill:url(#linearGradient3713);fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      </g>
+      <text
+         transform="scale(1.0101237,0.98997776)"
+         sodipodi:linespacing="125%"
+         id="text6623-3-59-6"
+         y="148.80484"
+         x="667.91364"
+         style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="148.80484"
+           x="667.91364"
+           id="tspan6625-7-4-3"
+           sodipodi:role="line">COMPONENTS</tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#8c8c8c;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.99607843;marker-end:url(#TriangleOutM);marker-start:url(#TriangleInM)"
+       d="m 693.2821,41.178519 0,-19.624557 120.24501,0 0,63.155393"
+       id="path3764" />
+    <path
+       style="fill:none;stroke:#8a8a8a;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.99607843;marker-start:url(#TriangleInM);marker-end:url(#TriangleOutM);display:inline"
+       d="m 693.4605,178.64025 0,19.62456 120.24501,0 0,-63.15539"
+       id="path3764-7" />
+    <text
+       xml:space="preserve"
+       style="font-size:9px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="750.72852"
+       y="19.056292"
+       id="text5559"><tspan
+         sodipodi:role="line"
+         id="tspan5561"
+         x="750.72852"
+         y="19.056292">define communicated</tspan><tspan
+         sodipodi:role="line"
+         x="750.72852"
+         y="30.30629"
+         id="tspan5563">data</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9px;font-style:normal;font-weight:normal;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
+       x="748.74805"
+       y="196.3371"
+       id="text5559-2"><tspan
+         sodipodi:role="line"
+         id="tspan5561-5"
+         x="748.74805"
+         y="196.3371">Implement</tspan><tspan
+         sodipodi:role="line"
+         x="748.74805"
+         y="207.5871"
+         id="tspan5563-4">algorithms</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;display:inline;font-family:ProggyTinyTT"
+       x="653.31641"
+       y="72.139122"
+       id="text3483-7-0-8"
+       sodipodi:linespacing="80.000001%"><tspan
+         sodipodi:role="line"
+         x="653.31641"
+         y="72.139122"
+         style="font-size:9.28523731px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:80.00000119%;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;font-family:ProggyTinyTT"
+         id="tspan6401-2">or</tspan></text>
+  </g>
+</svg>

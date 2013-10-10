@@ -1,0 +1,223 @@
+<?xml version='1.0'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % oro_ents SYSTEM "http://people.mech.kuleuven.be/~psoetens/orocos/doc/orocos.ent" >
+%oro_ents;
+]
+>
+
+<book>
+  <bookinfo>
+    <title>
+      The Orocos Component Builder's Manual
+    </title>
+    <subtitle><emphasis>Open RObot COntrol Software</emphasis>
+    </subtitle>
+    <subtitle>&oversion;</subtitle>
+    <copyright>
+      <year>2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012</year>
+      <holder>Peter Soetens</holder>
+    </copyright>
+    <copyright>
+      <year>2006,2007,2008</year>
+      <holder>FMTC</holder>
+    </copyright>
+
+    <abstract>
+      <para>
+	This document gives an introduction to building your own
+	components for the <ulink
+	url="http://www.orocos.org">&orocos;</ulink> <emphasis> ( Open
+	RObot COntrol Software ) </emphasis> project.
+      </para>
+    </abstract>
+
+    <legalnotice>
+      <para>
+	Orocos Real-Time Toolkit Version &oversion;.
+      </para>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation, with no
+	Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+	Texts. A copy of this license can be found at
+	<ulink
+	  url="http://www.fsf.org/copyleft/fdl.html">http://www.fsf.org/copyleft/fdl.html</ulink>.
+      </para>
+    </legalnotice>
+  </bookinfo>
+  <chapter>
+    <title>How to Read this Manual</title>
+    <para>
+      This manual is for Software developers who wish to write their own software components using
+      the Orocos Toolchain. The HTML version of this manual links to the API documentation of all
+      classes.
+    </para>
+    <section><title>Component Interfaces</title>
+    <para>
+      The most important Chapters to get started building a component
+      are presented first. Orocos components are implemented using the
+      'TaskContext' class and the following Chapter explains step by
+      step how to define the interface of your component, such that
+      you can interact with your component from a user interface
+      or other component.
+    </para></section>
+    <section><title>Component Implementation</title>
+    <para>
+      For implementing algorithms within your component, various C++
+      function <emphasis>hooks</emphasis> are present in wich you
+      can place custom C++ code. As your component's functionality grows,
+      you can extend its <emphasis>scripting</emphasis> interface
+      and call your algorithms from a script.
+    </para>
+    <para>
+      The Orocos Scripting Chapter details how to write programs and
+      state machines. "Advanced Users" may benefit from this Chapter
+      as well since the scripting language allows to 'program'
+      components without recompiling the source.
+    </para>
+    <para>
+			If you're familiar with the Lua programming language, you can
+			also implement components an statemachines in real-time Lua scripts.
+			Check out the <ulink url="http://www.orocos.org/wiki/orocos/toolchain/luacookbook">Lua Cookbook</ulink> website.
+    </para>
+    </section>
+    <section>
+      <title>Orocos Toolchain Overview</title>
+      <para>
+	The Toolchain allows setup, distribution and
+	the building of real-time software components. It is
+	sometimes refered to as 'middleware' because it sits
+	between the application and the Operating System.
+	It takes care of the real-time communication and execution of 
+	software components.
+      </para>
+      <figure id="fig-orocos-framework">
+	<title>
+	  Orocos Toolchain as Middleware
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/FrameworkOverview" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/FrameworkOverview" width="100%" scalefit="1"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      <para>
+	The <ulink url="http://www.orocos.org/toolchain">Toolchain
+	</ulink> provides a limited set of components for application
+	development. The Orocos Component Library (OCL) is a
+	collection of infrastructure components for building applications.
+			</para>
+			<para>
+  The Toolchain contains components for <ulink url="http://www.orocos.org/stable/documentation/ocl/v2.x/doc-xml/orocos-deployment.html">component deployment</ulink> and
+  <ulink url="http://www.orocos.org/stable/documentation/rtt/v2.x/doc-xml/orocos-transports-corba.html">distribution</ulink>, <ulink url="http://www.orocos.org/wiki/Using_real-time_logging">real-time status logging</ulink> and 
+	<ulink url="http://www.orocos.org/stable/documentation/ocl/v2.x/doc-xml/orocos-reporting.html">data reporting</ulink>. It
+	also contains tools for <ulink url="http://www.orocos.org/wiki/orocos/toolchain/getting-started/using-orocreate-pkg">creating component packages</ulink>,
+	extremely <ulink url="http://www.orocos.org/wiki/orocos/toolchain/getting-started/cmake-and-building">simple build instructions</ulink> and <ulink url="http://www.rock-robotics.org/orogen/">
+	code generators</ulink> for plain C++ structs and <ulink url="http://www.ros.org/wiki/orocos_toolchain_ros">ROS messages</ulink>.
+      </para>
+    </section>
+<!--
+    <section>
+      <title>Orocos Real-Time Toolkit Software Structure</title>
+      <para>
+	The Real-Time Toolkit is structured in layers on top
+	of the Operating System and the devices (IO).
+      </para>
+      <figure id="fig-orocos-app-stack">
+	<title>
+	  Real-Time Toolkit Layers
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/ApplicationStack2" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/ApplicationStack2" width="100%" scalefit="1"/>
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      <para> 
+	An Orocos component is built upon the Real-Time Toolkit (RTT)
+	library.  It allows you to build components which are
+	accessible over a network, configurable using XML files and
+	listen to a scripting interface, which allows components to be
+	controlled using text commands. A component which accesses IO
+	devices can use the Orocos Device Interface as well which
+	defines how to interact with analog and digital IO and
+	encoders.  Of course, components can make use of external,
+	non-Orocos libraries as well.
+      </para>
+      <para>
+	Orocos components which only use the Real-Time Toolkit are
+	portable over different Operating Systems (OS) and processor
+	architectures. Orocos has an internal OS abstraction which
+	allows the components to run on any supported
+	architecture. When your component uses an external library,
+	for example a camera or vision library, portability depends on
+	these libraries.
+      </para>
+    </section>
+-->
+  </chapter>
+  <chapter id="orocos-taskcontext">
+    <title>Setting up the Component Interface</title>
+    <xi:include  href="orocos-task-context.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-task-context.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-scripting">
+    <title>Orocos RTT Scripting Reference</title>
+    <xi:include  href="orocos-rtt-scripting.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-rtt-scripting.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-corba">
+    <title>Distributing Orocos Components with CORBA</title>
+    <xi:include  href="orocos-transports-corba.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-transports-corba.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-mqueue">
+    <title>Real-time Inter-Process Data Flow using MQueue</title>
+    <xi:include  href="orocos-transports-mqueue.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-transports-mqueue.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-corelib">
+    <title>Core Primitives Reference</title>
+    <xi:include  href="orocos-corelib.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-corelib.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-os">
+    <title>OS Abstraction Reference</title>
+    <xi:include  href="orocos-os.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-os.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+
+  <chapter id="orocos-fdi">
+    <title>Hardware Device Interfaces</title>
+    <xi:include  href="orocos-device-interface.xml#xpointer(/article/articleinfo/abstract)"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include  href="orocos-device-interface.xml#xpointer(/article/section[*])"  
+             xmlns:xi="http://www.w3.org/2001/XInclude" />
+  </chapter>
+</book>

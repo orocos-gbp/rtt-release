@@ -1,0 +1,624 @@
+<?xml version='1.0'?>
+
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"/usr/share/sgml/docbook/dtd/xml/4.1.2/docbookx.dtd" 
+[
+<!ENTITY cvs         "<acronym>CVS</acronym>">
+<!ENTITY orocos      "<acronym>Orocos</acronym> <acronym>RTT</acronym>">
+<!ENTITY rtai        "<acronym>RTAI</acronym>">
+<!ENTITY rtos        "<acronym>RTOS</acronym>">
+]
+>
+
+<!--- NOTE I HAVE EDITED /usr/share/xml/docbook/stylesheet/nwalsh/fo/qandaset.xsl
+      TO WORK AROUND AN DUPLICATE "id" BUG IN FOP: (presented patch is inverted)
+
+Patching the stylesheet is fairly straightforward. Here's the diff from my 
+environment:
+
+
+- - - fo/qandaset.xsl     Mon Sep 29 21:50:25 2003
++ + + fo/qandaset.xsl.orig        Tue Sep 30 15:42:27 2003
+@@ -200,9 +200,7 @@
+   </xsl:variable>
+
+   <fo:list-item xsl:use-attribute-sets="list.item.spacing">
+-    <fo:list-item-label end-indent="label-end()">
++    <fo:list-item-label id="{$id}" end-indent="label-end()">
+       <xsl:choose>
+         <xsl:when test="$deflabel = 'none'">
+           <fo:block/>
+
+Note that this isn't a smart fix. It just removes the ID, which arguably 
+should be made unique in the calling style by some other means (prepending 
+some identifier, etc...).
+
+IIRC, the on-list resolution to date was along the lines of "well, your parser 
+should be able to handle that, it's broken", so I'm not sure how much 
+sympathy such a patch will get.
+
+Regards.
+
+Alex Russell
+-->
+
+<article class="faq">
+  <articleinfo>
+    <title>
+      &orocos; Frequently Asked Questions (FAQ)
+    </title>
+    <subtitle><emphasis>Open RObot COntrol Software</emphasis>
+    </subtitle>
+    <pubdate>8 November 2006</pubdate>
+    <revhistory>
+      <revision>
+        <revnumber>0.1</revnumber>
+        <date>13 Jan 2005</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Initial version.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>0.2</revnumber>
+        <date>1 March 2005</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Updated broken links and RTAI version info.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>0.3</revnumber>
+        <date>1 May 2005</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Added 'Testing Orocos' section.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>0.4</revnumber>
+        <date>8 Nov 2006</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Updated to Orocos 1.0
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>0.5</revnumber>
+        <date>17 Nov 2006</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Fixed wrong links.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>0.6</revnumber>
+        <date>3 May 2007</date>
+        <authorinitials>PS</authorinitials>
+        <revremark>
+	  Updated to RTT 1.2
+        </revremark>
+      </revision>
+    </revhistory>
+    <abstract>
+      <para>
+	This document provides answers to frequently asked questions (faq) about
+	installing, configuration and usage of the Real-Time Toolkit.
+      </para>
+    </abstract>
+  </articleinfo>
+
+  <qandaset defaultlabel="qanda">
+    <qandadiv>
+      <title>General Questions</title>
+      <qandaentry>
+	<question>
+	  <para>What is Orocos - Real-Time Toolkit ?</para>
+	</question>
+	<answer>
+	  <para>
+	    Orocos stands for Open Robot Control Software and was a
+	    EU funded project to write Free Software for robots. This FAQ is
+	    about the Real-Time Toolkit
+	    library for writing hard real-time control applications in
+	    C++. It supports hard real-time <ulink
+	      url="http://www.rtai.org">RTAI/LXRT</ulink> and <ulink
+	      url="http://www.xenomai.org">Xenomai</ulink> and normal
+	    GNU/Linux programs.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Where can a find a quick overview of what features the Real-Time Toolkit currently has ?</para>
+	</question>
+	<answer>
+	  <para>
+	    In the <ulink
+	      url="http://www.orocos.org/documents/OrocosIn3Slides.pdf">Orocos in 3 slides Overview</ulink> 
+	    Presentation.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Where can I find the latest RTT documentation?</para>
+	</question>
+	<answer>
+	  <para>
+	    In the <ulink
+	      url="http://www.orocos.org/rtt/manuals">
+	      Manuals Section </ulink> of the Orocos website,
+	    you can find all on-line documents (and this FAQ). Also,
+	    the <ulink url="http://www.orocos.org/rtt"> RTT
+	      Documentation Section </ulink> contains links to the manuals.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Where can I find download and installation instructions?</para>
+	</question>
+	<answer>
+	  <para>
+	    In the <ulink url="http://www.orocos.org/rtt">
+	      Download Section</ulink> of the Orocos website and the
+	    <ulink
+	      url="orocos-installation.html"> 
+	      Orocos Installation Manual</ulink>.</para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Where can I ask Orocos software related questions (even newbie questions) ?</para>
+	</question>
+	<answer>
+	  <para>
+	    On the <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos-dev">
+	      Orocos-dev mailing list</ulink> (medium traffic) or the
+	      <ulink url="http://www.orocos.org/rtt/forum">forum</ulink>.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Where can I ask Orocos 'philosophical' questions ?</para>
+	</question>
+	<answer>
+	  <para>
+	    On the <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos">
+	      Orocos mailing list</ulink> (very low traffic ).
+	  </para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+    <qandadiv>
+      <title>Configuring and Compiling &orocos;</title>
+      <qandaentry>
+	<question>
+	  <para>Where can I find the latest configuration instructions?</para>
+	</question>
+	<answer>
+	  <para>In the <ulink url="orocos-installation.html">
+	    Orocos RTT Installation Manual</ulink>. </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Which Linux version should I use?</para>
+	</question>
+	<answer>
+	  <para>The RTT works with <ulink url="http://www.kernel.org">
+	      vanilla </ulink> Linux 2.4 and 2.6 kernels.</para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Which RTAI version should I use?</para>
+	</question>
+	<answer>
+	  <para>
+	    The RTT works with RTAI 3.0r5 ( you need to apply a <ulink
+	      url="http://people.mech.kuleuven.ac.be/~psoetens/orocos/patches/rtai-3.0rx.patch">patch</ulink> if you use 3.0r(1-4)
+	    ), RTAI 3.1, 3.2, 3.3 and 3.4 (no patching required).
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>How should I configure my Linux Kernel?</para>
+	</question>
+	<answer>
+	  <para>Disable anything that is remotely 'Experimental' or
+	  not necessarily needed.  The following Linux options must be
+	  disabled to guarantee the most stable performance:
+	    <itemizedlist>
+	      <listitem>
+		<para>Disable APM / ACPI. These can interfere with scheduling and RTAI.</para>
+	      </listitem>
+	      <listitem>
+		<para>Disable MTRR. This can interfere when using RTAI.</para>
+	      </listitem>
+	      <listitem>
+		<para>Disable CONFIG_REGPARM. This option causes BIG problems when using LXRT,
+		and renders it completely unusable all together.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </para>
+	  <para>The following Linux options must be enabled to guarantee
+	    the most stable performance:
+	    <itemizedlist>
+	      <listitem>
+		<para>Enable your USB driver ( or disable USB in your BIOS ). The aim
+		of using a Linux USB driver is to disable the BIOS USB driver.</para>
+	      </listitem>
+	      <listitem>
+		<para>
+		  Enable your IDE chip-set and choose the correct CPU.
+		  Wrong settings for one of these will cause lock-ups.
+		</para>
+	      </listitem>
+	    </itemizedlist>
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>How should I configure RTAI?</para>
+	</question>
+	<answer>
+	  <para>The following RTAI options must be enabled (and modules must be loaded):
+	    <itemizedlist>
+	      <listitem>
+		<para>
+		  LXRT scheduler (rtai_hal+rtai_lxrt)
+		</para>
+	      </listitem>
+	      <listitem>
+		<para>
+		  Semaphores (rtai_sem)
+		</para>
+	      </listitem>
+	      <listitem>
+		<para>
+		  FPU Support
+		</para>
+	      </listitem>
+	      <listitem>
+		<para>RealTime Memory Manager (with vmalloc)</para>
+	      </listitem>
+	    </itemizedlist>
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>How can I configure the RTT ?</para>
+	</question>
+	<answer>
+	  <para>
+	    Use the <command>cmake ..</command> command in your <filename>build</filename> directory , which will
+	    pop-up the configuration menu. 
+	    See the <ulink url="http://www.orocos.org/stable/documentation/rtt/v1.2.x/doc/orocos-installation.html"> 
+	    the Installation Manual </ulink>.
+	  </para>
+	  <para>
+	    Or, use <command>../configure --help</command> in your <filename>build</filename> directory
+	    for configuring only basic options.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>What are the system requirements of &orocos;?</para>
+	</question>
+	<answer>
+	  <para>
+	    For compiling the RTT, you need a very fast machine with minimum 256MB RAM,
+	    and 512MB RAM to be comfortable.
+	  </para>
+	</answer>
+	<answer>
+	  <para>
+	    For running a full-featured Orocos application, you need an Intel
+	    Pentium-like or PowerPC processor with minimum 32MB RAM if
+	    all options are enabled, but much depends on the
+	    application itself.
+	  </para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+    <qandadiv>
+      <title>Testing &orocos;</title>
+      <qandaentry>
+	<question>
+	  <para>Where can I find a quick demo application ?</para>
+	</question>
+	<answer>
+	  <para>
+	    You can download the <ulink
+	    url="http://www.orocos.org/ocl">Orocos Component Library
+	    (OCL)</ulink>, install it and check out the examples you
+	    can download on the Orocos RTT page as well.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Why doesn't the demo application compile ?</para>
+	</question>
+	<answer>
+	  <para>Did you read the README ? Did you install Orocos in /usr/local/orocos ?
+	  Otherwise, set ORO_PATH to the correct location in the Makefile or
+	  specify it in <command>make ORO_PATH=/path/to/install</command>
+	  </para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+    <qandadiv>
+      <title>Run-time Problems/Crashes with &orocos;</title>
+      <para>
+	This section covers 'general' causes of crashes.
+	If you are using RTAI, also check out the next Section.
+      </para>
+      <qandaentry>
+	<question>
+	  <para>The first message I get is 'Segmentation fault' !</para>
+	</question>
+	<answer>
+	  <para>Maybe you are mixing C++ libraries or compiler versions.
+	  In this case, the linker shows a warning, which most users ignore
+	  though. In order to check if your libraries are correctly setup, do:
+	  <screen>$ cd build/tests;
+$ ldd core-test
+        linux-gate.so.1 =>  (0xffffe000)
+        libcppunit-1.10.so.2 => /usr/lib/libcppunit-1.10.so.2 (0xb7f54000)
+        libdl.so.2 => /lib/tls/i686/cmov/libdl.so.2 (0xb7f4f000)
+        libpthread.so.0 => /lib/tls/i686/cmov/libpthread.so.0 (0xb7f3c000)
+        libstdc++.so.6 => /usr/lib/libstdc++.so.6 (0xb7e56000)
+        libm.so.6 => /lib/tls/i686/cmov/libm.so.6 (0xb7e33000)
+        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0xb7e28000)
+        libc.so.6 => /lib/tls/i686/cmov/libc.so.6 (0xb7cfa000)
+        /lib/ld-linux.so.2 (0xb7fcc000)</screen> You should only see
+	<emphasis>one</emphasis> libstdc++ library listed, thus if you see:
+	<screen>  ....
+        libstdc++.so.6 => /usr/lib/libstdc++.so.6 (0xb78a9000)
+        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0xb789e000)
+        libc.so.6 => /lib/tls/i686/cmov/libc.so.6 (0xb7770000)
+        libstdc++.so.5 => /usr/lib/libstdc++.so.5 (0xb76b6000)
+        ....</screen>
+	the double occurence of 'libstdc++' is the cause of the crash. </para>
+	<para>
+	  Compile all your libraries (cppunit, Orocos,...) with the
+	  same compiler.
+	</para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+    <qandadiv>
+      <title>Run-time Problems with RTAI/LXRT</title>
+      <para>This section documents causes of crashes that only occur when you
+      run Orocos for LXRT and disappear when you run the same program under GNU/Linux.
+      See also the section above.
+      </para>
+      <qandaentry>
+	<question>
+	  <para>The first message I get is 'Segmentation fault' !</para>
+	</question>
+	<answer>
+	  <para>Check if your rtai_lxrt and rtai_sem kernel modules are loaded <emphasis>and</emphasis>
+	  rtai_up is <emphasis>not</emphasis> loaded.</para>
+	  <para>
+	    If that does not help, set <screen>export ORO_LOGLEVEL=6</screen> and
+	    send the output to the Orocos-dev mailing list.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>&orocos; hangs after the first threads are created !</para>
+	</question>
+	<answer>
+	  <para>Check if the LXRT user space tests work. Orocos should be compiled
+	  with the same compiler as RTAI and Linux. RTAI/LXRT is quite sensitive
+	  about the chosen compiler. Problems have been reported with Red Hat's 
+	  GCC 3.4 compiler for example.</para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>The first message I get is 'LXRT NOT INITIALISED IN THIS THREAD pid=1234,
+	    BUT TRIES TO INVOKE LXRT FUNCTION &gt;&gt;rtos_mutex_init&lt;&lt; ANYWAY'. What did
+	    I do wrong ?</para>
+	</question>
+	<answer>
+	  <para>You tried to use RTAI's functions while RTAI was not yet initialised.
+	    This happens if you use global objects which contain Mutexes. Examples
+	    are Event and some DataObjects, Buffers and the Logger class.
+	    The solution is not to use global objects, but use global pointers and
+	    create the objects in ORO_main() with new.
+	  </para>
+	</answer>
+	<answer>
+	  <para>You did not put your program in the ORO_main()
+	    function. ( see <ulink
+	      url="http://www.orocos.org/stable/documentation/rtt/v1.2.x/doc-xml/orocos-installation.html"> 
+	      The Installation Manual </ulink> and <ulink
+	      url="http://www.orocos.org/stable/documentation/rtt/v1.2.x/doc-xml/orocos-os.html"> 
+	      The Orocos OS Manual</ulink>. )
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>The real-time performance is Terrible !</para>
+	</question>
+	<answer>
+	  <para>
+	    Well, that is not a question really, but anyway...
+	    Did you read the section about <ulink url="orocos-components-manual.html#core-priority-inversions"> Priority Inversions </ulink> in the RTT CoreLib Manual ? 
+	  </para>
+	</answer>
+	<answer>
+	  <para>
+	    Are you calling Linux system calls from a hard-real-time
+	    thread ? See <ulink
+	      url="http://people.mech.kuleuven.be/~psoetens/lxrt/portingtolxrt.html"> 
+	      this document </ulink> for what you can and can't do
+	    within hard-real-time LXRT tasks.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para><command>make check</command> crashes my (RTAI) system. What did I
+	  do wrong ?</para>
+	</question>
+	<answer>
+	  <para>
+	    The RTT test cases test the system to its limits and may
+	    crash RTAI if not properly configured. Especially RTAI 3.0
+	    and older.  Also, verify that the RTAI/LXRT (aka
+	    'user space') test programs work before blaming Orocos. Choosing
+	    a different compiler ( GCC 3.3 ) mostly solves that problem.
+	  </para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+    <qandadiv>
+      <title>Orocos Design Questions</title>
+      <qandaentry>
+	<question>
+	  <para>Does Orocos run on Embedded Systems ?</para>
+	</question>
+	<answer>
+	  <para>
+	    Orocos is targeted at 32bit or 64bit systems and can
+	    run on systems with &lt; 1MB of RAM (for code&amp;data &amp; 
+	    application code) although with reduced functionality.
+	  </para>
+	  <para>
+	    Orocos has an 'Embedded Systems' flag which disables
+	    C++ exceptions in order to save in terms of memory footprint.
+	    However, this means that the 'Scripting' language of Orocos can 
+	    not be used.
+	  </para>
+	  <para>
+	    Orocos contains tiny XML for parsing XML scripts on embedded
+	    systems as well, but you can disable XML completely.
+	  </para>
+	  <para>
+	    The Orocos Logger can be disabled at compile time to save on memory footprint.
+	  </para>
+	  <para>
+	    Various parts of the Execution Engine can be disabled
+	    at compile time to save on memory footprint.
+	  </para>
+	  <para>
+	    It can be cross compiled. See the 
+	    <ulink url="orocos-installation.html#cross-compile"> 
+	      installation manual.</ulink>.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>Is the &orocos; Portable ?</para>
+	</question>
+	<answer>
+	  <para>&orocos; runs on eCos, standard GNU/Linux, Xenomai and RTAI
+	  and supports cross-compiling.
+	  For eCos, you need to create a specially crafted C++ GNU tool chain,
+	  see <ulink url="http://www.zylin.com/libstdc++.html">libstdc++ for eCos</ulink>.
+	  </para>
+	</answer>
+	<answer>
+	  <para>The minimum requirements for running the RTT on a
+	  different target are for the CPU: floating point unit (FPU)
+	  or FPU emulation (will degrade performance),
+	  compare-and-swap instruction ( CAS, cmpxch ), and is
+	  targeted at 32 or 64 bit processors. The target Operating System
+	  (OS) must support the GNU C/C++ compiler with the Standard
+	  Template Library, periodic threads, semaphores and recursive
+	  mutexes.</para>
+	  <para>
+	    The RTT has a very thin wrapper around the above OS functions in the 'OS'
+	    package, this is the only place of the RTT you need to port, where the
+	    'gnulinux' package is a good starting point if you intend to port to a
+	    POSIX compliant OS. See also
+	    <ulink url="orocos-components-manual.html#orocos-os">The OS Reference</ulink>.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>What future ports are most likely ?</para>
+	</question>
+	<answer>
+	  <para>The Orocos developers are very willing to assist you
+	  in porting the RTT to your Operating System.
+	  </para>
+	</answer>
+      </qandaentry>
+      <qandaentry>
+	<question>
+	  <para>What is the overhead of all this C++, can it be
+	  real-time ?</para>
+	</question>
+	<answer>
+	  <para>
+	    C++ is a fundamental pillar of Orocos' design. If you need to
+	    be convinced that this actually works, take a look at
+	    <ulink url="http://www.orocos.org/applications">
+	      Demonstration movies </ulink> , and read <ulink
+	      url="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2002/n1396.pdf">
+	      a Technical Report on C++ Performance </ulink>, but
+	      Google can point you to <ulink
+	      url="http://www.google.com/search?hl=en&amp;ie=UTF-8&amp;c2coff=1&amp;q=C%2B%2B+Embedded+Real+time&amp;spell=1">
+	      lots more documents</ulink>. We are still finding ways
+	      to measure the overhead of using Orocos itself, and much
+	      depends on the application, but the minimum system
+	      requirements to run it are a Pentium-class processor or
+	      PowerPC with 32 MB of RAM.
+	  </para>
+	</answer>
+      </qandaentry>
+    </qandadiv>
+  </qandaset>
+  <appendix>
+    <title>About Orocos</title>
+    <para>
+      Please your Orocos questions to <ulink
+	url="mailto:orocos-users at lists.mech.kuleuven.be">
+	orocos-users at lists.mech.kuleuven.be </ulink>. 
+    </para>
+    <para>
+      These pages are maintained by <ulink
+	url="http://www.orocos.org/orocos/whatis">the Orocos
+	team</ulink>.
+    </para>
+    <para>
+      For questions related to the use of the Orocos Software, please consult these
+      web pages and the <ulink
+	url="http://www.orocos.org/rtt">Orocos RTT manuals</ulink>. If
+      that fails, the  <ulink
+	url="mailto: orocos-dev at lists.mech.kuleuven.be">
+	Orocos-dev at lists.mech.kuleuven.be </ulink> mailing list might help.
+      Please
+      send comments on these web pages and the development of Orocos to
+      our developer mailing list at  <ulink
+	url="mailto:orocos-dev at lists.mech.kuleuven.be">
+	Orocos-dev at lists.mech.kuleuven.be </ulink>. All of
+      our lists have <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos-users">public
+	archives</ulink> ( <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos-dev"> dev public
+	archive</ulink> ) .
+      </para>
+    <para>
+      Copyright (C) Peter Soetens, FMTC
+    </para>
+    <para>
+      Verbatim copying and distribution of this entire article is
+      permitted in any medium, provided this notice is preserved.
+    </para>
+  </appendix>
+</article>

@@ -1,0 +1,3342 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % oro_ents SYSTEM "http://people.mech.kuleuven.be/~psoetens/orocos/doc/orocos.ent" >
+%oro_ents;
+]
+>
+
+<article>
+  <articleinfo>
+    <title>
+      The Orocos TaskContext Manual
+    </title>
+    <subtitle>Designing Real-Time Orocos Applications</subtitle>
+    <copyright>
+      <year>2004,2005,2006,2007,2008,2009,2010,2011</year>
+      <holder>Peter Soetens</holder>
+    </copyright>
+    
+    <abstract>
+      <para>
+	This document describes the &orocos; Component Model, which
+	allows to design Real-Time software components which
+	transparently communicate with each other.
+      </para>
+    </abstract>
+    
+    <legalnotice>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation, with no
+	Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+	Texts. A copy of this license can be found at
+	<ulink
+	  url="http://www.fsf.org/copyleft/fdl.html">http://www.fsf.org/copyleft/fdl.html</ulink>.
+      </para>
+    </legalnotice>
+
+  </articleinfo>
+
+  <section id="task-context-intro">
+    <title>Introduction</title>
+    <para>
+      This manual documents how multi-threaded components can be
+      defined in &orocos; such that they form a thread-safe
+      robotics/machine control application.  Each control component is
+      defined as a "TaskContext", which defines the environment or
+      "context" in which an application specific task is executed. The
+      context is described by the three Orocos primitives: Operation, Property,
+      and Data Port. This document defines how a user
+      can write his own task context and how it can be used in an
+      application.
+    </para>
+    <figure id="fig-task-peers">
+      <title>
+	Typical application example for distributed control
+      </title>
+      <mediaobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/TaskPeers2" />
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata fileref="images/hires/TaskPeers2" width="100%" scalefit="1"/>
+	</imageobject>
+	<caption>
+	  <para>
+	    Components are loaded into the process by a deployer,
+	    which gets its configuration through an XML file.
+	    Communication between processes is transparant to the
+	    component, but your data must be known to Orocos
+	    (cfr 'typekits' and 'transports'). Most new users start
+	    with a single process however, using the 'deployer'
+	    application.
+	  </para>
+	</caption>
+      </mediaobject>
+    </figure>
+    <para>
+      A component is a basic unit of functionality which executes one
+      or more (real-time) programs in a single thread.  The program
+      can vary from a mere C/C++ function over a real-time program
+      script to a real-time hierarchical state machine. The focus is
+      completely on thread-safe time determinism. Meaning, that the
+      system is free of priority-inversions, and all operations are
+      lock-free.  Real-time components can communicate with non
+      real-time components (and vice verse) transparently.
+    </para>
+    <note>
+      <para>
+	In this manual, the words task and component are used as equal
+	words, meaning a software component built using the C++
+	TaskContext class.
+      </para>
+    </note>
+    <para>
+      The Orocos Component Model enables :
+      <itemizedlist>
+	<listitem>
+	  <para>Lock free, thread-safe, inter-component communication in a single process.</para>
+	</listitem>
+	<listitem>
+	  <para>Thread-safe, inter-process communication between (distributed) processes.</para>
+	</listitem>
+	<listitem>
+	  <para>Communication between hard Real-Time and non Real-Time components.</para>
+	</listitem>
+	<listitem>
+	  <para>Deterministic execution time during communication
+	  for the higher priority thread.</para>
+	</listitem>
+	<listitem>
+	  <para>Synchronous and asynchronous communication between components.</para>
+	</listitem>
+	<listitem>
+	  <para>Interfaces for run-time component introspection.</para>
+	</listitem>
+	<listitem>
+	  <para>C++ class implementations and scripting interface for all the above.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+    <para>
+      The Scripting chapter gives more details about script syntax
+      for state machines and programs.
+    </para>
+  </section>
+  <section>
+    <title>Hello World !</title>
+		<important>
+			<para>
+				Before you proceed, make sure you printed the <ulink url="http://www.orocos.org/stable/documentation/rtt/v2.x/doc-xml/orocos_cheat_sheet.pdf">Orocos Cheat Sheet</ulink> and
+				<ulink url="http://www.orocos.org/stable/documentation/rtt/v2.x/doc-xml/rtt_cheat_sheet.pdf">RTT Cheat Sheet</ulink> ! They will definately guide you through this lengthy
+				text.
+			</para>
+		</important>
+    <para>
+      This section introduces tasks through the "hello world"
+      application, for which you will create a component package using the
+			<command>orocreate-pkg</command> command on the command line:
+			<programlisting>$	rosrun ocl orocreate-pkg HelloWorld    # ... for ROS users 
+			</programlisting>
+			<programlisting>$	orocreate-pkg HelloWorld    # ... for non-ROS users 
+			</programlisting>
+    </para>
+		<para>
+			In a properly configured installation, you'll be able to enter this
+			directory and build your package right away:
+			<programlisting>$	cd HelloWorld
+$ make
+			</programlisting>
+			In case you are <emphasis>not</emphasis> using ROS to manage your packages, you also need to 
+			install your package:
+			<programlisting>$ make install
+			</programlisting>
+		</para>
+    <section>
+      <title>Using the Deployer</title>
+      <para>
+	The way we interact with TaskContexts during development of an
+	Orocos application is through the <emphasis>deployer
+	</emphasis>.  This application consists of the 
+	<classname>OCL::DeploymentComponent</classname> which is responsible
+	for creating applications out of component libraries and the 
+	<classname>OCL::DeploymentComponent</classname>  which is a powerful console
+	tool which helps you to explore, execute and debug
+	componentss in running
+	programs. 
+			</para>
+			<para>
+			The TaskBrowser uses the GNU readline library to easily enter
+			commands to the tasks in your system. This means you can press
+			TAB to complete your commands or press the up arrow to scroll
+			through previous commands. 
+      </para>
+			<para>
+				You can start the deployer in any directory like this:
+				<programlisting> $ deployer-gnulinux
+				</programlisting>
+				or in a ROS environment:
+				<programlisting> $ rosrun ocl deployer-gnulinux
+				</programlisting>
+			</para>
+			<para>
+				This is going to be your primary tool to explore the Orocos
+				component model so get your seatbelts fastened!
+			</para>
+    </section>
+    <section>
+      <title>Starting your First Application</title>
+      <para>
+	Now let's start the HelloWorld application we just created with
+	<command>orocreate-pkg</command>.
+      </para>
+      <para>
+	Create an 'helloworld.ops' Orocos Program Script (ops) file with
+	these contents:
+	<programlisting>
+ require("print")        // necessary for 'print.ln'
+ import("HelloWorld")    // 'HelloWorld' is a directory name to import      
+
+ print.ln("Script imported HelloWorld package:")
+ displayComponentTypes() // Function of the DeploymentComponent
+ 
+ loadComponent("Hello", "HelloWorld") // Creates a new component of type 'HelloWorld'
+ print.ln("Script created Hello Component with period: " + Hello.getPeriod() )
+</programlisting>
+        and load it into the deployer using this command:
+	<command>$ deployer-gnulinux -s helloworld.ops -linfo</command>
+	This command imports the HelloWorld package and any component library 
+	in there. Then it creates a component with name "Hello". We call this
+	a dynamic deployment, since the decision to create components is done
+	at run-time.
+			</para>
+			<para>
+			You could also create your component in a C++ program. We call this
+			static deployment, since the components are fixed at compilation time.
+			The figure below illustrates this difference:
+      </para>
+      <figure id="fig-hello-world-deployment">
+	<title>
+	  Dynamic vs static loading of components
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/HelloDeployment" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/HelloDeployment"  width="100%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>The 'helloworld' executable is a static deployment of one component in a process, which
+	    means it is hard-coded in the helloworld.cpp file.
+	    In contrast, using the deployer application allows you to load a component library dynamically.
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+      <para>
+      The output of the deployer should be similar to what we show below. Finally, type <command>cd
+	Hello</command> to start with the exercise.
+      </para>
+      <screen>
+0.000 [ Info   ][Logger] Real-time memory: 14096 bytes free of 20480 allocated.
+0.000 [ Info   ][Logger] No RTT_COMPONENT_PATH set. Using default: <emphasis>.../rtt/install/lib/orocos</emphasis>
+0.000 [ Info   ][Logger] plugin 'rtt' not loaded before.
+
+<emphasis>...</emphasis>
+
+0.046 [ Info   ][Logger] Loading Service or Plugin scripting in TaskContext Deployer
+0.047 [ Info   ][Logger] Found complete interface of requested service 'scripting'
+0.047 [ Info   ][Logger] Running Script helloworld.ops ...
+0.050 [ Info   ][DeploymentComponent::import] Importing directory <emphasis>.../HelloWorld/lib/orocos/gnulinux</emphasis> ...
+0.050 [ Info   ][DeploymentComponent::import] Loaded component type 'HelloWorld'
+Script imported HelloWorld package:
+I can create the following component types: 
+   HelloWorld
+   OCL::ConsoleReporting
+   OCL::FileReporting
+   OCL::HMIConsoleOutput
+   OCL::HelloWorld
+   OCL::TcpReporting
+   OCL::TimerComponent
+   OCL::logging::Appender
+   OCL::logging::FileAppender
+   OCL::logging::LoggingService
+   OCL::logging::OstreamAppender
+   TaskContext
+0.052 [ Info   ][Thread] Creating Thread for scheduler: 0
+0.052 [ Info   ][Hello] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+HelloWorld constructed !
+0.052 [ Info   ][DeploymentComponent::loadComponent] Adding Hello as new peer:  OK.
+Script created Hello Component with period: 0
+0.053 [ Info   ][Thread] Creating Thread for scheduler: 0
+0.053 [ Info   ][TaskBrowser] Thread created with scheduler type '0', priority 0, cpu affinity 15 and period 0.
+   Switched to : Deployer
+0.053 [ Info   ][Logger] Entering Task Deployer
+
+  This console reader allows you to browse and manipulate TaskContexts.
+  You can type in an operation, expression, create or change variables.
+  (type 'help' for instructions and 'ls' for context info)
+    TAB completion and HISTORY is available ('bash' like)
+
+Deployer [S]> cd Hello
+   Switched to : Hello
+Hello [S]>
+      </screen>
+      <para>
+	The first <command>[ Info ]</command> lines are printed by the
+	Orocos <classname>RTT::Logger</classname>, which has been
+	configured to display informative messages to
+	console with the <command>-linfo</command> program option.
+	Normally, only warnings or worse are displayed by
+	Orocos. You can always watch the log file 'orocos.log' in the
+	same directory to see all messages.  After the <command>[Log
+	Level]</command>, the <command>[Origin]</command> of the
+	message is printed, and finally the message itself. These
+	messages leave a trace of what was going on in the main()
+	function before the prompt appeared.
+      </para>
+      <para>
+	Depending on what you type, the TaskBrowser will act
+	differently.  The built-in commands <command>cd</command>,
+	<command>help</command>, <command>quit</command>,
+	<command>ls</command> etc,  are seen as commands to the TaskBrowser
+	itself, if you typed something else, it tries to execute your
+	command according to the Orocos scripting language syntax.
+      </para>
+      <screen>
+Hello[R] > <command>1+1</command>
+   = <command>2</command>
+      </screen>
+    </section>
+    <section>
+      <title>Displaying a TaskContext</title>
+    <para>
+      A component's interface consists of: Attributes and Properties, Operations,
+      and Data Flow ports which are all public.
+      The class <classname>RTT::TaskContext</classname> 
+      groups all these interfaces and serves as the basic building
+      block of applications. A component developer 'builds'
+      these interfaces using the instructions found in this manual.
+    </para>
+    <figure id="fig-hello-world">
+      <title>
+	Schematic Overview of the Hello Component.
+      </title>
+      <mediaobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/HelloWorld" />
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata fileref="images/hires/HelloWorld"  width="100%" scalefit="1"/>
+	</imageobject>
+	<caption>
+	  <para>Our hello world component.
+	  </para>
+	</caption>
+      </mediaobject>
+    </figure>
+      <para>
+	To display the contents of the current component, type
+	<command>ls</command>, and switch to one of the listed peers
+	with <command>cd</command>, while <command>cd ..</command>
+	takes you one peer back in history. We have two peers here:
+	the Deployer and your component, Hello.
+      </para>
+      <screen>
+Hello [S]> <command>ls</command>
+
+ Listing TaskContext Hello[S] :
+
+ Configuration Properties: (none)
+
+ Provided Interface:
+  Attributes   : (none)
+  Operations   : activate cleanup configure error getCpuAffinity getPeriod inFatalError inRunTimeError isActive isConfigured isRunning setCpuAffinity setPeriod start stop trigger update 
+
+ Data Flow Ports: (none)
+
+ Services: 
+(none)
+
+ Requires Operations :  (none)
+ Requests Services   :  (none)
+
+ Peers        : (none)
+Hello [S]>
+      </screen>
+      <note>
+	<para>To get a quick overview of the commands, type
+	<command>help</command>.
+	</para>
+      </note>
+      <para>
+	The first line shows the status between square brackets. The [S] here
+	means that the component is in the stopped state. Other states can 
+	be 'R' - Running, 'U' - Unconfigured, 'E' - run-time Error, 'F' - Fatal error,
+	'X' - C++ eXception in user code.
+      </para>
+      <para>
+	First you get a list of the Properties and Attributes
+	(alphabetical) of the current component. Properties are meant
+	for configuration and can be written to disk. Attributes export
+	a C++ class value to the interface, to be usable by scripts or
+	for debugging and are not persistent.
+      </para>
+      <para>
+	Next, the operations of this component are listed: each component
+	has some universal functions like activate, start, getPeriod etc.
+      </para>
+      <para>
+				You can see that the component is pretty empty: no data flow ports,
+				services or peers. We will add some of these right away.
+      </para>
+    </section>
+    <section>
+      <title>Listing the Interface</title>
+      <para>
+	To get an overview of the Task's interface, you can use the help
+	command, for example <emphasis>help this</emphasis> or <emphasis>help this.activate</emphasis>
+	or just short: <emphasis>help activate</emphasis>
+			</para>
+      <screen>
+Hello [R]> <command>help this</command>
+
+Printing Interface of 'Hello' :
+
+ <emphasis>activate</emphasis>( ) : bool
+   Activate the Execution Engine of this TaskContext (= events and commands).
+ <emphasis>cleanup</emphasis>( ) : bool
+   Reset this TaskContext to the PreOperational state (write properties etc).
+...
+   Stop the Execution Engine of this TaskContext.
+
+Hello [R]> <command>help getPeriod</command>
+ <emphasis>getPeriod</emphasis>( ) : double
+Get the configured execution period. -1.0: no thread associated, 0.0: non periodic, > 0.0: the period.
+
+Hello [R]> 
+      </screen>
+      <para>
+	Now we get more details about the operations
+	registered in the public interface. We see now that
+	the <emphasis>getPeriod</emphasis> operations takes no arguments
+	You can invoke each operation right away.
+    </para>
+    </section>
+    <section>
+      <title>Calling an Operation</title>
+      <screen>
+Hello [R]> <command>getPeriod()</command>
+ = <command>0</command>
+      </screen>
+      <para>
+	Operations are called directly and the TaskBrowser prints the
+	result. The return value of getPeriod() was a double, which is
+	0. This works just like calling a 'C' function.
+	You can express calling explicitly by writing:
+	<command>getPeriod.call()</command>.
+      </para>
+    </section>
+    <section>
+      <title>Sending a Operation</title>
+      <para>
+	When an operation is <emphasis>sent</emphasis> to
+	the Hello component, another thread will execute it on
+	behalf of the sender. Each sent method returns a SendHandle object.
+      </para>
+      <screen>
+Hello [R]> <command>getPeriod.send()</command>
+ = (unknown_t)
+      </screen>
+      <para>
+	The returned SendHandle must be stored in a SendHandle attribute
+	to be useful:
+      </para>
+      <screen>
+Hello [R]> <command>var SendHandle sh</command>
+Hello [R]> <command>sh = getPeriod.send()</command>
+ = true
+Hello [R]> <command>sh.collectIfDone( ret )</command>
+ = SendSuccess
+Hello [R]> <command>ret</command>
+ = 0
+      </screen>
+			<para>
+				SendHandles are further explained down the document.
+				They are not required understanding for a first discovery
+				of the Orocos world.
+			</para>
+    </section>
+    <section>
+      <title>Changing Values</title>
+      <para>
+	Besides calling or sending component methods, you can alter the
+	attributes of any task, program or state machine. The
+	TaskBrowser will confirm validity of the assignment with
+	the contents of the variable. Since Hello doesn't have any 
+	attributes, we create one dynamically:
+      </para>
+      <screen>
+Hello [R]> <command>var string the_attribute = "HelloWorld"</command>
+Hello [R]> <command>the_attribute</command>
+ = <command>Hello World</command>
+Hello [R]> <command>the_attribute = "Veni Vidi Vici !"</command>
+ = <command>"Veni Vidi Vici !"</command>
+Hello [R]> <command>the_attribute</command>
+ = <command>Veni Vidi Vici !</command>
+      </screen>
+    </section>
+    <section>
+      <title>Reading and Writing Ports</title>
+      <para>
+	The Data Ports allow seamless communication of calculation or 
+	measurement results between components. Adding and using ports is
+	described in <xref linkend="task-ports" />.
+      </para>
+<!--
+      <para>
+	Since each port has an associated service, we can inspect the
+	interface of a port by typing its name:
+      </para>
+      <screen>
+Hello [R]> the_input_port
+
+Printing Interface of 'the_input_port' :
+
+ <emphasis>connected</emphasis>( ) : bool
+   Check if this port is connected and ready for use.
+ <emphasis>disconnect</emphasis>( ) : void
+   Disconnects this port from any connection it is part of.
+ <emphasis>name</emphasis>( ) : string const&amp;
+   Returns the port name.
+ <emphasis>read</emphasis>( string &amp; sample ) : FlowStatus
+   Reads a sample from the port.
+   sample :
+      </screen>
+      <para>
+	The the_input_port service has four methods: connected(), disconnect(),
+	name() and read(). Since it's an input port, it makes sense that you can
+	read it.
+      </para>
+      <screen>
+ Hello [R]> <command>the_input_port.read(the_attribute)</command>
+ = <emphasis>NoData</emphasis>
+      </screen>
+      <para>
+	When an input port is read(), it will fill in the argument with the latest
+	data and inform you of the 'freshness' of the data: NoData, OldData or NewData.
+	NoData is returned for unconnected ports, or empty connections.
+	Writing to an outputport (using write() ) returns no value, it's purely send
+	and forget. Writing to an unconnected output port is not an error.
+      </para>
+-->
+    </section>
+<!--
+    <section>
+      <title>Advanced Component Browsing</title>
+      <para>
+	Remember that the TaskBrowser was a component as well ? When a
+	user enters <command>ls</command>, the interface of the visited
+	component is listed. It is also possible to get an 'outside'
+	view of the visited component, through the eyes of an external
+	component. The <command>leave</command> allows a view from
+	within the TaskBrowser itself:
+      </para>
+      <screen>
+Hello [R]> <command>leave</command>
+21666.113 [ Info   ][main()] Watching Task Hello
+Hello [R]&lt; <command>ls</command>
+21667.334 [ Info   ][main()] Found complete interface of requested service 'scripting'
+
+ Listing TaskContext TaskBrowser :
+
+ Configuration Properties: (none)
+
+ Execution Interface:
+  Attributes   : (none)
+  Operations      : activate cleanup configure error getPeriod inFatalError inRunTimeError isActive isConfigured isRunning resetError start stop trigger update
+
+ Data Flow Ports:
+  In(C)      string the_results   (TaskBrowser not connected to this port)
+ Out(C)      string the_buffer_port(TaskBrowser not connected to this port)
+
+ Services:
+  marshalling    ( Read and write Properties to a file. )
+  scripting      ( Services the Scripting interface. Use this object in order to load or query programs or state machines. )
+  the_buffer_port ( (No description set for this Port) )
+  the_results    ( (No description set for this Port) )
+
+ TaskBrowser Peers : Hello[R]
+
+Hello [R]&lt;</screen>
+      <para>
+	The following things are noteworthy: 'ls' shows now the
+	contents of the TaskBrowser itself and no longer of the Hello
+	Component.  In this example, the TaskBrowser has the same ports as the
+	component it visits: <emphasis>the_results</emphasis> and
+	<emphasis>the_input_port</emphasis>. These were created when
+	we connected to the component previously.
+      </para>
+      <para>
+	One can return to the 'inside' view again by typing
+	<command>enter</command>:
+      </para>
+      <screen>
+Hello [R]&lt; <command>enter</command>
+<command>1322.653 [ Info   ][main()] Entering Task Hello</command>
+Hello [R]&gt;
+      </screen>
+    </section>
+-->
+    <section>
+      <title>Last Words</title>
+      <para>
+	Last but not least, hitting TAB twice, will show you a list of
+	possible completions, such as peers, services or methods.
+      </para>
+      <para>
+	TAB completion works even across peers, such that you can type
+	a TAB completed command to another peer than the current peer.
+      </para>
+      <para>
+	In order to quit the TaskBrowser, enter <command>quit</command>:
+      </para>
+      <screen>
+ Hello [R]> <command>quit</command>
+
+1575.720 [ Info   ][ExecutionEngine::setActivity] Hello is disconnected from its activity.
+1575.741 [ Info   ][Logger] Orocos Logging Deactivated.      
+      </screen>
+      <para>
+	The TaskBrowser Component is application independent, so that
+	your end user-application might need a more suitable
+	interface. However, for testing and inspecting what is
+	happening inside your real-time programs, it is a very useful
+	tool. The next sections show how you can add properties,
+	methods etc to a TaskContext.
+      </para>
+      <note>
+	<para>
+	  If you want a more in-depth tutorial, see the rtt-exercises
+	  package which covers each aspect also shown in this manual.
+	</para>
+      </note>
+    </section>
+  </section>
+  <section id="basic-task">
+    <title>Creating a Basic Component</title>
+    <para>
+      Components are 
+      implemented by subclassing the <classname>RTT::TaskContext</classname> class.
+      It is useful speaking of a context because it defines
+      the context in which an activity (a program) operates. 
+      It defines the interface of the component, its properties,
+      its peer components and uses its
+      <classname>RTT::ExecutionEngine</classname> to execute its
+      programs and to process asynchronous messages.
+    </para>
+    <para>
+      This section walks you through the definition of an example component
+      in order to show you how you could build your own component.
+    </para>
+    <para>
+      A  new component is constructed as :
+    </para>
+    <para>
+      <programlisting>
+  #include &lt;rtt/TaskContext.hpp&gt;
+  #include &lt;rtt/Component.hpp&gt;
+
+  // we assume this is done in all the following code listings :
+  using namespace RTT;
+
+  class MyTask : public <classname>RTT::TaskContext</classname>
+  {
+  public:
+       ATask(const std::string&amp; name) : public TaskContext(name) {}
+  };
+
+  // from Component.hpp:
+  OCL_CREATE_COMPONENT( MyTask );
+      </programlisting>
+    </para>
+    <para>
+      The constructor argument is the (unique) name of the component.
+			You should create the component template and the CMakeLists.txt
+			file using the <command>orocreate-pkg</command> program such
+			that this compiles right away as in the HelloWorld example above:
+			<programlisting>
+				$ orocreate-pkg mytask
+			</programlisting>
+		</para>
+		<para>
+			You can load this package in a deployer by using the <command>import</command>
+			command at the TaskBrowser prompt and verify that it contains components 
+      using <command>displayComponentTypes()</command> in the
+      TaskBrowser. After import, <command>loadComponent("the_task","MyTask")</command>
+      loads a new component instance into the process:
+    </para>
+		<programlisting>
+      $ deployer-gnulinux
+      ...
+			Deployer [S]> import("mytask")    // 'mytask' is a directory name to import      
+			Deployer [S]> displayComponentTypes() // lists 'MyTask' among others
+			...
+			MyTask
+			...
+			Deployer [S]> loadComponent("the_task", "MyTask") // Creates a new component of type 'MyTask'
+		</programlisting>
+    <figure id="fig-a-task-context-intro">
+      <title>
+	Schematic Overview of a TaskContext
+      </title>
+      <mediaobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/ATaskContext" />
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata fileref="images/hires/ATaskContext"  width="100%" scalefit="1"/>
+	</imageobject>
+	<caption>
+	  <para>
+	    The component offers services through operations, and requests
+	    them through operation callers. The Data Flow is the propagation of data from
+	    one task to another, where one producer can have multiple
+	    consumers and the other way around.
+	  </para>
+	</caption>
+      </mediaobject>
+    </figure>
+    <para>
+      The beating hart of the component is its Execution Engine will check
+      for new messages in it's queue and execute programs which are
+      running in the task. When a TaskContext is created, the ExecutionEngine 
+      is always running. The complete state flow of a TaskContext is shown in
+      <xref linkend="fig-component-states" />. You can add code in the TaskContext
+      by implementing *Hook() functions, which will be called by the ExecutionEngine
+      when it is in a certain state or transitioning between states.
+    </para>
+    <figure id="fig-component-states">
+      <title>
+	TaskContext State Diagram
+      </title>
+      <mediaobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/ComponentStates" />
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata fileref="images/hires/ComponentStates"  width="80%" scalefit="1"/>
+	</imageobject>
+	<caption>
+	  <para>
+	    During creation, a component is in the
+	    <function>Init</function> state. When constructed, it
+	    enters the <function>PreOperational</function> or
+	    <function>Stopped</function> (default) state. If it enters
+	    the PreOperational state after construction, it requires
+	    an additional <function>configure()</function> call before
+	    it can be <function>start()</function>'ed. The figure
+	    shows that for each API function, a user 'hook' is
+	    available.
+	  </para>
+	</caption>
+      </mediaobject>
+    </figure>
+    <para>
+      The first section goes into detail on how to use these hooks.
+    </para>
+    <section><title>Task Application Code</title>
+    <para>
+      The user application code is filled in by inheriting from the
+      <classname>RTT::TaskContext</classname> and implementing the
+      'Hook' functions. There are five such functions which are called
+      when a TaskContext's state changes.
+    </para>
+    <para>
+      The user may insert his configuration-time setup/cleanup code in the
+      <function>configureHook()</function> (read XML, print status
+      messages etc.) and <function>cleanupHook()</function> (write
+      XML, free resources etc.).
+    </para>
+    <para>
+      The run-time (or: real-time) application code belongs in the
+      <function>startHook()</function>,
+      <function>updateHook()</function> and
+      <function>stopHook()</function> functions.
+    </para>
+    <programlisting>class MyTask 
+    : public <classname>RTT::TaskContext</classname>
+  {
+  public:
+       MyTask(std::string name) 
+         : <classname>RTT::TaskContext</classname>(name)
+       {
+          // see later on what to put here.
+       }
+  
+       /**
+        * This function is for the configuration code.
+        * Return false to abort configuration.
+        */
+       bool configureHook() {
+          // ...
+          return true;
+       }
+
+       /**
+        * This function is for the application's start up code.
+        * Return false to abort start up.
+        */
+       bool startHook() {
+          // ...
+          return true;
+       }
+
+       /**
+        * This function is called by the Execution Engine.
+        */
+       void updateHook() {
+          // Your component's algorithm/code goes in here.
+       }
+
+       /**
+        * This function is called when the task is stopped.
+        */
+       void stopHook() {
+          // Your stop code after last updateHook()
+       }
+
+       /**
+        * This function is called when the task is being deconfigured.
+        */
+       void cleanupHook() {
+          // Your configuration cleanup code
+       }
+  };</programlisting>
+    <important>
+      <para>
+	By default, the TaskContext enters the
+	<function>Stopped</function> state 
+	(<xref linkend="fig-component-states" />)
+	when it is created, which
+	makes <function>configure()</function> an optional call. 
+      </para>
+    </important>
+    <para> If you want to <emphasis>force</emphasis> the user to call
+    configure() of your TaskContext, set the TaskState in your constructor
+    as such:
+    </para>
+    <programlisting>class MyTask 
+    : public <classname>RTT::TaskContext</classname>
+  {
+  public:
+       MyTask(std::string name) 
+         : <classname>RTT::TaskContext</classname>(name, <emphasis>PreOperational</emphasis>) // demand configure() call.
+       {
+          //...
+       }
+  };</programlisting>
+    <para>
+      When <function>configure()</function> is called, the
+      <function>configureHook()</function> (which <emphasis>you</emphasis>
+      must implement!) is executed and must return
+      false if it failed. The TaskContext drops to the
+      <function>PreOperational</function> state in that case.
+      When <function>configureHook()</function> succeeds, the
+      TaskContext enters the <function>Stopped</function> state
+      and is ready to run.
+    </para>
+    <para>
+      A TaskContext in the <function>Stopped</function> state
+      (<xref linkend="fig-component-states" />)
+      may be <function>start()</function>'ed upon which
+      <function>startHook()</function> is called once and may abort
+      the start up sequence by returning false. If true, it enters the
+      <function>Running</function> state and
+      <function>updateHook()</function> is called (a)periodically by
+      the ExecutionEngine, see below.  When the task is
+      <function>stop()</function>'ed, <function>stopHook()</function>
+      is called after the last <function>updateHook()</function> and
+      the TaskContext enters the <function>Stopped</function> state
+      again. Finally, by calling <function>cleanup()</function>, the
+      <function>cleanupHook()</function> is called and the TaskContext
+      enters the <function>PreOperational</function> state.
+    </para>
+    </section>
+    <section>
+      <title>Starting a Component</title>
+      <para>
+	The functionality of a component, i.e. its algorithm, is executed
+	by its internal Execution Engine.  To run a TaskContext, you
+	need to use one of the
+	<classname>RTT::base::ActivityInterface</classname> classes from the
+	RTT, most likely <classname>RTT::Activity</classname>.  This
+	relation is shown in <xref linkend="fig-task-execution" />.
+	The Activity class allocates a thread which executes the
+	Execution Engine. The chosen
+	<classname>Activity</classname> object will run
+	the Execution Engine, which will in turn call the
+	application's hooks above. When created, the TaskContext is assigned
+	the <classname>RTT::Activity</classname> by default.
+	It offers an internal thread which can receive messagse
+	and process events but is not periodicly executing
+	updateHook().
+      </para>
+      <figure id="fig-task-execution">
+      <title>
+	Executing a TaskContext
+      </title>
+      <mediaobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/TaskContextExecution" />
+	</imageobject>
+	<imageobject role="fo">
+	  <imagedata fileref="images/hires/TaskContextExecution"  width="100%" scalefit="1"/>
+	</imageobject>
+	<caption>
+	  <para>You can make a TaskContext 'active' by creating
+	  an Activity object which executes its Execution Engine.
+	  </para>
+	</caption>
+      </mediaobject>
+    </figure>
+    <section><title>Periodic Execution</title>
+      <para>
+	A common task in control is executing an algorithm periodically.
+	This is done by attaching an activity to the Execution Engine
+	which has a periodic execution time set.
+	<programlisting>
+  #include &lt;rtt/Activity.hpp&gt;
+
+  using namespace RTT;
+
+  <classname>RTT::TaskContext</classname>* a_task = new MyTask("the_task");
+  // Set a periodic activity with priority=5, period=1000Hz
+  a_task->setActivity( new <classname>RTT::Activity</classname>( 5, 0.001 ));
+  // ... start the component:
+  a_task->start(); 
+  // ...
+  a_task->stop();</programlisting></para>
+      <para>
+	Which will run the Execution Engine of "ATask" with a
+	frequency of 1kHz. This is the frequency at which state
+	machines are evaluated, program steps taken, methods and
+	messages are accepted and executed and the application code in
+	<function>updateHook()</function> is run. Normally this activity
+	is always running, but you can stop and start it too.
+      </para>
+      <para>
+	You don't need to create a new Activity if you want to switch
+	to periodic execution, you can also use the <function>setPeriod</function>
+	function:
+	<programlisting>
+  // In your TaskContext's configureHook():
+  bool configureHook() {
+      return this->setPeriod(0.001); // set to 1000Hz execution mode.
+  }</programlisting></para>
+      <para>
+	An <function>updateHook()</function> function of a periodic
+	task could look like:
+	<programlisting>  class MyTask 
+    : public <classname>RTT::TaskContext</classname>
+  {
+  public:
+       // ...
+  
+       /**
+        * This function is periodically called.
+        */
+       void updateHook() {
+          // Your algorithm for periodic execution goes inhere
+          double result;
+          if ( inPort.read(result) == NewData )
+              outPort.write( result * 2.0 ); // only write if new data arrived.
+       }
+
+  };</programlisting></para>
+       <para>You can find more detailed information in
+       <xref linkend="corelib-activities" /> in the CoreLib
+       reference.</para>
+    </section>
+    <section><title>Default Component Execution Semantics</title>
+      <para>
+	A TaskContext is run by default by a non periodic RTT:Activity object. This
+	is useful when <function>updateHook()</function> only needs
+	to process data when it arrives on a port or must wait on
+	network connections or does any other blocking operation.
+      </para>
+      <para>
+	Upon start(), the Execution Engine waits for new methods or data to
+	come in to be executed. Each time such an event happens, the user's
+	application code (<function>updateHook()</function>) is called 
+	after the Execution Engine did its work.
+      </para>
+      <para>
+	An <function>updateHook()</function> function of a non periodic
+	task could look like:
+	<programlisting>  class MyTask 
+    : public <classname>RTT::TaskContext</classname>
+  {
+  public:
+       // ...
+  
+       /**
+        * This function is only called by the Execution Engine 
+        * when 'trigger()' is called or an event or command arrives.
+        */
+       void updateHook() {
+            // Your blocking algorithm goes inhere
+            char* data;
+            double timeout = 0.02; // 20ms
+            int rv = my_socket_read(data, timeout);
+
+            if (rv == 0) {
+               // process data
+               this->stateUpdate(data);
+            }
+	    <emphasis>
+            // This is special for non periodic activities, it makes
+            // the TaskContext call updateHook() again after
+            // commands and events are processed.</emphasis>
+            this->getActivity()->trigger(); 
+       }
+
+  };</programlisting></para>
+      <warning>
+	<para>
+	  Non periodic activities should be used with care and with
+	  much thought in combination with scripts (see later). The
+	  ExecutionEngine will do <emphasis>absolutely
+	  nothing</emphasis> if no asynchronous methods or <emphasis>asynchronous
+	  events</emphasis> or no <emphasis>trigger</emphasis> comes
+	  in.  This may lead to surprising 'bugs' when program scripts
+	  or state machine scripts are executed, as they will only
+	  progress upon these events and seem to be stalled otherwise.
+	</para>
+      </warning>
+       <para>You can find more detailed information in
+       <xref linkend="corelib-activities" /> in the CoreLib
+       reference.</para>
+      </section>
+    </section>
+    <section id="task-ports">
+      <title>Data Flow Ports</title>
+      <note><title>Purpose</title>
+	<para>A component has ports in order to send or receive a
+	  stream of data. The algorithm writes Output ports to publish
+	  data to other components, while input ports allow an
+	  algorithm to receive data from other components.  A
+	  component can be woken up if data arrives at one or more
+	  input ports or it can 'poll' for new data on its input
+	  ports.
+	</para>
+	<para>
+	  Reading and writing data ports is always real-time and
+	  thread-safe, on the condition that copying your data
+	  (i.e. your operator= ) is as well.
+	</para>
+      </note>
+      <para>
+	Each component defines its data exchange ports and connections
+	transmit data from one port to another. A Port is defined by a
+	name, unique within that component, the data type it wants to
+	exchange and if its for reading (Input) or writing (Output) data samples.
+	Finally,
+	you can opt that new data on selected Input ports wake up your task.
+	The example below shows all these possibilities.
+      </para>
+      <para>
+	Each connection between an Output port and an Input port can
+	be tuned for your setup: buffering of data, thread-safety
+	and initialisation of the connection are parameters provided
+	by the user when the connection is created. We call these
+	<emphasis>Connection Policies</emphasis> and use the
+	<classname>RTT::ConnPolicy</classname>
+	object when creating the connection between ports.
+      </para>
+      <figure id="fig-data-flow-ports">
+	<title>
+	  Data flow ports are connected with a connection policy
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/DataFlowPorts" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/DataFlowPorts"  width="80%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>
+	      This figure shows that input and output ports
+	      can be connected in an N:M way. See
+	      <xref linkend="setup-data-flow" /> on how to connect ports and
+	      which connection policy to choose.
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+      <section>
+	<title>Which data can be transfered ?</title>
+	<para>
+	  The data flow implementation can pass on any data type 'X', given
+	  that its class provides:
+	  <itemizedlist>
+	    <listitem><para>A default constructor: X::X()</para></listitem>
+	    <listitem><para>An assignment operator: const X&amp; X::operator=(const X&amp; )</para></listitem>
+	  </itemizedlist>
+	  For real-time data transfer (see also <xref
+	  linkend="guarantee-rt-data-flow" />) the operator= must be
+	  real-time when assigning equal sized objects. When assigning not
+	  equal sized objects, your operator= should free the memory and
+	  allocate enough room for the new size.
+	</para>
+	<para>
+	  In addition, if you want to send your data out of your
+	  process to another process or host, it will additionally
+	  need:
+	  <itemizedlist>
+	    <listitem><para>Registration of 'X' with the type system (see the manual about Typekits)</para></listitem>
+	    <listitem><para>A transport for the data type registered with the type system (see the transport (ROS,CORBA,MQueue,...) documentation)</para></listitem>
+	  </itemizedlist>
+	  The standard C++ and std::vector&lt;double> data types are
+	  already included in the RTT library for real-time transfer
+	  and out of process transport.
+	</para>
+      </section>
+      <section>
+	<title>Setting up the Data Flow Interface</title>
+	<para>
+	  Any kind of data can be exchanged (also user defined C/C++ types)
+	  but for readability, only the 'double' C type is used here.
+	  <programlisting>  #include &lt;rtt/Port.hpp&gt;
+  using namespace RTT;
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+    // Input port: We'll let this one wake up our thread
+    <classname>RTT::InputPort</classname>&lt;double&gt; evPort;
+
+    // Input port: We will poll this one
+    <classname>RTT::InputPort</classname>&lt;double&gt; inPort;
+
+    // Output ports are allways 'send and forget'
+    <classname>RTT::OutputPort</classname>&lt;double&gt; outPort;
+  public:
+    // ...
+    MyTask(std::string name)
+      : <classname>RTT::TaskContext</classname>(name)
+    {
+       // an 'EventPort' is an InputPort which wakes our task up when data arrives.
+       this->ports()->addEventPort( "evPort", evPort ).doc( "Input Port that raises an event." );
+
+       // These ports do not wake up our task
+       this->ports()->addPort( "inPort", inPort ).doc( "Input Port that does *not* raise an event." );
+       this->ports()->addPort( "outPort", outPort ).doc( "Output Port, here write our data to." );
+
+       // more additions to follow, see below
+     }
+
+     // ...
+  };</programlisting>
+      </para>
+      <para>
+	The example starts with declaring all the ports of MyTask. A
+	template parameter '&lt;double&gt;' specifies the type of data
+	the task wants to exchange through that port. Logically, if
+	input and output are to be connected, they must agree on this type.
+	The name is given in the addPort() function. This
+	name can be used to 'match' ports between connected tasks
+	( using 'connectPorts', see <xref linkend="connect-tasks" /> ),
+	but it is possible <emphasis>and preferred</emphasis> to connect Ports with different names
+	using the Orocos deployer.
+      </para>
+      <para>
+	There are two ways to add a port to the TaskContext interface:
+	using <function>addPort()</function>
+	or <function>addEventPort()</function>. In the latter case,
+	new data arriving on the port will wake up ('trigger') the
+	activity of our TaskContext and updateHook() get's executed.
+      </para>
+      <note>
+	<para>
+	  Only <classname>RTT::InputPort</classname> can be added as EventPort and
+	  will cause your component to be triggered (ie wake up and
+	  call updateHook).
+	</para>
+	</note>
+      </section>
+      <section id="guarantee-rt-data-flow">
+	<title>Guaranteeing Real-Time data flow</title>
+	<para>
+	  The data flow implementation is written towards hard real-time data
+	  transfer, if the data type allows it. Simple data types, like
+	  a double or struct with only data which can be copied without
+	  causing memory allocations work out of the box. No special measures
+	  must be taken and the port is immediately ready to use.
+	</para>
+	<para>
+	  If however, your type is more complex, like a std::vector
+	  or other dynamically sized object, additional setup steps
+	  must be done. First, the type must guarantee that its
+	  operator=() is real-time in case two equal-sized objects
+	  are used. Second, before sending the first data
+	  to the port, a properly sized data sample must be given
+	  to the output port. An example:
+	  <programlisting>  OutputPort&lt;std::vector&lt;double> > myport("name");
+
+  // create an example data sample of size 10:
+  std::vector&lt;double> example(10, 0.0);
+
+  // show it to the port (this is a not real-time operation):
+  myport.setDataSample( example );
+	    
+  // Now we are fine ! All items sent into the port of size 10 or less will
+  // be passed on in hard real-time.  
+  myport.write( example ); // hard real-time.
+</programlisting>
+          setDataSample does not actually send the data to all receivers,
+	  it just uses this sample to initiate the connection, such that
+	  any subsequent writes to the port with a similar sample will
+	  be hard real-time. If you omit this call, data transfer will
+	  proceed, but the RTT makes no guarantees about real-timeness
+	  of the transfer.
+	</para>
+	<para>
+	  The same procedure holds if you use transports to send data
+	  to other processes or hosts. However, it will be the transport
+	  protocol that determines if the transfer is real-time or not.
+	  For example, CORBA transports are not hard real-time, while
+	  MQueue transports are.
+	</para>
+      </section>
+      <section>
+	<title>Using the Data Flow Interface in C++</title>
+	<para>
+	  The Data Flow interface is used by your task from within
+	  the program scripts or its <function>updateHook()</function>
+	  method. Logically the script or method reads the inbound
+	  data, calculates something and writes the outbound data.
+	</para>
+	<programlisting>  #include &lt;rtt/Port.hpp&gt;
+  using namespace RTT;
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+     // ...Constructor sets up Ports, see above.
+
+     bool startHook() {
+       // Check validity of (all) Ports:
+       if ( !inPort.connected() ) {
+          // No connection was made, can't do my job !
+          return false;
+       }
+       if ( !outPort.connected() ) {
+          // ... not necessarily an error, a connection may be
+          // made while we are running.
+       }
+       return true;
+     }
+
+     /**
+      * Note: use updateHook(const std::vector&lt;PortInterface*&gt;&amp;)
+      * instead for having information about the updated event 
+      * driven ports.
+      */
+     void updateHook() {
+
+       double val = 0.0; 
+
+       // Possible return values are: NoData, OldData and NewData.
+       if ( inPort.read(val) == RTT::NewData ) {
+         // <emphasis>update val...</emphasis>
+         outPort.write( val );
+       }
+     }
+     // ...
+  };</programlisting>
+	<para>
+	  It is wise to check in the <function>startHook()</function>
+	  ( or earlier: in <function>configureHook()</function> )
+	  function if all necessary ports are
+	  <function>connected()</function>.  At this point, the task
+	  start up can still be aborted by returning false. Otherwise,
+	  a write to an unconnected output port will be discarded,
+	  while a read from an unconnected input port returns NoData.
+	</para>
+      </section>
+      <section>
+	<title>Using Data Flow in Scripts</title>
+	<para>
+	  When a Port is added, it becomes available to the
+	  Orocos scripting system such that (part of) the calculation
+	  can happen in a script. Also, the TaskBrowser can then
+	  be used to inspect the contents of the DataFlow on-line.
+	</para>
+	<note><para>In scripting, it is currently not yet possible to 
+	    know which event port woke your task up.</para></note>
+	<para>
+	  A small program script could be loaded into MyTask with
+	  the following contents:
+	  <programlisting>  program MyControlProgram {
+    var double the_K  = K        // read task property, see later.
+    var double setp_d
+
+    while ( true ) {
+      if ( SetPoint_X.read( setp_d ) != NoData ) {   // read Input Port
+        var double in_d = 0.0;
+        Data_R.read( in_d )             // read Input Port
+        var double out_d = (setp_d - in_d) * the_K  // Calculate
+        Data_W.write( out_d )          // write Data Port
+      }
+      yield       // this is a 'yield' point to avoid inifinite spinning.
+    }
+  } </programlisting>
+         The program "MyControlProgram" starts with declaring
+	 two variables and reading the task's Property 'K'.
+	 Then it goes into an endless loop, trying to Pop
+	 a set point value from the "SetPoint_X" Port. If that succeeds (new or old data present)
+	 the  "Data_R" Port is read and a simple 
+	 calculation is done. The result is written to the
+	 "Data_W" OutputPort and can now be read by the other
+	 end(s). Alternatively, the result may be directly
+	 used by the Task in order to write it to a device
+	 or any non-task object. You can use methods (below)
+	 to send data from scripts back to the C++ implementation.
+	</para>
+	<para>
+	  Remark that the program is executed within the thread of the component.
+	  In order to avoid the endless loop, a 'wait' point
+	  must be present. The "yield" command inserts such a
+	  wait point and is part of the Scripting syntax.  If you plan
+	  to use Scripting state machines, such a
+	  <function>while(true)</function> loop (and hence wait point)
+	  is not necessary. See the Scripting Manual for a full
+	  overview of the syntax.
+	</para>
+      </section>
+    </section>
+    <section id="task-operations">
+      <title>The OperationCaller/Operation Interface</title>
+      <note><title>Purpose</title><para>A task's operations
+        define which functions a component offers. Operations are grouped
+        in 'services', much like C++ class methods are grouped in classes.
+        OperationCallers are helper objects for calling operations.
+      </para>
+      </note>
+      <para>
+	Operations are C/C++ functions that can be used
+	in scripting or can be called from another process or accross a network.
+	They take arguments and return a value.
+	The return value can in return be used as an argument
+	for other Operations or stored in a variable.
+      </para>
+      <para>
+	To add a C/C++ function to the operation interface, you
+	only need to register it with <function>addOperation()</function>,
+	defined in <classname>RTT::Service</classname>.
+      </para>
+      <para>
+	<programlisting>
+  #include &lt;rtt/Operation.hpp&gt;
+  using namespace RTT;
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+    public:
+    void reset() { ... }
+    string getName() const { ... }
+    double changeParameter(double f) { ... }
+    // ...
+ 
+    MyTask(std::string name)
+      : <classname>RTT::TaskContext</classname>(name),
+    {
+       // Add the method objects to the method interface:
+       this->addOperation( "reset",  &amp;MyTask::reset, this, <emphasis>OwnThread</emphasis>)
+                                   .doc(&quot;Reset the system.&quot;);
+       this->addOperation( "getName", &amp;MyTask::getName, this, <emphasis>ClientThread</emphasis>)
+                                   .doc(&quot;Read out the name of the system.&quot;);
+       this->addOperation( "changeParameter", &amp;MyTask::changeParameter, this, <emphasis>OwnThread</emphasis>)
+                                   .doc(&quot;Change a parameter, return the old value.&quot;)
+                                   .arg(&quot;New Value&quot;, &quot;The new value for the parameter.&quot;); 
+
+       // more additions to follow, see below
+     }
+     // ...
+  };</programlisting>
+      </para>
+      <para>
+	In the above example, we wish to add 3 functions to the
+	method interface: reset, getName and changeParameter. You
+	need to pass the name of the function, address (function pointer) of this function
+	and the object on which it must be called (this) to addOperation. Optionally,
+	you may document the operation with .doc("...") and each argument with a .arg() 
+	call.
+      </para>
+      <para>
+	Using this mechanism, any method of <emphasis>any</emphasis>
+	class can be added to a task's method interface, not just functions of a TaskContext 
+	You can also add plain C functions, just omit the <emphasis>this</emphasis> pointer.
+      </para>
+      <para>
+        As the last argument to addOperation, a flag can be passed which can be <emphasis>OwnThread</emphasis>
+	or <emphasis>ClientThread</emphasis>. This allows the component implementer to choose
+	if the operation, when called, is executed in the thread of the ExecutionEngine,
+	or in the thread of the caller (i.e. the Client). This choice is hidden from the user
+	of our operations. It allows us to choose who gets the burden of the execution of the
+	function, but also allows to synchronize operation calls with the execution of
+	updateHook(). Summarized in a table:
+      </para>
+	<table id="execution-types-table">
+	  <title>Execution Types</title>
+	  <tgroup cols="4">
+	    <thead>
+	      <row>
+		<entry>ExecutionType</entry>
+		<entry>Requires locks in your component?</entry>
+		<entry>Executed at priority of</entry>
+		<entry>Examples</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>ClientThread</entry>
+		<entry>Yes. For any data shared between the ClientThread-tagged operation and updateHook() or other operations.</entry>
+		<entry>Caller thread</entry>
+		<entry><itemizedlist>
+		  <listitem><para>Stateless algorithms that get all data through parameters.</para></listitem>
+		  <listitem><para>Operations of real-time components that are not real-time.</para></listitem>
+		  <listitem><para>getName(), loadProperties("file.xml"), ... </para></listitem>
+		</itemizedlist>
+		</entry>
+	      </row>
+	      <row>
+		<entry>OwnThread</entry>
+		<entry>No. Every OwnThread-tagged operation and updateHook() is executed in the thread of the component.</entry>
+		<entry>Component thread.</entry>
+		<entry><itemizedlist>
+		  <listitem><para>Operations that do a lot of setup work in the component.</para></listitem>
+		  <listitem><para>Operations which are called from several places at the same time.</para></listitem>
+		  <listitem><para>moveToPosition(pos, time), setParameter("name", value),...</para></listitem>
+		</itemizedlist>
+		</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+        <para>
+	  The choice of this type is completely up to the implementor
+	  of the component and can be made independently of how it
+	  will be used by its clients. Clients can indicate the same
+	  choice indepenently: they can Call or Send an
+	  operation. This is explained in the next two sections.
+	</para>
+	<section>
+	  <title>Call versus Send: the OperationCaller object</title>
+	  <para>
+	    Operations are added to the TaskContext's inteface. To
+	    call an operation from another component, you need a
+	    OperationCaller object to do the work for you. It allows to modes:
+	    <itemizedlist>
+	      <listitem><para>calling the operation, in which case you block until the
+	    operation returns its value</para></listitem>
+	      <listitem><para>sending the operation, in which case you get a SendHandle
+	    back which allows you to follow its status and collect the results.</para></listitem>
+	    </itemizedlist>
+	    One OperationCaller object always offers both choices, and they can
+	    be used both interweaved, as far as the allocation scheme
+	    allows it. See <xref linkend="method-allocation" />. 
+	    Calling is used by default if you don't specify which mode
+	    you want to use.
+	  </para>
+	  <para>
+	    Each OperationCaller object is
+	    templated with the function signature of the operation you
+	    wish to call.  For example 
+	    <programlisting>void(int,double)</programlisting>
+	    which is the signature of a
+	    function returning 'void' and having two arguments: an
+	    'int' and a 'double', for example, <function>void foo(int
+	    i, double d);</function>.
+	  </para>
+	  <para>
+	    To setup a OperationCaller object, you need a pointer to a TaskContext object, for example
+	    using the 'getPeer()' class function. Then you provide the
+	    name with which the operation was registered during 'addOperation':
+	</para>
+	<programlisting>  // create a method:
+  TaskContext* a_task_ptr = getPeer("ATask");
+  OperationCaller&lt;void(void)&gt; my_reset_meth 
+       = a_task_ptr->getOperation("reset"); // void reset(void)
+
+  // Call 'reset' of a_task:
+  reset_meth();  </programlisting>
+      <para>
+	If you wanted to send the same reset operation, you had written:
+      </para>
+	<programlisting>  // Send 'reset' of a_task:
+  SendHandle&lt;void(void)&gt; handle = reset_meth.send();  </programlisting>
+      <para>A send() always returns a SendHandle object which offers three
+        methods: <function>collect()</function>, 
+	<function>collectIfDone()</function> and <function>ret()</function>.
+	All three come in two forms: with arguments or without arguments.
+	The form without arguments can be used if you are only interested in
+	the return values of these functions. collect() and collectIfDone()
+	return a SendStatus, ret() returns the return value of the operation.
+	SendStatus is an enum of SendSuccess, SendNotReady or SendFailure.
+	Code says it all:
+      </para>
+	<programlisting>  // Send 'reset' of a_task:
+  SendHandle&lt;void(void)&gt; handle = reset_meth.send();  
+
+  // polling for reset() to complete:
+  while (handle.collectIfDone() == SendNotReady )
+      sleep(1);
+
+  // blocking for reset() to complete:
+  handle = reset_meth.send();
+  SendStatus ss = handle.collect();
+  if (ss != SendSuccess) {
+      cout &lt;&lt; "Execution of reset failed." &lt;&lt; endl;
+  }
+
+  // retrieving the return value is not possible for a void(void) method. </programlisting>
+      <para>
+	Next we move on to methods with arguments and return values by using
+	the getName and changeParameter operations:
+      </para>
+      <programlisting>  // used to hold the return value of getName:
+  string name;
+  OperationCaller&lt;string(void)> name_meth = 
+    a_task_ptr->getOperation("getName"); // string getName(void)
+
+  // Call 'getName' of a_task:
+  name = name_meth();
+  // Equivalent to:
+  name = name_meth.call();
+
+  cout &lt;&lt; "Name was: " &lt;&lt; name &lt;&lt; endl; 
+
+  // Send 'getName' to a_task:
+  SendHandle&lt;string(void)> nhandle = name.send();
+
+  // collect takes the return value of getName() as first argument and fills it in:
+  SendStatus ss = nhandle.collect(name);
+  if (ss == SendSuccess) {
+    cout &lt;&lt; "Name was: " &lt;&lt; name &lt;&lt; endl; 
+  }
+
+  assert( name == nhandle.ret() ); // ret() returns the same as getName() returned. 
+
+  // hold return value of changeParameter:
+  double oldvalue;
+  OperationCaller&lt;double(double)> mychange =
+      a_task_ptr->getOperation("changeParameter"); // double changeParameter(double)
+
+  // Call 'changeParameter' of a_task with argument '1.0'
+  oldvalue = mychange( 1.0 );
+  // Equivalent to:
+  oldvalue = mychange.call( 1.0 );
+
+  // Send 'changeParameter' to a_task:
+  SendHandle&lt;double(double)> chandle = changeParameter.send( 2.0 )
+
+  SendStatus ss = chandle.collectIfDone( oldvalue );
+  if (ss == SendSuccess) {
+      cout &lt;&lt; "Oldvalue was: " &lt;&lt; oldvalue &lt;&lt; endl;
+  }  </programlisting>
+       <para>
+	 Up to 4 arguments can be given to send or call. If the signature of the OperationCaller was
+	 not correct, the method invocation will be throw.
+	 One can check validity of a method object with the
+	 'ready()' function:
+       </para>
+       <programlisting>  OperationCaller&lt;double(double)> mychange = ...;
+  assert( mychange.ready() );</programlisting>
+<!--- OperationCallerC must go to -devel manual.
+      <para>
+	However, the return value
+	con only be stored in a variable:
+      </para>
+      <programlisting>  // used to store the return value:
+  string name;
+  OperationCallerC name_meth = 
+    a_task.methods()->create("this", "name").ret( name );
+
+  // Call 'name' of a_task:
+  bool result = name_meth.execute(); 
+
+  cout &lt;&lt; "Name was: " &lt;&lt; name &lt;&lt; endl; 
+
+  // store return value.
+  double oldvalue;
+  // const argument (note: 'argC'):
+  OperationCallerC mychange_1 =
+      a_task.methods()->create("this", "changeP").argC(1.0).ret( oldvalue );
+
+  // this example ignores the return value.
+  // variable argument (note: 'arg'):
+  double d_arg = 1.23;
+  OperationCallerC mychange_2 =
+      a_task.methods()->create("this", "changeP").arg( d_arg );
+
+  // Call 'changeParameter' of a_task with argument '1.0'
+  bool result_1 = mychange_1.execute();
+  // oldvalue now contains previous value.
+
+  // Call 'changeParameter' of a_task, reads contents of d_arg.
+  bool result_2 = mychange_2.execute();</programlisting>
+       <para>
+	 Any number of arguments can be given (just add
+	 .arg(X).arg(Y).arg(Z) etc ), but an error will be logged when
+	 a wrong number or wrong type of argument is given.
+       </para>
+       -->
+      </section>
+      <section>
+	<title>Calling/Sending Operations in Scripts</title>
+	<para>
+	  The syntax in scripts is the same as in C++:</para>
+	<para>
+	<programlisting> // call:
+  var double oldvalue
+  ATask.changeParameter( 0.1 )
+  // or :
+  set oldvalue = ATask.changeParameter( 0.1 ) // store return value 
+
+  // send:
+  var SendHandle handle;
+  var SendStatus ss;
+  handle = ATask.changeParameter.send( 2.0 );
+
+  // collect non-blocking:
+  while ( handle.collectIfDone( oldvalue ) ) 
+     yield // see text below.
+   
+  // collect blocking:
+  handle.collect( oldvalue ); // see text below.
+</programlisting></para>
+         <para> There is an important difference between collect()
+	   and collectIfDone() in scripts. collect() will block your
+	   whole script, so also other scripts executed in the ExecutionEngine
+	   and updateHook(). The only exception is that incomming
+	   operations are still processed, such that call-backs are allowed.
+	   For example: if ATask.changeParameter( 0.1 ) does in turn a send on your component,
+	   this will be processed such that no dead-lock occurs.</para>
+	 <para>
+	   If you do not wish to block unconditionally on the completion
+	   of changeParameter(), you can poll with collectIfDone(). Each time
+	   the poll fails, you issue a yield (in RTT 1.x this was 'do nothing').
+	   Yield causes temporary suspension of your script, such that other scripts
+	   and updateHook() get a chance to run. In the next trigger
+	   of your component, the program resumes and the while loop checks
+	   the collectIfDone() statement again.
+	 </para>
+      </section>
+      <section>
+	<title>Overview: Who's executing the operation ?</title>
+	 <para>
+	   Considering all the combinations above, 4 cases can occur:   
+	 </para>
+	<table id="calling-combination-table">
+	  <title>Call/Send and ClientThread/OwnThread Combinations</title>
+	  <tgroup cols="3">
+	    <thead>
+	      <row>
+		<entry>OperationCaller-v \ Operation-></entry>
+		<entry>ClientThread</entry>
+		<entry>OwnThread</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>Call</entry>
+		<entry>Executed directly by the thread that does the call()</entry>
+		<entry>Executed by the ExecutionEngine of the receiving component.</entry>
+	      </row>
+	      <row>
+		<entry>Send</entry>
+		<entry>Executed by the GlobalExecutionEngine. See text below.</entry>
+		<entry>Executed by the ExecutionEngine of the receiving component.</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+	<para>
+	  This matrix shows a special case: when the client does a send() and 
+	  the component defined the operation as 'ClientThread', someone else
+	  needs to execute it. That's the job of the GlobalExecutionEngine.
+	  Since no thread wishes to carry the burden of executing this function,
+	  the GlobalExecutionEngine, which runs with the lowest priority thread in the system, 
+	  picks it up.
+	</para>
+      </section>
+      <section id="method-allocation">
+	<title>Executing methods in real-time.</title>
+	 <para>
+	   Calling or sending a method has a cost in terms of memory.
+	   The implementations needs to allocate memory to collect the 
+	   return values when a send or call is done. There are two ways
+	   to claim memory: by using a real-time memory allocator or by
+	   setting a fixed amount in the OperationCaller object in advance. The
+	   default is using the real-time memory allocator. For mission
+	   critical code, you can override this with a reserved amount,
+	   which will be guaranteed always available for that object.
+	 </para>
+	 <para>
+	   (to be completed).
+	 </para>
+      </section>
+    <section id="method-args-types">
+      <title>Operation Argument and Return Types</title>
+      <para>
+	The arguments can be of any class type and type qualifier
+	(const, &amp;, *,...). However, to be compatible with inter-process
+	communication or the Orocos Scripting variables, it is best to follow the
+	following guidelines :
+	<table id="method-args-table">
+	  <title>Operation Return &amp; Argument Types</title>
+	  <tgroup cols="3">
+	    <thead>
+	      <row>
+		<entry>C++ Type</entry>
+		<entry>In C++ functions passed by</entry>
+		<entry>Maps to Parser variable type</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>Primitive C types : double, int, bool, char</entry>
+		<entry><emphasis>value</emphasis> or reference</entry>
+		<entry>double, int, bool, char</entry>
+	      </row>
+	      <row>
+		<entry>C++ Container types : std::string, std::vector&lt;double&gt;</entry>
+		<entry><emphasis>(const) &amp;</emphasis></entry>
+		<entry>string, array</entry>
+	      </row>
+	      <row>
+		<entry>Orocos Fixed Container types : RTT::Double6D, KDL::[Frame | Rotation | Twist | ... ]</entry>
+		<entry><emphasis>(const) &amp;</emphasis></entry>
+		<entry>double6d, frame, rotation, twist, ...</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+      </para>
+      <para>
+	Summarised, every non-class argument is best passed by value,
+	and every class type is best passed by const reference. The parser
+	does handle references (&amp;) in the arguments or return type as well.
+      </para>
+    </section>
+  </section>
+  <section id="task-attr-rep">
+    <title>The Attributes and Properties Interface</title>
+      <note><title>Purpose</title><para>A task's
+      properties are intended to configure and tune a task with
+      certain values. Properties have the advantage of being writable
+      to an XML format, hence can store 'persistent' state.  For
+      example, a control parameter. Attributes reflect a C++ class variable in
+      the interface and can be read and written during run-time
+      by a program script, having the same data as if it was a C++ function.
+      </para>
+      <para>
+	Reading and writing properties and attributes is real-time but
+	not thread-safe and should for a <emphasis>running</emphasis>
+	component be limited to the task's own activity.
+      </para>
+      </note>
+    <para>
+      A TaskContext may have any number of attributes or properties,
+      of any type. They can be used by programs in the
+      TaskContext to get (and set) configuration data.
+      The task allows to store any C++ value type and
+      also knows how to handle Property objects. Attributes are plain
+      variables, while properties can be written to and updated from an XML file.
+    </para>
+    <section>
+      <title>Adding Task Attributes or Properties</title>
+      <para>
+	An attribute can be added in the comonent's interface
+	(<classname>RTT::ConfigurationInterface</classname>) like this :</para>
+      <para>
+	<programlisting>  #include &lt;rtt/Property.hpp>
+  #include &lt;rtt/Attribute.hpp>
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+     // we will expose these:
+     bool aflag;
+     int max;
+
+     double pi;
+
+     std::string param;
+     double value;
+  public:
+    // ...
+    MyTask(std::string name)
+      : <classname>RTT::TaskContext</classname>(name),
+        param("The String"),
+        value( 1.23 ),
+        aflag(false), max(5), pi(3.14)
+    {
+       // other code here...
+
+       // attributes and constants don't take a .doc() description.
+       this->addAttribute( "aflag", aflag );
+       this->addAttribute( "max", max );
+      
+       this->addConstant( "pi", pi );
+
+       this->addProperty( "Param", param ).doc("Param Description");
+       this->addProperty( "Palue", value ).doc("Value Description");
+     }
+     // ...
+  };
+</programlisting></para>
+      <para>
+	Which aliases an attribute of type bool and int, name 'aflag' and 'max' and initial
+	value of false and 5 to the task's interface. A constant alias 'pi' is added as well.
+	These methods return false if an attribute with that name already exists.
+	Adding a Property is also straightforward. The property is added in a 
+	<classname>RTT::PropertyBag</classname>.
+      </para>
+    </section>
+    <section>
+      <title>Accessing Task Attributes or Properties in C++</title>
+      <para>
+	An attribute is used in your C++ code transparantly. For properties, you
+	need their set() and get() methods to write and read them.
+      </para>
+      <para>
+	A external task can access attributes through an Attribute object and the getValue method:
+    <programlisting>  Attribute&lt;bool> the_flag = a_task->getValue("aflag");
+  assert( the_flag.ready() );
+
+  bool result = the_flag.get();
+  assert( result == false );
+
+  Attribute&lt;int> the_max = a_task->attributes()->getAttribute("max");
+  assert( the_max.ready() );
+  the_max.set( 10 );
+  assert( the_max.get() == 10 );</programlisting>
+  The attributes 'the_flag' and 'the_max' are mirrors of the
+  original attributes of the task.
+      </para>
+      <para>
+	See also <xref linkend="corelib-properties" /> in
+	the Orocos CoreLib reference.
+      </para>
+    </section>
+    <section>
+      <title>Accessing Task Attributes in Scripts</title>
+      <para>
+	A program script can access the above attributes simply by naming them:</para>
+      <para>
+	<programlisting>  // a program in "ATask" does :
+  var double pi2 = pi * 2.
+  var int    myMax = 3
+  set max = myMax
+
+  set Param = "B Value"</programlisting>
+	<programlisting>  // an external (peer task) program does :
+  var double pi2 = ATask.pi * 2.
+  var int    myMax = 3
+  set ATask.max = myMax	</programlisting></para>
+      <para>
+	When trying to assign a value to a constant, the script parser
+	will throw an exception, thus before the program is run.
+      </para>
+      <important>
+	<para>
+	  The same restrictions of <xref linkend="method-args-types" /> hold for
+	  the attribute types, when you want to access them from program scripts.
+	</para>
+      </important>
+      <para>
+	See also <xref linkend="corelib-attributes" /> in
+	the Orocos CoreLib reference.
+      </para>
+    </section>
+    <section>
+      <title>Reading and writing Task Properties from XML</title>
+      <para>
+	See <xref linkend="task-property-config" /> for storing and loading
+	the Properties to and from files, in order to store a TaskContext's state.
+      </para>
+    </section>
+  </section>
+    <section>
+      <title>A TaskContext's Error states</title>
+      <para>
+	In addition to the <function>PreOperational</function>,
+	<function>Stopped</function> and <function>Running</function>
+	TaskContext states, you can use two additional states for more
+	advanced component behaviour: the <function>Exception</function>, <function>FatalError</function>
+	and the <function>RunTimeError</function> states. The first two are shown in
+	<xref linkend="fig-ext-component-states" />.
+      </para>
+      <figure id="fig-ext-component-states">
+	<title>
+	  Extended TaskContext State Diagram
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/ComponentStatesExtended" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/ComponentStatesExtended"  width="80%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>
+	      This figure shows the extended state diagram of a
+	      TaskContext.  This is <xref linkend="fig-component-states" />
+	      extended with two more states: <function>Exception</function>
+	      and <function>FatalError</function>.
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+      <para>
+	The <function>FatalError</function> state is entered whenever
+	the TaskContext's <function>fatal()</function> function is
+	called, and indicates that an unrecoverable error occured. 
+	The ExecutionEngine is immediately
+	stopped and no more functions are called. This state can
+	not be left and the only next step is destruction of the component
+	(hence 'Fatal').
+      </para>
+      <para>
+	When an exception happens in your code, the <function>Exception</function> state
+	is entered. Depending on the TaskState, stopHook() and cleanupHook()
+	will be called to give a chance to cleanup. This state is recoverable
+	with the <function>recover()</function> function which drops your
+	component back to the <function>PreOperational</function> state,
+	from which it needs to be configured again.
+      </para>
+      <para>
+	It is possible that non-fatal run-time errors occur which
+	may require user action on one hand, but do not prevent
+	the component from performing it's task, or allow degraded
+	performance.
+	Therefor, in the <function>Running</function> state, one can
+	make a transition to the<function>RunTimeError</function>
+	sub-state by calling <function>error()</function>. See
+	<xref linkend="fig-ext-runtime-states" />.
+      </para>
+      <figure id="fig-ext-runtime-states">
+	<title>
+	  Possible Run-Time failure.
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/RunTimeStates" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/RunTimeStates" width="80%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>
+	      Th
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+      <para>
+	When the application code calls <function>error()</function>,
+	the RunTimeError state is entered and
+	<function>errorHook()</function> is executed instead of
+	<function>updateHook()</function>.  If at some moment the
+	component detects that it can resume normal operation, it
+	calls the <function>recover()</function> function, which
+	leads to the Running state again and in the next iteration,
+	<function>updateHook()</function> is called again.
+      </para>
+      <section>
+      <title>Error States Example</title>
+      <para>
+	Here is a very simple use case, a TaskContext communicates over
+	a socket with a remote device. Normally, we get a data packet
+	every 10ms, but sometimes one may be missing.  When we don't
+	receive 5 packets in a row, we signal this as a run time
+	error. From the moment packets come in again we go back to the run
+	state. Now if the data we get is corrupt, we go into
+	fatal error mode, as we have no idea what the current state of
+	the remote device is, and shouldn't be updating our state, as
+	no one can rely on the correct functioning of the TaskContext.
+      </para>
+      <para>
+	Here's the pseudo code:
+	<programlisting> class MyComponent : public TaskContext
+ {
+       int faults;
+ public:
+       MyComponent(const std::string &amp;name) 
+         : TaskContext(name), faults(0) 
+       {}
+
+ protected:
+       // Read data from a buffer.
+       // If ok, process data. When to many faults occur,
+       // trigger a runtime error.
+       void updateHook()
+       {
+            Data_t data;
+            FlowStatus rv = input.read( data );
+            if ( rv == NewData ) {
+               this->stateUpdate(data);
+               faults = 0;
+               this->recover(); // may be an external supervisor calls this instead.
+            } else {
+               faults++;
+               if (faults > 4)
+                   this->error();
+            }
+
+       }
+
+       // Called instead of updateHook() when in runtime error state.
+       void errorHook()
+       {
+            this->updateHook(); // just call updateHook anyway.
+       }
+
+       // Called by updateHook()
+       void stateUpdate(Data_t data)
+       {
+            // Check for corrupt data
+            if ( checkData(data) == -1 ) {
+                 this->fatalError(); // we will enter the FatalError state.
+            } else {
+                 // data is ok: update internal state...
+            }
+       }
+ };</programlisting>
+      </para>
+      <para>
+	When you want to discard the 'error' state of the component,
+	call mycomp.recover().  If your component went into
+	FatalError, call mycomp.reset() and mycomp.start() again for
+	processing updateHook() again.
+      </para>
+    </section>
+    </section>
+<!--
+  <section>
+    <title>Signals: Adding callback functions</title>
+      <note><title>Purpose</title>
+	<para>
+	  In case you want to attach function callbacks to the calling of an operation,
+	  you can use the RTT::Signal class. The return value of callbacks are ignored
+	  and more restrictions apply than with the operation's function.
+	</para>
+	<para>
+	  Raising and reacting to a Signal is real-time.
+	</para>
+      </note>
+      <mediaobject>
+	<imageobject role="fo">
+	  <imagedata width="5cm" fileref="images/EventInterface" />
+	</imageobject>
+	<imageobject role="html">
+	  <imagedata fileref="images/EventInterface" />
+	</imageobject>
+      </mediaobject>
+    <para>
+      A task may register its events in its interface in order to be
+      used by its state machines and other tasks as well.  Events are
+      defined and explained in the Orocos CoreLib reference,
+      <xref linkend="corelib-events" />.
+    </para>
+    <section>
+      <title>Adding Events</title>
+      <para>
+	Events can be easily added to a task's interface,
+	much like methods are:
+      </para>
+	<programlisting>  #include &lt;rtt/Event.hpp>
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+    // An event with a bool argument:
+    <classname>RTT::Event</classname>&lt; void(bool) &gt; turnSwitch;
+    // An event with three arguments:
+    <classname>RTT::Event</classname>&lt; bool(double, double, double) &gt; moveAxis;
+  public:
+    MyTask(std::string name)
+      : <classname>RTT::TaskContext</classname>(name),
+        turnSwitch( "turnSwitch" ),
+	moveAxis( "move" )
+    {
+      // ... other startup code here
+  
+      // add it to the task's interface:
+      this->events()->addEvent( &amp;turnSwitch, 
+                                "Turn switch description", 
+                                "d","Direction" ); 
+      this->events()->addEvent( &amp;moveAxis,
+                                "Move the axis."
+                                "x","X axis position",
+				"y","Y axis position",
+				"z","Z axis direction");
+    }
+  };</programlisting>
+      <para>
+	An <classname>RTT::Event</classname> object has the signature
+	('void(bool)') of the 'callback function' it will call when
+	the event is 'emitted' (or 'fired'). The object is initialised
+	with a name ("turnSwitch") and added to the interface ('addEvent').
+      </para>
+    </section>
+    <section>
+      <title>Emitting Events in C++</title>
+      <para>
+	Once events are added, they can be emitted using the
+	<classname>RTT::Event</classname> object.
+	<programlisting>  <classname>RTT::Event</classname>&lt; bool(double, double, double) &gt; move_event 
+    = a_task.events()->getEvent( "move" );
+  assert( move_event.ready() );
+
+  // emit the event 'move' with given args:
+  move_event(1.0, 2.0, 3.0);
+
+  // or with variable arguments:
+  double a = 0.3, b = 0.2, c = 0.1;
+  move_event(a, b, c); </programlisting>
+      </para>
+    </section>
+    <section>
+      <title>Reacting to Events in C++</title>
+      <para>
+	Analogous to emitting an event, one can also react to an event
+	in C++, using the Event interface. Event connections can be accessed
+	through the <classname>RTT::Handle</classname> object. The
+	first example shows how to setup a synchronous connection to
+	the event of the previous examples: 
+      </para>
+      <programlisting>   #include &lt;boost/bind.hpp> 
+  /** 
+   * Example: Connect a class method to an Event.  
+   */ 
+  class Reactor 
+  { 
+  public: 
+     bool react_callback(double a1, double a2, double a3) { 
+        // use a1,a2, a3 
+	return false; // return value is ignored.
+     } 
+  };
+
+  /**
+   * Example: Connect a 'C' function to an Event.
+   */
+  bool foo_callback( double a1, double a2, double a3 ) {
+      // use a1, a2, a3
+      return false; // ignored.
+  }
+
+  // Class callback:
+  Reactor r;
+
+  // WARNING: this requires events to be registered to
+  // the scripting interface (see warning note below).
+  <classname>RTT::Handle</classname> h
+    = a_task.events()->setupConnection("move")
+                 .callback( &amp;r, &amp;Reactor::react_callback )
+                 .handle();
+  assert( h.ready() );
+    
+  h.connect(); // connect to event "move"
+
+  move_event(1.0, 2.0, 3.0); // see previous example.
+
+  // now Reactor::callback() was called.
+
+  h.disconnect(); // disconnect again.
+
+  // 'C' Function callback:
+  // WARNING: this requires events to be registered to
+  // the scripting interface (see warning note below).
+  h = a_task.events()->setupConnection("move")
+                 .callback( &amp;foo_callback )
+                 .handle();
+
+  h.connect();
+  move_event(4.0, 5.0, 6.0)
+
+  // now foo_callback is called with arguments.	</programlisting>
+      <warning>
+	<para>
+	  The RTT makes the distinction between adding a primitive to
+	  the C++ interface and adding to the C++ &amp; scripting
+	  interface.  For using the event callback mechanism, you
+	  always need to add to the C++ &amp; scripting interface,
+	  since it requires that functionality.  You must use
+	  <function>addEvent(&amp;ev, "description", "arg1", "arg1
+	  description", "arg2",...)</function> to register your event
+	  to that interface. <emphasis>Don't use
+	  <function>addEvent(&amp;ev);</function></emphasis>
+	</para>
+      </warning>
+      <note>
+	<para>
+	  Using the <function>boost::bind</function> function is not yet supported
+	  in this interface. You must provide the object and function separately
+	  in <function>callback()</function>.
+	</para>
+      </note>
+      <para>
+	Analogous to the event example in the CoreLib reference 
+	(<xref linkend="corelib-events" />),
+	a class funcion is made to react to the event. A connection
+	is setup between the "move" event and the <function>react_callback</function>
+	function of "r". The connection can be controlled using
+	the handle to connect or disconnect the reaction to events.
+	When <function>connect()</function> is called, every
+	event invocation will call <function>react_callback()</function>
+	with the given arguments. Using a 'C' function works analogous as shown
+	above.
+      </para>
+      <para>
+	A second example continues, but uses an asynchronous connection.
+	First a new task (b_task) is created which will handle the event
+	asynchronously. During setup, the <classname>RTT::EventProcessor</classname> of
+	b_task's Execution Engine is used to process the event.
+	<programlisting>  <classname>RTT::TaskContext</classname> b_task("BTask");
+  b_task.setActivity( new <classname>RTT::Activity</classname>(5, 0.1) ); // priority, period
+  ptask_b.run( &amp;b_task );
+  ptask_b.start();
+
+  // WARNING: see the warning above about using callback
+  <classname>RTT::Handle</classname> h3 
+    = a_task.events()->setupConnection("move")
+                            .callback(&amp;r, &amp;react_callback,
+                                      b_task.engine()->events() ).handle();
+    
+  assert( h3.ready() );
+
+  h3.connect(); // connect asynchronously to event "move"
+
+  move_event.emit(); // see previous example.
+
+  // wait a bit...
+
+  // now react_callback() was called from within b_task's execution engine.
+	</programlisting>
+	Note that after passing the object and function, the EventProcessor
+	of b_task is added in the <function>callback</function> method, such
+	that the callback is executed in b_task's thread.
+      </para>
+    </section>
+    <section>
+      <title>Using Events from Scripts</title>
+      <para>
+	Events are as easy to use as methods (above) from within
+	scripts, using the keyword <symbol>do</symbol>:
+	<programlisting>  do ATask.move( 1.0, 2.0, 3.0 )</programlisting>
+      </para>
+      <para>
+	It is also possible to react to events from within a state
+	machine in order to change state. We refer to the Program
+	Parser Manual for syntax and examples.
+      </para>
+    </section>
+  </section>
+-->
+  </section>
+  <section id="connect-tasks">
+    <title>Connecting Services</title>
+    <para>
+      A Real-Time system exists of multiple concurrent
+      tasks which must communicate to each other.
+      TaskContext can be connected to each other
+      such that they can use each other's Services.
+    </para>
+    <section id="connect-peers">
+      <title>Connecting Peer Components</title>
+      <note>
+	  <para>
+	    The <function>addPeer</function> and <function>connectPeers</function>
+	    functions are used to connect TaskContexts and allow them
+	    to use each other's interface. The <function>connectPorts</function>
+	    function sets up the data flow between tasks.
+	  </para>
+      </note>
+      <para>
+	We call connected TaskContexts &quot;Peers&quot; because there is no implied
+	hierarchy. A connection from one TaskContext to its
+	Peer can be uni- or bi-directional. In a uni-directional connection (<function>addPeer</function> ),
+	only one peer can use the services of the other, while
+	in a bi-directional connection (<function>connectPeers</function>), both can use
+	each others services.
+	This allows to build strictly hierarchical topological
+	networks as well as complete flat or circular networks or any
+	kind of mixed network. 
+      </para>
+      <para>
+	Peers are connected as such (<methodname>hasPeer</methodname> takes a string 
+      argument ):</para>
+      <para>
+      <programlisting>  // bi-directional :
+  connectPeers( &amp;a_task, &amp;b_task );
+  assert( a_task.hasPeer( &amp;b_task.getName() ) 
+          &amp; b_task.hasPeer( &amp;a_task.getName() ) );
+
+  // uni-directional :
+  a_task.addPeer( &amp;c_task );
+  assert( a_task.hasPeer( &amp;c_task.getName() ) 
+          &amp; ! c_task.hasPeer( &amp;a_task.getName() ) );
+
+  // Access the interface of a Peer:
+  OperationCaller&lt;bool(void)> m = a_task.getPeer( "CTask" )->getOperation("aOperationCaller");
+  // etc. See interface usage in previous sections.
+</programlisting></para>
+    <para>
+      Both <function>connectPeers</function> and <function>addPeer</function>
+      allow scripts or C++ code to use the interface of a connected Peer. <function>connectPeers</function>
+      does this connection in both directions.
+    </para>
+    <para>
+      From within a program script, peers can be accessed by
+      merely prefixing their name to the member you want to
+      access. A program <emphasis>within</emphasis> &quot;ATask&quot; could
+      access its peers as such :</para>
+    <para>
+      <programlisting> // Script:
+  var bool result = CTask.aOperation() </programlisting></para>
+    <para>
+      The peer connection graph can be traversed at arbitrary
+      depth. Thus you can access your peer's peers.
+    </para>
+    </section>
+    <section id="setup-data-flow">
+      <title>Setting up the Data Flow</title>
+      <note>
+	<para>
+	  In typical applications, the DeploymentComponent
+	  ('deployer') will form connections between ports using a
+	  program script or XML file. The manual method described
+	  below is not needed in that case.
+	</para>
+      </note>
+      <para>
+	Data Flow between TaskContexts can be setup by using <function>connectPorts</function>.
+	The direction of the data flow is imposed by the input/output direction of
+	the ports.  The <function>connectPorts(TaskContext* A, TaskContext* B)</function> function
+	creates a connection between TaskContext ports when both ports 
+	have the same name and type. It will never disconnect existing connections
+	and only tries to add ports to existing connections or create new
+	connections. The disadvantage of this approach is that you can not specify
+	connection policies.
+      </para>
+      <para>
+	Instead of calling <function>connectPorts</function>, one may connect individual ports,
+	such that different named ports can be connected and a connection policy can be set.
+	Suppose that Task A has a
+	port a_port, Task B a b_port and Task C a c_port (all are of type PortInterface&amp;). Then
+	 connections are made as follows:
+	<programlisting>  // Create a connection with a buffer of size 10:
+  <classname>RTT::ConnPolicy</classname> policy = RTT::ConnPolicy::buffer(10);
+  a_port.connectTo( &amp;b_port, policy );
+  // Create an unbuffered 'shared data' connection:
+  policy = RTT::ConnPolicy::data();
+  a_port.connectTo( &amp;c_port, policy );</programlisting>
+	The order of connections does not matter; the following would also work:
+	<programlisting>  b_port.connectTo( &amp;a_port, policy ); // ok...
+  c_port.connectTo( &amp;a_port, policy ); // fine too.</programlisting>
+        Note that you can not see from this example which port is input and which
+	is output. For readability, it is recommended to write it as:
+	<programlisting>output_port.connectTo( &amp;input_port );</programlisting>
+      </para>
+      <para>
+	<classname>RTT::ConnPolicy</classname> are powerful objects that allow you to
+	connect component ports just like you want them. You can use them to create
+	connections over networks or to setup fast real-time inter-process communication.
+      </para>
+    </section>
+    <section><title>Disconnecting Tasks</title>
+    <para>
+      Tasks can be disconnected from a network by invoking
+      <function>disconnect()</function> on that task. It will
+      inform all its peers that it has left the network and
+      disconnect all its ports.
+    </para>
+    </section>
+  </section>
+  <section id="task-services">
+    <title>Providing and Requiring Services</title>
+    <para>
+      In the previous sections, we saw that you could add an operation to a
+      TaskContext, and retrieve it for use in a OperationCaller object. This manual
+      registration and connection process can be automated by using the
+      service objects. There are two major players: <classname>RTT::Service</classname>
+      and <classname>RTT::ServiceRequester</classname>. The
+      first manages operations, the second methods. We say that the
+      Service <emphasis>provides</emphasis> operations, while
+      the ServiceRequester <emphasis>requires</emphasis> them. The first
+      expresses what it can do, the second what it needs from others to do.
+    </para>
+    <para>
+      Here's a simple use case for two components:
+    </para>
+    <example><title>Setting up a Service</title>
+    <para>The only difference between setting up a service and
+      adding an operation, is by adding provides("servicename")
+      in front of addOperation.
+    </para>
+    <programlisting>   #include &lt;rtt/TaskContext.hpp>
+  #include &lt;iostream>
+
+  class MyServer : public RTT::TaskContext {
+  public:
+    MyServer() : TaskContext("server") {
+       this-><emphasis>provides("display")</emphasis>
+             ->addOperation("showErrorMsg", &amp;MyServer::showErrorMsg, this, RTT::OwnThread)
+                   .doc("Shows an error on the display.")
+                   .arg("code", "The error code")
+                   .arg("msg","An error message");
+       this-><emphasis>provides("display")</emphasis>
+             ->addOperation("clearErrors", &amp;MyServer::clearErrors, this, RTT::OwnThread)
+                   .doc("Clears any error on the display.");
+    }
+    void showErrorMsg(int code, std::string msg) {
+       std::cout &lt;&lt; "Code: "&lt;&lt;code&lt;&lt;" - Message: "&lt;&lt; msg &lt;&lt;std::endl;
+    }
+    void clearErrors() {
+       std::cout &lt;&lt; "No errors present." &lt;&lt; std::endl;
+    }
+  };
+    </programlisting>
+    </example>
+    <para>
+       What the above code does is grouping operations in an interface that is provided
+       by this component. We give this interface a name, 'display' in order to allow
+       another component to find it by name. Here's an example on how to use this service:
+    </para>
+    <example><title>Using a Service</title>
+    <para>The only difference between setting up a service and
+      adding a OperationCaller object, is by adding requires("servicename")
+      in front of addOperationCaller.
+    </para>
+    <programlisting>   #include &lt;rtt/TaskContext.hpp>
+  #include &lt;iostream>
+
+  class MyClient : public RTT::TaskContext {
+  public:
+    int counter;
+    OperationCaller&lt;void(int,std::string)> showErrorMsg;
+    OperationCaller&lt;void(void)> clearErrors;
+
+    MyClient() : TaskContext("client"), counter(0),
+       showErrorMsg("showErrorMsg"), clearErrors("clearErrors")
+    {
+       this-><emphasis>requires("display")</emphasis>
+             ->addOperationCaller(showErrorMsg);
+       this-><emphasis>requires("display")</emphasis>
+             ->addOperationCaller(clearErrors);
+       this->setPeriod(0.1);
+    }
+    bool configureHook() {
+       return this->requires("display")->ready();
+    }
+
+    void updateHook() {
+        if (counter == 10) {
+           showErrorMsg.send(101, "Counter too large!");
+        }
+        if (counter == 20) {
+           clearErrors.send();
+           counter = 0;
+        }
+        ++counter;
+     }
+  };</programlisting>
+    </example>
+    <para> What you're seeing is this: the client has 2 OperationCaller objects
+      for calling the functions in the "display" service. The method objects
+      must have the same name as defined in the 'provides' lines in the previous
+      listing. We check in configureHook if this interface is ready to be called.
+      Update hook then calls these methods.</para>
+    <para> The remaining question is now: how is the connection done from client to
+      server ? The <classname>RTT::ServiceRequester</classname> has a method 
+      <function>connectTo(Service*)</function> which does this connection from
+      OperationCaller object to operation. If you wanted to hardcode this, it would look like:
+      <programlisting>  bool configureHook() {
+     requires("display")->connectTo( getPeer("server")->provides("display") );
+     return requires("display")->ready();
+  }</programlisting>
+      In practice, you will use the deployer application to do the connection for
+      you at run-time. See the DeploymentComponent documentation for the syntax.
+    </para>
+  </section>
+  <section id="run-tasks">
+    <title>Using Tasks</title>
+    <para>
+      This section elaborates on the interface all Task Contexts have
+      from a 'Task user' perspective.
+    </para>
+    <section id="task-property-config">
+      <title>Task Property Configuration and XML format</title>
+      <para>
+	As was seen in <xref linkend="task-attr-rep" />,
+	<classname>RTT::Property</classname> objects can be
+	added to a task's interface. To read and write properties from
+	or to files, you can use the
+	<classname>RTT::Marshalling</classname> service.
+	It creates or reads files in the XML Component
+	Property Format such that it is human readable and modifiable.
+      </para>
+      <programlisting>  // ...
+  <classname>RTT::TaskContext</classname>* a_task = ...
+            mname = ab->getName();
+            mname = ab->getName();
+  a_task->getProvider&lt;Marshalling&gt;("marshalling")->readProperties( "PropertyFile.cpf" );
+  // ...
+  a_task->getProvider&lt;Marshalling&gt;("marshalling")->writeProperties( "PropertyFile.cpf" ); </programlisting>
+       <para>
+	 In order to access a service, we need both the type of the provider, <classname>RTT::Marshalling</classname>
+	 and the run-time name of the service, by default "marshalling".
+       </para>
+       <para>
+	 In the example, <function>readProperties()</function> reads the file and updates the
+	 task's properties and <function>writeProperties()</function> writes the
+	 given file with the properties of the task. Other functions allow to
+	 share a single file with multiple tasks or update the task's
+	 properties from multiple files.
+       </para>
+       <para>
+	 The PropertyFile.cpf file syntax can be easily learnt by
+	 using <function>writeProperties()</function> and looking at
+	 the contents of the file. It will contain elements for each
+	 Property or PropertyBag in your task.  Below is a
+	 component with five properties. There are three properties at
+	 the top level of which one is a PropertyBag, holding two
+	 other properties.
+       </para>
+       <para>
+	<programlisting>  #include &lt;rtt/TaskContext.hpp>
+#include &lt;rtt/Property.hpp>
+#include &lt;rtt/PropertyBag.hpp>
+
+  class MyTask
+    : public <classname>RTT::TaskContext</classname>
+  {
+     
+     int i_param;
+     double d_param;
+     <classname>RTT::PropertyBag</classname> sub_bag;
+     std::string s_param;
+     bool b_param;
+  public:
+    // ...
+    MyTask(std::string name)
+      : <classname>RTT::TaskContext</classname>(name),
+        i_param(5 ),
+        d_param(-3.0),
+        s_param("The String"),
+        b_param(false)
+    {
+       // other code here...
+
+       this->addProperty("IParam", i_param ).doc("Param Description");
+       this->addProperty("DParam", d_param ).doc("Param Description");
+       this->addProperty("SubBag", sub_bag ).doc("SubBag Description");
+
+       // we call addProperty on the PropertyBag object in order to 
+       // create a hierarchy
+       sub_bag.addProperty("SParam", s_param ).doc("Param Description");
+       sub_bag.addProperty("BParam", b_param ).doc("Param Description");
+     }
+     // ...
+  };
+</programlisting></para><para>
+         Using writeProperties() would produce the following XML file:
+      <programlisting><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "cpf.dtd">
+<properties>
+
+  <simple name="IParam" type="short">
+    <description>Param Description</description>
+    <value>5</value>
+    </simple>
+  <simple name="DParam" type="double">
+    <description>Param Description</description>
+    <value>-3.0</value>
+  </simple>
+
+  <struct name="SubBag" type="PropertyBag">
+    <description>SubBag Description</description>
+    <simple name="SParam" type="string">
+      <description>Param Description</description>
+      <value>The String</value>
+    </simple>
+    <simple name="BParam" type="boolean">
+      <description>Param Description</description>
+      <value>0</value>
+    </simple>
+  </struct>
+
+</properties>]]></programlisting></para>
+        <para> PropertyBags (nested properties) are represented as
+        &lt;struct&gt; elements in this format. A &lt;struct&gt; can contain
+	another &lt;struct&gt; or a &lt;simple&gt; property.
+      </para>
+      <para>
+	The following table lists the conversion from C++ data types
+	to XML Property types.
+	<table id="property-types-table">
+	  <title>C++ &amp; Property Types</title>
+	  <tgroup cols="3">
+	    <thead>
+	      <row>
+		<entry>C++ Type</entry>
+		<entry>Property type</entry>
+		<entry>Example valid XML &lt;value&gt; contents</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>double</entry>
+		<entry>double</entry>
+		<entry>3.0</entry>
+	      </row>
+	      <row>
+		<entry>int</entry>
+		<entry><emphasis>short or long</emphasis></entry>
+		<entry>-2</entry>
+	      </row>
+	      <row>
+		<entry>bool</entry>
+		<entry><emphasis>boolean</emphasis></entry>
+		<entry><emphasis>1 or 0</emphasis></entry>
+	      </row>
+	      <row>
+		<entry>float</entry>
+		<entry>float</entry>
+		<entry>15.0</entry>
+	      </row>
+	      <row>
+		<entry>char</entry>
+		<entry>char</entry>
+		<entry>c</entry>
+	      </row>
+	      <row>
+		<entry>std::string</entry>
+		<entry>string</entry>
+		<entry>Hello World</entry>
+	      </row>
+	      <row>
+		<entry>unsigned int</entry>
+		<entry><emphasis>ulong or ushort</emphasis></entry>
+		<entry>4</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+      </para>
+    </section>
+    <section>
+      <title>Task Scripts</title>
+      <para>
+	Orocos supports two types of scripts:
+	<itemizedlist>
+	  <listitem><para>An Orocos Program Script (ops) contains a <emphasis>Real-Time</emphasis>
+	  functional program which calls methods and sends commands to
+	  tasks, depending on classical functional logic.</para></listitem>
+	  <listitem><para> An Orocos State machine Description (osd)
+	  script contains a <emphasis>Real-Time</emphasis> (hierarchical)
+	  state machine which dictates which program script snippets
+	  are executed upon which event.  </para>	</listitem>
+	</itemizedlist>
+	Both are loaded at run-time into a task. The scripts are parsed
+	to an object tree, which can then be executed by the
+	<classname>RTT::ExecutionEngine</classname> of a
+	task.
+      </para>
+      <section id="task-context-programs">
+	<title>Program Scripts</title>
+	<para>
+	  Program can be finely controlled once loaded in
+	  the <classname>RTT::Scripting</classname> service,
+	  which delegates the execution of the script to the
+	  ExecutionEngine.
+	  A program can be paused, it's variables inspected
+	  and reset while it is loaded in the Processor.
+	  A simple program script can look like :</para>
+	<para>
+	  <programlisting>  program foo
+  {
+    var int i = 1
+    var double j = 2.0
+    changeParameter(i,j)
+  }</programlisting>
+	  Any number of programs may be listed in a file.
+	</para>
+	<para>
+	  Orocos Programs are loaded as such into a TaskContext
+	  :</para>
+	<para>
+	  <programlisting>  <classname>RTT::TaskContext</classname>* a_task = ...
+
+  a_task->getProvider&lt;Scripting&gt;("scripting")->loadPrograms( "ProgramBar.ops" ); </programlisting></para>
+	<para>
+	  When the Program is loaded in the Task Context, it can
+	  also be controlled from other scripts or a TaskBrowser. Assuming
+	  you have loaded a Program with the name 'foo', the
+	  following commands are available :
+	</para>
+	<screen>
+  foo.start()
+  foo.pause()
+  foo.step()
+  foo.stop()
+	</screen>
+	<para>While you also can inspect its status :</para>
+	<screen>
+  var bool ret
+  ret = foo.isRunning()
+  ret = foo.inError()
+  ret = foo.isPaused()
+	</screen>
+	<para>You can also inspect and change the variables of a loaded program,
+	but as in any application, this should only be done
+	for debugging purposes.</para>
+	<screen>
+  set foo.i = 3
+  var double oldj = foo.j
+	</screen>
+	<para>
+	  Program scripts can also be controlled in C++, but only from the
+	  component having them, because we need access to the <classname>RTT::scripting::ScriptingService</classname>
+	  object, which is only available locally to the component.
+	  Take a look at the
+	  <classname>RTT::scripting::ProgramInterface</classname> class
+	  reference for more program related functions. One can
+	  get a pointer to a program by calling:
+	</para>
+	<programlisting>  scripting::ScriptingService* sa = dynamic_cast&lt;scripting::ScriptingService*&gt;(this->getService("scripting"));
+  scripting::ProgramInterface* foo = sa->getProgram("foo");
+  if (foo != 0) {
+    bool result = foo->start(); // try to start the program !
+    if (result == false) {
+       // Program could not be started.
+       // Execution Engine not running ?
+    }
+  }</programlisting>
+      </section>
+      <section>
+	<title>State Machines</title>
+	<para>
+	  Hierarchical state machines are modelled in Orocos
+	  with the <classname>RTT::scripting::StateMachine</classname> class.
+	  They are like programs in that they can call a
+	  peer task's members, but the calls are grouped
+	  in a state and only executed when the state machine
+	  is in that state. This section limits to showing
+	  how an Orocos State Description (osd) script can be loaded in a 
+	  Task Context.
+	</para>
+	<para>
+	  <programlisting>  <classname>RTT::TaskContext</classname>* a_task = ...
+
+  a_task->getProvider&lt;Scripting&gt;("scripting")->loadStateMachines( "StateMachineBar.osd" ); </programlisting></para>
+	<para>
+	  When the State Machine is loaded in the Task Context, it can
+	  also be controlled from your scripts or TaskBrowser. Assuming
+	  you have instantiated a State Machine with the name 'machine', the
+	  following commands are available :
+	</para>
+	<screen>
+  machine.activate()
+  machine.start()
+  machine.pause()
+  machine.step()
+  machine.stop()
+  machine.deactivate()
+  machine.reset()
+  machine.reactive()
+  machine.automatic() // identical to start()
+  machine.requestState("StateName")
+	</screen>
+	<para>As with programs, you can inspect and change the
+	variables of a loaded StateMachine.</para>
+	<screen>
+  set machine.myParam = ...
+	</screen>
+	<para>
+	  The Scripting Manual goes in great detail on how to 
+	  construct and control State Machines.
+	</para>
+      </section>
+    </section>
+  </section>
+  <section>
+    <title>Deploying Components</title>
+    <para>
+      An Orocos component can be used in both embedded (&lt;1MB RAM) or
+      big systems (128MB RAM), depending on how it is created or used.
+      This is called <emphasis>Component Deployment</emphasis> as the
+      target receives one or more component implementations. The components
+      must be adapted as such that they fit the target.
+    </para>
+    <section>
+      <title>Overview</title>
+      <para>
+	<xref linkend="fig-comp-levels" /> shows the
+	distinction between the three levels of Component Deployment.
+      </para>
+      <figure id="fig-comp-levels">
+	<title>
+	  Component Deployment Levels
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/DeploymentLevels" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/DeploymentLevels"  width="100%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>
+	      Three levels of using or creating Components can be
+	      accomplished in Orocos: Not distributed, embedded distributed
+	      and fully distributed.
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+      <para>
+	If your application will not use distributed components and
+	requires a very small footprint, the <classname>RTT::base::TaskCore</classname>
+	can be used. The Orocos primitives appear publicly in the interface
+	and are called upon in a hard-coded way.
+      </para>
+      <para>
+	If you application requires a small footprint and distributed
+	components, the <emphasis>C++ Interface</emphasis> of the
+	<classname>RTT::TaskContext</classname> can be used in
+	combination with a <emphasis>Distribution Library</emphasis>
+	which does the network translation. It handles a predefined
+	set of data types (mostly the 'C' types) and needs to be
+	adapted if other data types need to be supported. There is no
+	portable distribution library available.
+      </para>
+      <para>
+	If footprint is of no concern to your application and you
+	want to distribute any component completely transparently,
+	the <classname>RTT::TaskContext</classname> can be used in combination
+        with a <emphasis>Remoting Library</emphasis> which does the
+        network translation. A CORBA implementation of such a library is
+	being developed on. It is a write-once, use-many implementation,
+	which can pick up user defined types, without requiring modifications.
+	It uses the <emphasis>Orocos Type System</emphasis> to manage user 
+	defined types. 
+      </para>
+    </section>
+    <section>
+      <title>Embedded TaskCore Deployment</title>
+      <para>
+	A TaskCore is nothing more than a place holder for the
+	Execution Engine and application code functions
+	(<function>configureHook()</function>, <function>cleanupHook()</function>,
+	<function>startHook()</function>, <function>updateHook()</function>
+	and <function>stopHook()</function> ). The Component
+	interface is built up by placing the Orocos primitives
+	as public class members in a TaskCore subclass. Each
+	component that wants to use this TaskCore must get a
+	'hard coded' pointer to it (or the interface it implements)
+	and invoke the command, method etc. Since Orocos is by
+	no means informed of the TaskCore's interface, it can not
+	distribute a TaskCore.
+      </para>
+    </section>
+    <section>
+      <title>Embedded TaskContext Deployment: C++ Interface</title>
+      <para>
+	Instead of putting the Orocos primitives in the public
+	interface of a subclass of TaskCore, one can subclass a
+	TaskContext and register the primitives to the
+	<emphasis>Local C++ Interface</emphasis>. This is a reduced
+	interface of the TaskContext, which allows distribution
+	by the use of a <emphasis>Distribution Library</emphasis>.
+      </para>
+      <para>
+	The process goes as such: A component inherits from
+	<classname>RTT::TaskContext</classname> and has some
+	Orocos primitives as class members. Instead of calling:
+      </para>
+      <programlisting>  this->add<emphasis>Operation</emphasis>("name", &amp;foo).doc("Description").arg("Arg1","Arg1 Description");</programlisting>
+      <para>
+	and providing a description for the primitive as well as
+	each argument, one writes:
+      </para>
+      <programlisting>  this->add<emphasis>LocalOperation</emphasis>("name", &amp;foo );</programlisting>
+      <para>
+	This functions does no more than a pointer registration, but already allows
+	all C++ code in the same process space to use the added primitive.
+      </para>
+      <para>
+	In order to access the interface of such a Component,
+	the user code may use:
+      </para>
+      <programlisting>  taskA->get<emphasis>LocalOperation</emphasis>("name");</programlisting>
+      <para>
+	You can only distribute this component if an implementation of a
+	Distribution Library is present. The specification of
+	this library, and the application setup is in left to another
+	design document.
+      </para>
+    </section>
+    <section>
+      <title>Full TaskContext Deployment: Dynamic Interface</title>
+      <para>
+	In case you are building your components as instructed in this
+	manual, your component is ready for distribution as-is, given
+	a Remoting library is used. The Orocos CORBA package implements
+	such a Remoting library. 
+      </para>
+    </section>
+    <section>
+      <title>Putting it together</title>
+      <para>
+	Using the three levels of deployment in one application is
+	possible as well. To save space or execution efficiency,
+	one can use TaskCores to implement local (hidden) functionality
+	and export publicly visible interface using a TaskContext.
+	<xref linkend="fig-deployment-example" /> is an
+	small example of a TaskContext which uses two TaskCores to
+	delegate work to. The Execution Engines may run in one or
+	multiple threads.
+      </para>
+      <figure id="fig-deployment-example">
+	<title>
+	  Example Component Deployment.
+	</title>
+	<mediaobject>
+	  <imageobject role="html">
+	    <imagedata fileref="images/CoreVsContext" />
+	  </imageobject>
+	  <imageobject role="fo">
+	    <imagedata fileref="images/hires/CoreVsContext"  width="100%" scalefit="1"/>
+	  </imageobject>
+	  <caption>
+	    <para>
+	    </para>
+	  </caption>
+	</mediaobject>
+      </figure>
+    </section>
+  </section>
+  <section>
+    <title>Advanced Techniques</title>
+    <para>
+      If you master the above methods of setting up tasks, this section
+      gives some advanced uses for integrating your existing application
+      framework in Orocos Tasks.
+    </para>
+<!--
+    <section>
+      <title>Waiting for Something : Synchronisation</title>
+      <para>
+	When tasks need to synchronise, you have a wide range of
+	options to use. 
+      </para>
+      <section>
+	<title>Waiting in States</title>
+	<para>
+	  A (sub-)State Machine can pause itself and an extra function
+	  in the task's interface can provide the key to progress to
+	  another state. First the StateMachine is loaded in an .osd file  :
+	</para>
+	<programlisting>
+  StateMachine X {
+     // ...
+     state y {
+        entry {
+           // pause myself, no transitions are checked.
+           do this.pause()
+        }
+        transitions {
+	   // guard this transition.
+           if checkSomeCondition() then
+              select z
+        }
+     }
+     state z {
+       // ...
+     }
+  }
+
+  RootMachine X x</programlisting>
+	<para>Then, load an ops file which contains :</para>
+	<programlisting>
+  export function progress() {
+    // Check if we may progress :
+    if this.x.inState("y") then {
+        // continue :
+        do this.x.start()
+        // OR try single transition :
+        do this.x.step()
+    }
+  }</programlisting>
+	<para>
+	  A peer task then calls <function>progress()</function>
+	  which in turn checks if the function is applicable.
+	  But even then, the responsibility of the transition
+	  lies within the State Machine.
+	</para>
+	<para>
+	  Of course, the example can be simplified by setting/
+	  resetting a boolean flag between function and
+	  State Machine.
+	</para>
+	<programlisting>
+  StateMachine X {
+     // ...
+     state y {
+        transitions {
+           if progressflag == true then
+                select z
+        }
+     }
+     state z {
+       // ...
+     }
+  }
+
+  RootMachine X x</programlisting>
+	<para>Then, load an ops file which contains :</para>
+	<programlisting>
+  export function progress() {
+    // Check if we may progress :
+    if this.x.inState("y") then {
+          set progressflag = true
+    }
+  }</programlisting>
+	<para>
+	  When the user or another program calls the progress() command,
+	  the flag will be set.
+	</para>
+      </section>
+      <section>
+	<title>Requesting States</title>
+	<para>
+	  A State Machine can be used such that it waits for state
+	  change requests instead of discovering itself to which 
+	  state it makes a transition. This requires the State Machine to run in
+	  another mode, the requestState mode ( as opposed to the automatic mode,
+	  which is entered by start() ). 
+	</para>
+	<programlisting>
+  StateMachine X {
+     // ...
+     state y {
+        entry {
+	   // ...
+        }
+        transitions {
+	   // guard this transition.
+           if checkSomeCondition() then
+              select z
+	   // always good to go to states :
+	   select ok_1
+           select ok_2
+        }
+     }
+     state z {
+       // ...
+     }
+     state ok_1 {
+       // ...
+     }
+     state ok_2 {
+       // ...
+     }
+  }
+
+  RootMachine X x</programlisting>
+	<para>Then, load an ops file which contains :</para>
+	<programlisting>
+  export function progress() {
+       // request to enter anther state :
+       do this.x.requestState("z")
+    }
+  export function progress_Ok() {
+       // this will succeed always from state 'x' :
+       do this.x.requestState("ok1")
+    } </programlisting>
+         <para>
+	   This command will fail if the transition is not 
+	   possible ( for example, the state machine is not in
+	   state y, or checkSomeCondition() was not true ),
+	   otherwise, the state machine will make the transition
+	   and the command succeeds and completes when the z state
+	   is fully entered (it's init program completed).
+	 </para>
+	 <para>
+	   To merely request that a state is handled, one can
+	   call requestState on the current state :
+	 </para>
+	<programlisting>
+  export function handleState() {
+       // request to handle current state :
+       do this.x.requestState( this.x.getState() )
+    }  </programlisting>
+	 <para>
+	   To request to go to the next possible state (or call handle if
+	   none) and then wait again for requests, use 'step()' :
+	 </para>
+	<programlisting>
+  export function evaluate() {
+       // request go to the next state and wait :
+       do this.x.step()
+    }  </programlisting>
+         <para>
+	   Note that if the StateMachine happened to be paused, step() would
+	   only progress one single statement. To check if the StateMachine
+	   is waiting for requests, use the 'inRequest()' method :
+	 </para>
+	<programlisting>
+  export function progress() {
+       if ( this.x.inRequest() ) {
+           // ... it's waiting
+       } else {
+          // was not waiting, possibly running, paused or non active
+       }
+    }  </programlisting>
+        <para>
+	  All these methods can of course also be called from parent
+	  to child State Machine, or across tasks.
+	</para>
+      </section>
+    </section>
+-->
+    <section>
+      <title>Polymorphism : Task Interfaces</title>
+      <para>
+	Most projects have define their own task interfaces in C++.
+	Assume you have a class with the following interface :
+      </para>
+      <programlisting>
+  class DeviceInterface
+  {
+  public:
+    /**
+     * Set/Get a parameter. Returns false if parameter is read-only.
+     */
+    virtual bool setParameter(int parnr, double value) = 0;
+    virtual double getParameter(int parnr) const = 0;
+
+    /**
+     * Get the newest data.
+     * Return false on error.
+     */
+    virtual bool updateData() = 0;
+    virtual bool updated() const = 0;
+
+    /**
+     * Get Errors if any.
+     */
+    virtual int getError() const = 0;
+  };</programlisting>
+      <para>
+	Now suppose you want to do make this interface available,
+	such that program scripts of other tasks can access this 
+	interface. Because you have many devices, you surely want
+	all of them to be accessed transparently from a supervising
+	task. Luckily for you, C++ polymorphism can be transparently
+	adopted in Orocos TaskContexts. This is how it goes.
+      </para>
+      <section>
+	<title>Step 1 : Export the interface</title>
+	<para>We construct a TaskContext, which exports your
+	C++ interface to a task's interface.
+	</para>
+	<programlisting>
+  #include &lt;rtt/TaskContext.hpp&gt;
+  #include &lt;rtt/Operation.hpp&gt;
+  #include "DeviceInterface.hpp"
+
+  class TaskDeviceInterface
+    : public DeviceInterface,
+      public <classname>RTT::TaskContext</classname>
+  {
+  public:
+      TaskDeviceInterface()
+        : <classname>RTT::TaskContext</classname>( "DeviceInterface" )
+      {
+         this->setup();
+      }
+
+      void setup() 
+      {
+         // Add client thread operations :
+         this->addOperation(&quot;setParameter&quot;,
+                    &amp;DeviceInterface::setParameter, this, ClientThread)
+                        .doc(&quot;Set a device parameter.&quot;)
+	                .arg(&quot;Parameter&quot;, &quot;The number of the parameter.&quot;)
+	                .arg(&quot;New Value&quot;, &quot;The new value for the parameter.&quot;); 
+
+         this->addOperation(&quot;getParameter&quot;,
+                     &amp;DeviceInterface::getParameter, this, ClientThread)
+                          .doc(&quot;Get a device parameter.&quot;)
+                          .arg(&quot;Parameter&quot;, &quot;The number of the parameter.&quot;);
+         this->addOperation(&quot;getError&quot;,
+                     &amp;DeviceInterface::getError, this, ClientThread)
+                          .doc(&quot;Get device error status.&quot;);
+
+         // Add own thread operations :
+         this->addOperation(&quot;updateData&quot;,
+                          &amp;DeviceInterface::updateData, this, OwnThread)
+                              .doc(&amp;DeviceInterface::updated)
+                              .arg(&quot;Command data acquisition.&quot; );
+      }
+  };</programlisting>
+	<para>
+	  The above listing just combines all operations which were introduced
+	  in the previous sections. Also note that the TaskContext's name
+	  is fixed to "DeviceInterface". This is not obligatory though.
+	</para>
+      </section>
+      <section>
+	<title>Step 2 : Inherit from the new interface</title>
+	<para>Your DeviceInterface implementations now
+	  only need to inherit from <classname>TaskDeviceInterface</classname>
+	  to instantiate a Device TaskContext :
+	</para>
+	<programlisting>
+  #include "TaskDeviceInterface.hpp"
+
+  class MyDevice_1 
+    : public TaskDeviceInterface
+  {
+  public:
+
+    bool setParameter(int parnr, double value) {
+      // ...
+    }
+    double getParameter(int parnr) const {      // ...
+    }
+    // etc.
+  };
+	</programlisting>
+      </section>
+      <section>
+	<title>Step 3 : Add the task to other tasks</title>
+	<para>
+	  The new TaskContext can now be added to other tasks.
+	  If needed, an alias can be given such that the
+	  peer task knows this task under another name.
+	  This allows the user to access different incarnations
+	  of the same interface from a task.
+	</para>
+	<programlisting>
+	  // now add it to the supervising task :
+  MyDevice_1 mydev;
+  supervisor.addPeer( &amp;mydev, "device" );
+	</programlisting>
+	<para>
+	  From now on, the "supervisor" task will be able to access
+	  "device". If the implementation changes, the same interface
+	  can be reused without changing the programs in the supervisor.
+	</para>
+	<para>
+	  A big warning needs to be issued though : if you change a
+	  peer at run-time (after parsing programs),
+	  you need to reload all the programs, functions,
+	  state contexts which use that peer so that they reference
+	  the new peer and its C++ implementation.
+	</para>
+      </section>
+      <section>
+	<title>Step 4 : Use the task's interface</title>
+	<para>To make the example complete, here is an example
+	script which could run in the supervisor task :
+	</para>
+	<programlisting>
+  program ControlDevice
+  {
+     const int par1 = 0
+     const int par2 = 1
+     device.setParameter(par1, supervisor.par1 )
+     device.setParameter(par2, supervisor.par2 )
+
+     while ( device.getError() == 0 ) 
+     {
+        if ( this.updateDevice("device") == true )
+           device.updateData()
+     }
+     this.handleError("device", device.getError() )
+  }</programlisting>
+	<para>To start this program from the TaskBrowser, browse to supervisor
+	  and type the command :</para>
+	<screen>
+  ControlDevice.start()
+	</screen>
+	<para>
+	  When  the program "ControlDevice" is started,
+	  it initialises some parameters from its own attributes.
+	  Next, the program goes into a loop and sends updateData commands
+	  to the device as long as underlying supervisor (i.e. "this") logic requests
+	  an update and no error is reported. This code guarantees that
+	  no two updateData commands will intervene each other since the
+	  program waits for the commands completion or error.
+	  When the device returns
+	  an error, the supervisor can then handle the error of the
+	  device and restart the program if needed.
+	</para>
+	<para>
+	  The advantages of this program over classical C/C++ functions are :
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>If any error occurs (i.e. a method returns false),
+	    the program stops and other programs or state contexts can
+	    detect this and take appropriate action.</para>
+	  </listitem>
+	  <listitem>
+	    <para>The  "<function>device.updateData()</function>" call waits
+	    for completion of the remote operation.</para>
+	  </listitem>
+	  <listitem>
+	    <para>While the program waits for <function>updateData()</function>
+	      to complete, it does not block other programs, etc within
+	      the same TaskContext and thread.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      There is no need for additional synchronisation primitives
+	      between the supervisor and the device since the operations 
+	      have the OwnThread execution type. Which leads to :
+	    </para>
+	    <itemizedlist>
+	      <listitem>
+		<para>The operation is executed at the priority of the device's
+		  thread, and not the supervisor's priority.</para>
+	      </listitem>
+	      <listitem>
+		<para>The operation can never corrupt data of the device's thread,
+		  since it is <emphasis>serialised</emphasis>(executed after)
+		  with the programs running in that thread.
+		</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+	</itemizedlist>
+      </section>
+    </section>
+  </section>
+</article>
+

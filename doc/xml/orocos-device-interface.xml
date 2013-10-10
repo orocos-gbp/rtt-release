@@ -1,0 +1,262 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % oro_ents SYSTEM "http://people.mech.kuleuven.be/~psoetens/orocos/doc/orocos.ent" >
+%oro_ents;
+]
+>
+
+<article>
+  <articleinfo>
+    <title>Orocos Hardware Device Interface</title>
+    <copyright>
+      <year>2002,2003,2004,2005,2006,2007</year>
+      <holder>Peter Soetens, Herman Bruyninckx</holder>
+    </copyright>
+
+    <abstract>
+      <para>
+	This document provides a short introduction to the
+	&orocos; Hardware Device Interface definitions. These
+	are a collection of classes making abstraction of
+	interacting with hardware components.
+      </para>
+    </abstract>
+
+    <revhistory>
+      <revision>
+	<revnumber>0.1</revnumber>
+	<date>18 Oct 2003</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Initial document copied from core documentation.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.2</revnumber>
+	<date>21 Jan 2004</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Added more concrete how-to-use-it info.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.18</revnumber>
+	<date>16 Dec 2004</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Update to current code status.</revremark>
+      </revision>
+    </revhistory>
+
+    <legalnotice>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation, with no
+	Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+	Texts. A copy of this license can be found at
+	<ulink
+	  url="http://www.fsf.org/copyleft/fdl.html">http://www.fsf.org/copyleft/fdl.html</ulink>.
+      </para>
+    </legalnotice>
+
+  </articleinfo>
+
+    <section>
+      <title>The Orocos Device Interface (<acronym>DI</acronym>)</title>
+      <para>
+	Designing portable software which should interact with
+	hardware is very hard. Some efforts, like <ulink
+	  url="http://www.comedi.org"> Comedi</ulink>
+	propose a generic interface to communicate with a certain kind
+	of hardware (mainly analog/digital IO). This allows us to
+	change hardware and still use the same code to communicate
+	with it.  Therefore, we aim at supporting every Comedi
+	supported card.  We invite you to help us writing a C++
+	wrapper for this API and port comedilib (which adds more
+	functionality) to the real-time kernels.
+      </para>
+      <para>
+	We do not want to force people into using Comedi, and most of
+	us have home written device drivers.  To allow total
+	implementation independence, we are writing C++ device
+	interfaces 
+	which just defines which functionalities a generic device
+	driver should implement. It is up to the developers to wrap
+	their C device driver into a class which implements this
+	interface. You can find an example of this in the devices
+	package.  This package only contains the interface header files.
+	Other packages should always point to these interface files
+	and never to the real drivers actually used.  It is up to the
+	application writer to decide which driver will actually be
+	used.
+      </para>
+      <section><title>Structure</title>
+      <para>
+	The Device Interface can be structured
+	in two major parts : <emphasis>physical</emphasis> device
+	interfaces and <emphasis>logical</emphasis> device interfaces.
+	Physical device interfaces can be subdivided in four basic
+	interfaces: <classname>RTT::AnalogInput</classname>, <classname>RTT::AnalogOutput</classname>, 
+	<classname>RTT::DigitalInput</classname>,
+	<classname>RTT::DigitalOutput</classname>. Analog devices
+	are addressed with a channel as parameter and write a ranged
+	value, while digital devices are addressed with a bit number
+	as parameter and a true/false value.
+      </para>
+      <para>Logical device interfaces
+	represent the entities humans like to work with: a drive, a
+	sensor, an encoder, etc. They put <emphasis>semantics</emphasis> on top
+	of the physical interfaces they use underneath. You just want to know the
+	position of a positional encoder in radians for example.
+	Often, the physical layer is device dependent (and thus
+	non-portable) while the logical layer is device independent.
+      </para>
+      <para> 
+	<figure><title>Device Interface Overview</title>
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="images/fdi" />
+	    </imageobject>
+	    <imageobject role="fo">
+	      <imagedata fileref="images/hires/fdi"  width="100%" scalefit="1"/>
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+      </para></section>
+      <section><title>Example</title>
+      <para>An example of the
+	interactions between the logical and the physical layer is the
+	logical encoder with its physical counting card. An encoder is
+	a physical device keeping track of the position of an axis of
+	a robot or machine. The programmer wishes to use the encoder
+	as a sensor and just asks for the current position. Thus a
+	logical encoder might choose to implement the
+	<classname>RTT::SensorInterface</classname> which provides
+	a <methodname>read(DataType &amp; )</methodname> function.
+	Upon construction of the logical sensor, we supply the real
+	device driver as a parameter. This device driver implements
+	for example <classname>RTT::AnalogInInterface</classname>
+	which provides <methodname>read(DataType &amp; data, unsigned
+	  int chan)</methodname> and allows to read the position of a
+	certain encoder of that particular card.
+      </para>
+      </section>
+    </section>
+    <section>
+      <title>The Device Interface Classes</title>
+      <para>
+	The most common used interfaces for machine control
+	are already implemented and tested on multiple setups.
+	All the Device Interface classes reside in the
+	<classname>RTT</classname> namespace.
+      </para>
+      <section>
+	<title>Physical IO</title>
+	<para>
+	  There are several classes for representing
+	  different kinds of IO. Currently there are:
+	</para>
+	<table>
+	  <title>Physical IO Classes</title>
+	  <tgroup cols="2">
+	    <thead>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry>Interface</entry>
+		<entry>Description</entry>
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry><classname>RTT::AnalogInInterface</classname></entry>
+		<entry>Reading analog input channels</entry>
+	      </row>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry><classname>RTT::AnalogOutInterface</classname></entry>
+		<entry>Writing analog output channels</entry>
+	      </row>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry><classname>RTT::DigitalInInterface</classname></entry>
+		<entry>Reading digital bits</entry>
+	      </row>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry><classname>RTT::DigitalOutInterface</classname></entry>
+		<entry>Writing digital bits</entry>
+	      </row>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry>CounterInterface</entry>
+		<entry>Not implemented yet</entry>
+	      </row>
+	      <row>
+		<!-- one of (entrytbl entry) -->
+		<entry><classname>RTT::EncoderInterface</classname></entry>
+		<entry>A position/turn encoder</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	  <!-- one of (graphic mediaobject tgroup) -->
+	</table>
+      </section>
+      <section>
+	<title>Logical Device Interfaces</title>
+	<para>
+	  From a logical point of view, the generic
+	  <classname>RTT::SensorInterface</classname>&lt;T> is an
+	  easy to use abstraction for reading any kind 
+	  of data of type T.
+	</para>
+	<para>
+	  You need to look in the Orocos Component Library
+	  for implementations of the Device Interface.
+	  Examples are <classname>Axis</classname> and
+	  <classname>AnalogDrive</classname>.
+	</para>
+      </section>
+    </section>
+    <section>
+      <title>Porting Device Drivers to Device Interfaces</title>
+      <para>
+	The methods in each interface are well documented
+	and porting existing drivers (which mostly have a C API)
+	to these should be quite straight forward. It is the
+	intention that the developer writes a class that
+	inherits from one or more interfaces and implements
+	the corresponding methods. Logical Devices can then
+	use these implementations to provide higher level
+	functionalities.
+      </para>
+    </section>
+    <section>
+      <title>Interface Name Serving</title>
+      <para>
+	Name Serving is introduced in the Orocos CoreLib documentation.
+      </para>
+      <para>
+	The Device Interface provides name serving on interface level. This means
+	that one can ask a certain interface by which objects it is
+	implemented and retrieve the desired instance. No type-casting
+	whatsoever is needed for this operation. For now, only the
+	physical device layer can be queried for entities, since
+	logical device drivers are typically instantiated where
+	needed, given an earlier loaded physical device driver.
+      </para>
+      <para>
+	<xref linkend="example_name_service"/> shows how one could query the 
+	<classname>RTT::DigitalOutInterface</classname>.
+	  
+	<example id="example_name_service"><title>Using the name service</title>
+	    
+	  <programlisting>  FancyCard* fc = new FancyCard("CardName"); // FancyCard implements DigitalOutInterface
+
+  // Elsewhere in your program:
+  bool value = true;
+  <classname>RTT::DigitalOutInterface</classname>* card = DigitalOutInterface::nameserver.getObject("CardName");
+  if (card)
+      card->setBit(0, value);    // Set output bit to 'true'. </programlisting>
+	</example>
+      </para>
+    </section>
+</article>

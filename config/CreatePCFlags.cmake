@@ -1,0 +1,72 @@
+
+# This macro converts CMake lists of defines, include dirs and link libraries to pkg-config
+# style defines, include directives and link directives. The first three arguments are inputs
+# The last three arguments are the outputs (any existing content in the output vars is deleted.)
+# The first three arguments MUST be lists passed as a single argument. 
+# The last three arguments will be strings.
+#
+# Usage: create_pc_flags( "${INCLUDES}" "${LIBS}" PC_INCLUDES PC_LIBS )
+macro( create_pc_flags CM_DEFINES CM_INCLUDES CM_LIBRARIES PC_DEFINES PC_INCLUDES PC_LIBRARIES )
+  set(${PC_DEFINES} "")
+  set(${PC_INCLUDES} "")
+  set(${PC_LIBRARIES} "")
+
+  # MESSAGE("Got cmlibs: ${CM_LIBRARIES}")
+  # MESSAGE("Got cmcflags: ${CM_INCLUDES}")
+  # MESSAGE("Got cmdefs: ${CM_DEFINES}")
+
+  # WARNING: WE HAVE TO STORE THE MACRO ARG IN A TEMP VAR, OTHERWISE, the while() is always false !
+  set(FOO ${CM_LIBRARIES})
+
+  while( FOO )
+    list(GET FOO 0 ITEM)
+    list(REMOVE_AT FOO 0)
+    #message("item: ${ITEM}")
+    if( ITEM )
+      if( ITEM STREQUAL "debug")
+	if( CMAKE_BUILD_TYPE STREQUAL "Debug" )
+	  list(GET FOO 0 ITEM)
+	  list(REMOVE_AT FOO 0)
+	else()
+	  list(REMOVE_AT FOO 0)
+	  set(ITEM "")
+	endif()
+      endif()
+      if( ITEM STREQUAL "optimized")
+	if( NOT CMAKE_BUILD_TYPE STREQUAL "Debug" )
+	  list(GET FOO 0 ITEM)
+	  list(REMOVE_AT FOO 0)
+	else()
+	  list(REMOVE_AT FOO 0)
+	  set(ITEM "")
+	endif()
+      endif()
+      if( ITEM )
+	get_filename_component(PC_LIBPATH ${ITEM} PATH)
+	get_filename_component(PC_LIB ${ITEM} NAME_WE)
+	if (PC_LIBPATH AND PC_LIB)
+	  string(REPLACE "lib" "" PC_LIB ${PC_LIB})
+	  set( ${PC_LIBRARIES} "${${PC_LIBRARIES}} -L${PC_LIBPATH} -l${PC_LIB}")
+	else()
+	  set( ${PC_LIBRARIES} "${${PC_LIBRARIES}} -l${ITEM}")
+	endif()
+      endif()
+    endif()
+  endwhile()
+
+  foreach( ITEM ${CM_INCLUDES})
+    if( ITEM AND NOT ${ITEM} STREQUAL "/usr/include")
+      set( ${PC_INCLUDES} "${${PC_INCLUDES}} -I${ITEM}")
+    endif()
+  endforeach()
+
+  foreach( ITEM ${CM_DEFINES})
+    if( ITEM )
+      set( ${PC_DEFINES} "${${PC_DEFINES}} -D${ITEM}")
+    endif()
+  endforeach()
+
+  # MESSAGE("Computed pclibs: ${${PC_LIBRARIES}}")
+  # MESSAGE("Computed pccflags: ${${PC_INCLUDES}}")
+  # MESSAGE("Computed pcdefs: ${${PC_DEFINES}}")
+endmacro()

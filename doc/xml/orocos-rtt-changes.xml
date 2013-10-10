@@ -1,0 +1,313 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY orocos      "<acronym>Orocos</acronym>">
+<!ENTITY oldversion  "2.5">
+<!ENTITY version     "2.6">
+]
+>
+
+<article>
+  <articleinfo>
+    <title>
+      &orocos; Toolchain &version; Release Series
+      Changes, New Features, and Fixes 
+    </title>
+    <subtitle>
+			<emphasis>Open RObot COntrol Software</emphasis>
+    </subtitle>
+  </articleinfo>
+  <para>
+    This document provides a quick overview of what changed between
+    the &orocos; Toolchain &oldversion; and version &version;.
+  </para>
+  <section id="upgrading">
+    <title>Upgrading from RTT 1.x to Toolchain 2.x</title>
+		<para>
+			Please consult the online wiki for all available information about the 1.x to 2.x transition:
+			<ulink url="http://www.orocos.org/wiki/rtt/rtt-20">The Road to RTT 2.0</ulink>.  The
+			Real-Time Toolkit is no longer released as a single entity, but as part of a complete set of
+			tools and libraries for creating real-time applications.  See also the changes documents of
+			the previous major releases:
+		 <itemizedlist>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.0.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.0 Changes</ulink></para></listitem>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.1.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.1 Changes</ulink></para></listitem>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.2.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.2 Changes</ulink></para></listitem>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.3.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.3 Changes</ulink></para></listitem>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.4.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.4 Changes</ulink></para></listitem>
+			 <listitem><para><ulink url="http://www.orocos.org/stable/documentation/rtt/v2.5.x/doc-xml/orocos-rtt-changes.html">Toolchain 2.5 Changes</ulink></para></listitem>
+		 </itemizedlist>
+		</para>
+	</section>
+  <section id="caveats">
+    <title>Important Caveats</title>
+    <itemizedlist>
+      <listitem>
+				<para>
+					This release is binary incompatible with RTT &oldversion;.x. You need to recompile the
+					whole toolchain and all your applications in order to use this release.
+				</para>
+				<note><para> <emphasis>Take care that all previously built components and plugins in the
+				&lt;install&gt;/lib/orocos directory and subdirectories are removed, since the component
+				and plugin loaders may get confused if older versions are found.</emphasis>
+				</para></note>
+      </listitem>
+      <listitem>
+				<para>
+					The rttlua DeploymentComponent's name has been changed from "deployer" to "Deployer" in
+					order to be compatible with the existing deployer application. This change only influences
+					Lua users and requires each occurence of getPeer("deployer") to be changed by getPeer("Deployer").
+				</para>
+				<para>
+					You can do the renaming in your existing source trees with this Shell command:
+					<command> find . ! -path  "*.git*" -name "*.lua" -print0 | xargs -0 sed -i "s/\"deployer\"/\"Deployer\"/g;s/\'deployer\'/\'Deployer\'/g"
+					</command>
+				</para>
+      </listitem>
+      <listitem>
+				<para>
+					There was an API change in the (RTT internal) <classname>RTT::types::TypeInfo</classname>
+					class. If you inherited directly or indirectly from this class, you'll probably need to
+					inherit from <classname>RTT::types::TypeInfoGenerator</classname> instead and fabricate a
+					<function>installTypeInfoObject()</function> function. There is generally no change needed on your
+					side if you inherited from <classname>RTT::types::TemplateTypeInfo</classname>,
+					<classname>RTT::types::StructTypeInfo</classname> or similar classes, since these classes
+					have implemented <function>installTypeInfoObject()</function> function for you and inherit
+					from <classname>RTT::types::TypeInfoGenerator</classname>.
+				</para>
+      </listitem>
+      <listitem>
+				<para>
+					There was an API change in the (RTT internal)
+					<classname>RTT::marsh::PropertyLoader</classname> class. It requires now a TaskContext or
+					Service in the constructor and no longer as argument to the rest of the API.
+				</para>
+      </listitem>
+      <listitem>
+				<para>
+					<emphasis>We no longer load component libraries with the RTLD_GLOBAL flag.</emphasis>
+				</para>
+				<para>
+				
+					This means you must link
+					with all required libraries at link time, and not rely on symbol resolution during the
+					loading by the deployer.
+				</para>
+      </listitem>
+		</itemizedlist>
+  </section>
+  <section id="ros">
+    <title>ROS Users</title>
+    <itemizedlist>
+      <listitem>
+				<para> The Orocos Toolchain 2.6.x will only be released in ROS Fuerte and later.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					We fixed issues of conflicting typekits (see more on that below). This means that its
+					allowed now to load typekits from ROS and non-ROS packages, describing the same
+					structs.
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+  <section>
+    <title>Improvements</title>
+    <section>
+      <title>Building</title>
+      <itemizedlist>
+      <listitem>
+				<para>
+					<emphasis>ROS_ROOT is no longer influencing your build, unless you're in a ROS_PACKAGE_PATH</emphasis>
+					The last cornercases of ROS_ROOT influencing our build behavior have been ironed out in this release.
+				</para>
+				<para>
+					This fixes integration issues with AutoProj.
+				</para>
+      </listitem>
+      <listitem>
+				<para>
+					<emphasis>RTT and OCL builds with clang++ 3.0</emphasis>
+				</para>
+				<para>
+					This allows you to speed up RTT builds significantly. When you enabled CORBA, only the OMNIORB transport compiles fine
+					in clang.
+				</para>
+      </listitem>
+      <listitem>
+				<para>
+					<emphasis>It's now possible to create applications that setup a CORBA proxy, without
+					linking to TAO/OMNIORB directly, but only to the RTT corba transport.</emphasis> See the
+					<classname>RTT::corba::TaskContextFactory</classname> class.
+				</para>
+      </listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>TaskContext and Services</title>
+      <itemizedlist>
+				<listitem>
+					<para>
+						<emphasis> A new connection type has been introduced, CIRCULAR_BUFFER</emphasis>
+					</para>
+					<para>
+						This new type can be used in the ConnPolicy.type field in order to have circular
+						buffers instead of the classical non-circular buffer.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis>Exceptions thrown in operations are now detected and handled.</emphasis> 
+					</para>
+					<para>When an operation threw an exception, this resulted in undefined behavior. The exception is
+						now caught by RTT and the caller side receives an std::runtime_exception exception.
+						Passing exceptions is not supported, so this is a last-resort solution to cope with
+						misbehaving operations.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis>The ComponentLoader is from now on part of RTT instead of OCL.</emphasis>
+					</para>
+					<para>
+						This means you no longer need a DeploymentComponent to import typekits or component
+						packages.
+					</para>
+				</listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>Data Types, Toolkits and Typekits</title>
+      <itemizedlist>
+				<listitem>
+					<para><emphasis>We restructured typekits such that it is now allowed to load multiple typekits for the same type.</emphasis></para>
+					<para>
+						If these typekits name the type differently, the names will function as an alias. Also,
+						TypeInfo object pointers are now constant and can no longer become invalid in a running
+						application.  The restructuring allows one to install a TypeInfo object and later-on
+						add features such as type decomposition or transports. The classical TypeInfo subclasses
+						all have been adapted, but if you created your own TypeInfo variant, you will need to
+						update your code minimally.
+					</para>
+					<para>
+						See the Caveats section above in case you wrote a custom typekit.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis>The internal function getMember is now much more efficient and faster.</emphasis> 
+					</para>
+					<para>
+					There's now also
+						a real-time version of getMember, if you provide it a ReferenceDataSource such that a
+						reference to the member can be given without allocating a DataSource for it.
+					</para>
+				</listitem>
+      </itemizedlist>
+    </section>
+    <section>
+      <title>Operating Systems</title>
+      <itemizedlist>
+				<listitem>
+					<para>
+						Creating a Linux thread now prints the TID or PID instead of the POSIX id, such that
+						RTT threads can be correlated to normal Unix tools such as top or ps.
+					</para>
+				</listitem>
+      </itemizedlist>
+    </section>
+  </section>
+  <section>
+    <title>Orocos Component Library (OCL)</title>
+		<section>
+			<title>Lua scripting</title>
+			<itemizedlist>      
+				<listitem>
+					<para>
+						rttlua and tlsf-rttlua now support CORBA and Log4cpp logging as well.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						tlsf-rttlua is now capable of executing RTT operations in hard real-time, as long
+						as they are assigned to an operation variable in a non-critical-time section.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Consult the  <ulink
+						url="http://www.orocos.org/wiki/orocos/toolchain/orocostoolchainluacookbook">LuaCookbook</ulink>
+						for the latest changes
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+    <section>
+      <title>Reporting</title>
+      <itemizedlist>
+				<listitem>
+					<para>
+						The reporting component has been rewritten (again) boosting its performance sometimes a
+						1000-fold (but at least a 100-fold), especially when using the NetCDF reporting component. We can now reliably log
+						a dozen ports at 1kHz, using only 10% cpu on an Intel i7 system.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+    <section>
+      <title>Deployment</title>
+      <itemizedlist>
+				<listitem>
+					<para>
+						A <emphasis>-d or --daemon</emphasis> flag has been added to the deployer to let it
+						run in the background. You can use the new signal catching functions in the deployer
+						API to catch shutdown/restart signals.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Two new operations were added: setFileDescriptorActivity and connectOperations.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+	<appendix>
+		<title>About Orocos</title>
+		<para>
+			Please send your Orocos questions to <ulink
+			url="mailto: orocos-users at lists.mech.kuleuven.be">
+			orocos-users at lists.mech.kuleuven.be </ulink>. 
+		</para>
+		<para>
+			These pages are maintained by <ulink
+			url="http://www.orocos.org/orocos/whatis">the Orocos
+			team</ulink>.
+		</para>
+		<para>
+			For questions related to the use of the Orocos Software, please consult these
+			web pages and the <ulink
+			url="http://www.orocos.org/rtt">Orocos RTT manuals</ulink>. If
+			that fails, the  <ulink
+			url="mailto:orocos-dev at lists.mech.kuleuven.be">
+			orocos-dev at lists.mech.kuleuven.be </ulink> mailing list might help.
+			Please
+			send comments on these web pages and the development of Orocos to
+			our developer mailing list at  <ulink
+			url="mailto:orocos-dev at lists.mech.kuleuven.be">
+			orocos-dev at lists.mech.kuleuven.be </ulink>. All of
+			our lists have <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos-users">public
+			archives</ulink> ( <ulink url="http://lists.mech.kuleuven.be/mailman/listinfo/orocos-dev"> dev public
+			archive</ulink> ) .
+		</para>
+		<para>
+			Copyright (C) The SourceWorks
+		</para>
+		<para>
+			Verbatim copying and distribution of this entire article is
+			permitted in any medium, provided this notice is preserved.
+		</para>
+	</appendix>
+</article>

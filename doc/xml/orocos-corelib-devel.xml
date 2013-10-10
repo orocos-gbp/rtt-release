@@ -1,0 +1,426 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % oro_ents SYSTEM "http://people.mech.kuleuven.be/~psoetens/orocos/doc/orocos.ent" >
+%oro_ents;
+]
+>
+
+<article>
+  <articleinfo>
+    <title>Inside the Orocos Core Library Manual</title>
+    <copyright>
+      <year>2006,2007</year>
+      <holder>Peter Soetens, Herman Bruyninckx</holder>
+    </copyright>
+
+    <abstract>
+      <para>
+	This document explains the design and implementation of the
+	<emphasis>Core Library</emphasis> of &orocos;, the <emphasis>Open
+	RObot COntrol Software</emphasis> project. The CoreLib provides
+	infrastructural support for the functional and application components
+	of the &orocos; framework.
+      </para>
+    </abstract>
+
+    <revhistory>
+      <revision>
+	<revnumber>0.22.0</revnumber>
+	<date>28 Feb 2006</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>First version split off main manual.</revremark>
+      </revision>
+    </revhistory>
+
+    <legalnotice>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation, with no
+	Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+	Texts. A copy of this license can be found at
+	<ulink
+	  url="http://www.fsf.org/copyleft/fdl.html">http://www.fsf.org/copyleft/fdl.html</ulink>.
+      </para>
+    </legalnotice>
+
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+    <para>
+      This document contains some bits about the design of the CoreLib.
+    </para>
+  </section>
+  <section>
+    <title>PeriodicActivity</title>
+    <para>
+      The RTT::PeriodicActivity is an activity that serialises itself
+      in a common thread, such that multiple activities are executed
+      by the same thread.
+    </para>
+    <section>
+      <title>Periodic Activity Ordering</title>
+      <para>
+	In case multiple activities are executed (serialised) in one
+	thread, their execution must be ordered. The order of execution is
+	determined by the order in which they are started. Stopping
+	an activity removes it from the list.
+      </para>
+      <para>
+	<figure><title>Execution sequence diagram</title>
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="images/execution-sequence" />
+	    </imageobject>
+	    <imageobject role="fo">
+	      <imagedata fileref="images/hires/execution-sequence"  width="50%" scalefit="1"/>
+	    </imageobject>
+	    <!--
+	    <caption><para>
+	  </para></caption>
+	    -->
+	  </mediaobject>
+	</figure>
+      </para>
+      <para>
+	A PeriodicActivity instance is only serialised with another instance
+	if the priorities and periodicities match. Otherwise, a new thread
+	is created.
+      </para>
+    </section>
+    <section>
+      <title>Example Periodic Activity Creation</title>
+      <example>
+	<title>Example Periodic Activity Creation</title>
+	<para>
+	  This example shows how all kinds of activities can be created. When a activity
+	  is started it will add itself to the correct thread.
+	</para>
+	<programlisting>#include "rtt/PeriodicActivity.hpp"
+
+using namespace RTT;
+
+ORO_main( int argc, char** argv)
+{
+  // Define your tasks.
+
+  // ...
+
+  // The threads are created by Orocos.
+  // Both activities run in the same thread:
+  <classname>RTT::PeriodicActivity</classname> fast_activity1(0, 0.001, &amp;vel_loop);
+  <classname>RTT::PeriodicActivity</classname> fast_activity2(0, 0.001, &amp;vel_loop2);
+
+  // This activity is run in its own thread.
+  <classname>RTT::PeriodicActivity</classname> own_activity( 9, 0.05, &amp;kine_loop );
+
+  // This activity is run in its own thread as well.
+  <classname>RTT::PeriodicActivity</classname> own_activity2( 9, 0.5, &amp;kine_loop2 );
+
+  // All is transparent from here on.
+  fast_activity1->start();
+  fast_activity2->start(); // is always run directly after fast_activity1 !
+
+  // ...
+
+  fast_activity1->stop();
+  fast_activity2->stop();
+
+  return 0;
+}</programlisting>
+      </example>
+    </section>
+
+    <section id="corelib-simulation">
+      <title>Simulation</title>
+      <para>
+	The SimulationThread is available to do as fast as possible 
+	execution of SimulationActivity objects. Its priority and
+	simulated periodicity can be changed with the configuration tool, or
+	before its started.
+      </para>
+	<programlisting>#include "rtt/SimulationActivity.hpp"
+
+using namespace RTT;
+
+ORO_main( int argc, char** argv)
+{
+  // Define your activities
+
+  // ...
+
+  // Manually start the simulation thread
+  // 0.001 : The (virtual) period :  no activity can run 'faster' than this.
+  <classname>RTT::SimulationThread</classname>::Instance()->setPeriod( 0.001 );
+  <classname>RTT::SimulationThread</classname>::Instance()->start();
+
+  // fast_sim_activity will measure 0.001s elapses between each step(),
+  // slow_sim_activity will measure 0.01s elapses in time between each step()
+  <classname>RTT::SimulationActivity</classname> fast_sim_activity(0.001, &amp;vel_loop);
+  <classname>RTT::SimulationActivity</classname> slow_sim_activity(0.01, &amp;pos_loop);
+
+  // All is transparent from here on.
+  fast_sim_activity->start();
+  slow_sim_activity->start();
+
+  // ...
+
+  fast_sim_activity->stop();
+  slow_sim_activity->stop();
+
+  return 0;
+}</programlisting>
+      <warning>
+	<para>
+	  If other threads are running in the same program executable,
+	  they will also 'notice' the fast system time changes if the SimulationThread
+	  is started. It is thus advisable not to mix SimulationThreads with
+	  other threads. Also, any thread with lower priority than the 
+	  SimulationThread will never run.
+	</para>
+      </warning>
+    </section>
+  </section>
+  <section>
+    <title>Multi-Threading</title>
+    <section id="core-priority-inversions">
+      <title>Priority Inversions</title>
+      <para>
+	A Priority inversion is the term used to indicate a scheduling situation
+	in which a high priority thread is blocked on a resource which is held
+	by a low priority thread, while a medium priority thread is running,
+	preventing the low priority thread to free the resource for the high
+	priority thread. 
+      </para>
+      <para>
+	The result is an inverted priority because a medium priority thread
+	is running while the high priority thread should be runnen, hence, 
+	the medium priority thread has, in practice, a higher priority than
+	the high priority thread.
+      </para>
+      <para>
+	There are roughly said two solution to this problem. 1. Do 
+	not block on resources from high priority threads. 2. Use priority
+	inheritance, where a thread gets the priority of the highest priority
+	thread being blocked on a resource it holds. Once it releases the
+	resource, its priority goes back to normal and the high priority thread
+	can resume.
+      </para>
+      <para>
+	In essence, Orocos does not know of priority inversions and does not
+	know if the underlying Operating System properly solves this common
+	situation. Furthermore, it can be prooven that there are situations 
+	where priority inheritance does not work.
+	Therefore, we try to provide as much as possible lock-free
+	implementations of inter-thread messaging. <xref linkend="core-priority-inversion-table"/>
+	lists the know uses of Orocos which <emphasis>might</emphasis> lead
+	to priority inversion. 
+      </para>
+      <table id="core-priority-inversion-table">
+	<title>Classes Possibly Subject to Priority Inversion</title>
+	<tgroup cols="2">
+	  <thead>
+	    <row>
+	      <entry>Class/method</entry>
+	      <entry>Rationale</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <row>
+	      <entry><classname>RTT::DataObjectLocked</classname></entry>
+	      <entry>
+		<para>Uses Mutex for serialising concurrent access. Alternative
+		Lock-free implementations are possible.</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::PeriodicTask</classname>::start(), 
+	      <classname>RTT::PeriodicTask</classname>::stop()</entry>
+	      <entry><para>
+		Uses Mutex for serialising concurrent access.
+		Alternative implementation are incorrect,
+		since stop() guarantees that finalize() will
+		be called <emphasis>after</emphasis> the last step(), hence a
+		mutex/semaphore is used such that it
+		will block until the step() returns and then call finalize().
+		</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::Logger</classname></entry>
+	      <entry>
+		<para>Uses Mutex for serialising concurrent access.
+		  No Alternative implementation is possible, Std C++ IO
+		  <emphasis>must</emphasis> be serialised.</para>
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+      <para><xref linkend="core-lock-free-table"/> shows communication infrastructure
+	in Orocos which is especially designed to be lock-free and which is thus 
+	not subject to priority inversions. It is our aim to shrink the former
+	table and grow the latter in Orocos' development lifetime.</para>
+      <table id="core-lock-free-table">
+	<title>Classes Not Subject to Priority Inversion</title>
+	<tgroup cols="2">
+	  <thead>
+	    <row>
+	      <entry>Class/method</entry>
+	      <entry>Rationale</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <row>
+	      <entry><classname>RTT::DataObjectLockFree</classname></entry>
+	      <entry>
+		<para>Uses a single writer, multiple reader Lock-free implementation.
+		  A read only returns the last written value.
+		  Used by the ControlKernel application to communicate data between
+		  Components.</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::AtomicQueue</classname></entry>
+	      <entry>
+		<para>Uses Compare And Swap (CAS) to store object pointers
+		in an atomic queue. Used by the Processor class to queue incoming Commands.</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::BufferLockFree</classname></entry>
+	      <entry>
+		<para>Uses a many writers, multiple readers Lock-free CAS implementation.
+		  A read returns the oldest written value in a FIFO way.
+		</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::ListLockFree</classname></entry>
+	      <entry>
+		<para>Uses a many writers, multiple readers Lock-free CAS implementation
+		of a single linked list. A special member function 'apply' must be used
+		to manipulate the objects within the list.
+		</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::Event</classname>::emit()</entry>
+	      <entry>
+		<para>Uses the ListLockFree above for keeping track of subscribers.
+		Concurrent invocations of emit() will lead to concurrent execution
+		of the subscriber's callback functions.</para>
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><classname>RTT::Handle</classname>::connect() and <classname>RTT::Handle</classname>::disconnect()</entry>
+	      <entry>
+		<para>(Dis)Connection of an event handle is hard real-time and lock-free
+		because of the lock-free event implementation.</para>
+	      </entry>
+	    </row>
+	  </tbody>
+	</tgroup>
+      </table>
+    </section>
+  </section>
+  <section>
+    <title>DataSources</title>
+    <para>
+      A <classname>RTT::DataSource</classname> is the fundamental
+      data exchange entity within Orocos. It's interface is that of an
+      'expression': it can be evaluate()'d, its result can be get() and
+      an <classname>RTT::AssignableDataSource</classname> can
+      even be set(). The <classname>RTT::DataObject</classname> types
+      are implementations of DataSources, but many more kinds exists which
+      are used by the Scripting engine and the task infrastructure.
+    </para>
+    <para>
+      The <classname>RTT::DataSourceBase</classname> interface is the most
+      basic interface for exchanging data ( value types ) between
+      objects. They are reference counted ('smart pointers'), such
+      that ownership across many objects must not be managed.
+      The DataObjectInterface implements the DataSource interface,
+      and thus all Orocos DataObject types are DataSources.
+    </para>
+    <para>
+      The <classname>RTT::DataObjectInterface</classname> has multiple
+      implementations, depending on the specific data access locking
+      needs:
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis role="strong"><classname>RTT::DataObject</classname></emphasis>. This is
+	      the most simple DataObject implementation. The
+	      <function>Get()</function> and
+	      <function>Set()</function> methods directly map onto the
+	      contents and can always be inlined by the compiler. It
+	      offers no thread safety, but maximum efficiency for
+	      copying data.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis role="strong"><classname>RTT::DataObjectLocked</classname></emphasis>.
+	      This is a thread safe DataObject whose
+	      <function>Set()</function> and
+	      <function>Get()</function> methods are guarded by a
+	      single mutex. The second thread accessing this object
+	      will always block, which is not always appropriate in a
+	      realtime system.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis
+		role="strong"><classname>RTT::DataObjectPrioritySet</classname></emphasis>. This
+	      is a more complex DataObject which gives always priority
+	      to the thread calling <function>Set()</function>, which
+	      will never block. The thread accessing
+	      <function>Get()</function> will block if the
+	      <function>Set()</function> thread is accessing the
+	      contents. It is mainly used for sharing data between two
+	      kernels, running at different priorities.
+	    </para>
+	    <note>
+	      <para>
+		This DataObject will only work if the
+		<function>Set()</function> thread has the highest
+		priority. When the inverse is true, data corruption
+		will occur. It is obvious that this DataObject can
+		only be used if both threads have static priorities
+		(which is the case for all threads in the &orocos;
+		framework).
+	      </para>
+	    </note>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis
+		role="strong"><classname>RTT::DataObjectPriorityGet</classname></emphasis>. The
+	      inverse of <function>DataObjectPrioritySet</function>.
+	      The thread accessing <function>Get()</function> will
+	      never block.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis role="strong"><classname>RTT::DataObjectLockFree</classname></emphasis>.
+	      This DataObject implements a non blocking reader/writer
+	      buffer which always returns the last written value to
+	      the reader. If the reader is preempted with a write and
+	      a read, the last read will return a newer value, while
+	      the first read continues to read the uncorrupted old
+	      value.  The depth of this buffer must be readers+3, for
+	      the algorithm to succeed in doing every write. Apart
+	      from memory consumption, it is one of the best
+	      thread-safe DataObject implementations.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+  </section>
+</article>

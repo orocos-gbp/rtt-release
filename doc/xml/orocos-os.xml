@@ -1,0 +1,518 @@
+<?xml version='1.0'?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+"http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+<!ENTITY % oro_ents SYSTEM "http://people.mech.kuleuven.be/~psoetens/orocos/doc/orocos.ent" >
+%oro_ents;
+]
+>
+
+<article>
+  <articleinfo>
+    <title>Orocos Operating System Abstraction</title>
+    <copyright>
+      <year>2003-2010</year>
+      <holder>Peter Soetens, Herman Bruyninckx</holder>
+    </copyright>
+
+    <abstract>
+      <para>
+	This document gives a short overview of the 
+	philosophy and available classes for Operating
+	System ( threads, mutexes, etc ) interaction within &orocos;
+      </para>
+    </abstract>
+    
+    <revhistory>
+      <revision>
+	<revnumber>0.1</revnumber>
+	<date>28 Oct 2003</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Initial version copied from corelib documentation.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.16</revnumber>
+	<date>31 March 2004</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>PeriodicThread and SingleThread.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.18</revnumber>
+	<date>10 Dec 2004</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Review of all sections. I have removed the kernel space
+	  sections, since it is no longer maintained. Everything in this
+	manual now applies to the GNU/Linux and RTAI/LXRT targets.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.19</revnumber>
+	<date>16 Feb 2005</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Introduction cleanup, restructuring.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.20</revnumber>
+	<date>1 May 2005</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Added Thread monitoring via ParallelPort support.</revremark>
+      </revision>
+      <revision>
+	<revnumber>0.22</revnumber>
+	<date>16 Okt 2006</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Documented new setScheduler call and priority management.</revremark>
+      </revision>
+      <revision>
+	<revnumber>1.2.1</revnumber>
+	<date>10 July 2007</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Small updates in porting section, spelling fixes.</revremark>
+      </revision>
+      <revision>
+	<revnumber>2.0</revnumber>
+	<date>Feb 6, 2010</date>
+	<authorinitials>ps</authorinitials>
+	<revremark>Cleanups for RTT 2.0</revremark>
+      </revision>
+    </revhistory>
+
+    <legalnotice>
+      <para>
+	Permission is granted to copy, distribute and/or modify this document
+	under the terms of the GNU Free Documentation License, Version 1.1 or
+	any later version published by the Free Software Foundation, with no
+	Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
+	Texts. A copy of this license can be found at
+	<ulink
+	  url="http://www.fsf.org/copyleft/fdl.html">http://www.fsf.org/copyleft/fdl.html</ulink>.
+      </para>
+    </legalnotice>
+
+  </articleinfo>
+
+  <section>
+    <title>Introduction</title>
+    <section>
+      <title>Real-time OS Abstraction</title>
+      <para>
+	The OS layer makes an abstraction of the operating system on
+	which it runs. It provides C++ interfaces to only the
+	<emphasis>minimal set</emphasis> of operating system
+	primitives that it needs: time reading, mutexes, semaphores, condition variables and
+	threads. The abstraction
+	also allows &orocos; users to build their software on all
+	supported systems with only a recompilation step. The OS
+	Abstraction layer is not directly being used by the
+	application writer.
+      </para>
+      <para>
+	The abstractions cause (almost) no execution overhead, because
+	the wrappers can be called in-line. See the <option>OROBLD_OS_AGNOSTIC</option>
+	option in CMake build tool to control in-lining.
+      </para>
+    </section>
+  </section>
+  <section>
+    <title>The Operating System Interface</title>
+    <section>
+      <title>Basics</title>
+      <para>
+	Keeping the &orocos; core portable requires an extra
+	abstraction of some operating system (OS) functionalities. For
+	example, a thread can be created, started, paused, scheduled,
+	etc., but each OS uses other function calls to do this.
+	&orocos; prefers C++ interfaces, which led to the
+	<classname>RTT::os::ThreadInterface</classname> which allows
+	control and provides information about a thread in &orocos;.
+      </para>
+      <para>
+	Two thread classes are available in &orocos;:
+	<classname>RTT::os::Thread</classname> houses our thread implementation.
+	The <classname>RTT::os::MainThread</classname> is a special case as
+	only one such object exists and represents the thread that
+	executes the main() function.
+      </para>
+      <para>
+	This drawing situates the Operating System abstraction with
+	respect to device driver interfacing (DI) and the rest of
+	&orocos; <figure><title>OS Interface overview</title>
+	  <mediaobject>
+	    <imageobject role="html">
+	      <imagedata fileref="images/FDIvsFOSI" />
+	    </imageobject>
+	    <imageobject role="fo">
+	      <imagedata fileref="images/hires/FDIvsFOSI"  width="100%" scalefit="1"/>
+	    </imageobject>
+	  </mediaobject>
+      </figure>
+      </para>
+    </section>
+  </section>
+  <section>
+    <title>OS directory Structure</title>
+      <para>
+      The OS directory contains C++ classes to access Operating System
+      functionality, like creating threads or signaling
+      semaphores. Two kinds of subdirectories are used: the CPU <emphasis>architecture</emphasis>
+      (i386, powerpc, x86_64) and the Operating System (gnulinux, xenomai, lxrt),
+      or <emphasis>target</emphasis>.
+    </para>
+    <section>
+      <title>The RTAI/LXRT OS target</title>
+      <para>
+	RTAI/LXRT is an
+	environment that allows user programs to run with real-time
+	determinism next to the normal programs. The advantage is
+	that the real-time application can use normal system libraries
+	for its functioning, like showing a graphical user interface.
+      </para>
+      <para>
+	An introduction to RTAI/LXRT can be found in the <ulink
+	  url="http://people.mech.kuleuven.be/~psoetens/lxrt/portingtolxrt.html"> 
+	  Porting to LXRT HOWTO</ulink>, which is a must-read if you
+	don't know what LXRT is.
+      </para>
+      <para>
+	The common rule when using LXRT is that any user space (GNU/Linux)
+	library can be used and any header included as long as their non-real-time
+	functions are not called from within a hard real-time thread.
+	Specifically, this means that all the RTAI (and Orocos) OS functions,
+	but not the native Linux ones, may be called from within
+	a hard real-time thread. Fortunately these system calls
+	can be done from a not hard real-time thread within the
+	same program.
+      </para>
+    </section>
+    <section>
+      <title>Porting Orocos to other Architectures / OSes</title>
+      <para>
+	The OS directory is the only part of the Real-Time Toolkit
+	that needs to be ported to other Operating Systems or
+	processor architectures in case the target supports Standard
+	C++. The os directory contains code common to all OSes. The
+	<emphasis>oro_arch</emphasis> directories contain the
+	architecture dependent headers (for example atomic counters
+	and compare-and-swap ).
+      </para>
+      <para>
+	In order to start your port, look at the <filename>fosi_interface.h</filename>
+	and <filename>fosi_internal_interface.hpp</filename> files in
+	the os directory. These two files list the C/C++ function
+	signatures of all to be ported functions in order to support
+	a new Operating System. The main categories are: time reading, mutexes,
+	semaphores and threads.
+	The easiest way to port Orocos to another operating system, 
+	is to copy the gnulinux directory into a new directory and start
+	modifying the functions to match those in your OS.
+      </para>
+    </section>
+    <section>
+      <title>OS Header Files</title>
+      <para>
+	The following table gives a short overview of the available
+	headers in the os directory.
+      </para>
+      <table frame="all">
+	<title>Header Files</title>
+	<tgroup cols="3" colsep="1" rowsep="1">
+	  <thead >
+	    <row>
+	      <entry>Library</entry>
+	      <entry>Which file to include</entry>
+	      <entry>Remarks</entry>
+	    </row>
+	  </thead>
+	  <tbody>
+	    <row>
+	      <entry align="center" valign="middle">OS
+		functionality</entry>
+	      <entry align="center"
+		  valign="middle">rtt/os/fosi.h</entry>
+	      <entry align="left" valign="middle">Include this file if
+		you want to make system calls to the underlying
+		operating system ( LXRT, GNU/Linux ) .</entry></row>
+	    <row>
+	      <entry align="center" valign="middle">OS Abstraction
+		classes</entry>
+	      <entry align="center" valign="middle">
+		Mutex.hpp, MutexLock.hpp, Semaphore.hpp, PeriodicThread.hpp, SingleThread.hpp,
+		main.h
+	      </entry>
+	      <entry align="left" valign="middle">
+		The available C++ OS primitives. main.h
+		is required to be included in your ORO_main() program file.
+	      </entry></row>
+	  </tbody>
+	</tgroup>
+      </table> 
+    </section>
+  </section>
+  <section>
+    <title>Using Threads and Real-time Execution of Your Program</title>
+    <section>
+      <title>Writing the Program main()</title>
+      <para>
+	All tasks in the real-time system have to be performed by some
+	thread.  The OS abstraction expects an <function>int
+	  ORO_main(int argc, char** argv)</function> function (which
+	the user has written) and will call that after all system
+	initialisation has been done. Inside ORO_main() the user
+	may expect that the system is properly set up and can be used.
+	The resulting orocos-rtt library will contain the real main()
+	function which will call the ORO_main() function.
+      </para>
+      <important>
+	<para>
+	  Do not forget to include
+	  <filename>&lt;rtt/os/main.h&gt;</filename> in the main program
+	  file, or the linker will not find the ORO_main function.
+	</para>
+      </important>
+      <note>
+	<para>
+	  Using global objects ( or <emphasis>static</emphasis> class
+	  members ) which use the OS functions before ORO_main() is
+	  entered (because they are constructed before main() ), can
+	  come into conflict with an uninitialised system. It is
+	  therefor advised not to use static global objects which use
+	  the OS primitives. <classname>Event</classname>s in the
+	  CoreLib are an example of objects which should not be
+	  constructed as global static. You can use dynamically
+	  created (i.e. created with <emphasis>new</emphasis> ) global
+	  events instead.
+	</para>
+      </note>
+    </section>
+    <section>
+      <title>The Orocos Thread</title>
+      <section>
+	<title>Threads</title>
+	<para>
+	  An &orocos; thread by the
+	  <classname>RTT::os::Thread</classname> class. The most
+	  common operations are <methodname>start()</methodname>,
+	  <methodname>stop()</methodname> and setting the periodicity.
+	  What is executed is defined in an user object which
+	  implements the
+	  <classname>RTT::os::RunnableInterface</classname>. It
+	  contains three methods :
+	  <methodname>initialize()</methodname>,
+	  <methodname>step()</methodname> and
+	  <methodname>finalize()</methodname>. You can inherit from
+	  this interface to implement your own functionality. In
+	  initialize(), you put the code that has to be executed once
+	  when the component is start()'ed. In step(), you put the
+	  instructions that must be executed periodically. In
+	  finalize(), you put the instructions that must be executed
+	  right after the last step() when the component is stop()'ed.
+	</para>
+	<para>
+	  However, you are encouraged <emphasis>NOT</emphasis> to use
+	  the OS classes! The Core Primitives use these classes as a basis to provide a more
+	  fundamental activity-based (as opposite to thread based)
+	  execution mechanism which will insert your periodic activities in
+	  a periodic thread.
+	</para>
+	<para>
+	  Common uses of periodic threads are :
+	  <itemizedlist>
+	  <listitem>
+	    <para>Running periodic control tasks.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Fetching periodic progress reports.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Running the CoreLib periodic tasks.</para>
+	  </listitem>
+	</itemizedlist>
+	</para>
+	<para>
+	  A special function is forseen when the Thread executes
+	  non periodically (ie getPeriod() == 0): loop(), which is 
+	  executed instead of step and in which it is allowed to
+	  not return (for a long time).
+	</para>
+	<para>
+	  The user himself is responsible for providing a mechanism to
+	  return from the loop() function. The Thread expects
+	  this mechanism to be implemented in the
+	  breakLoop() function, which must return
+	  true if the loop() function could be signaled to
+	  return. Thread will call breakLoop() in its stop()
+	  method if loop() is still being executed and, if successful,
+	  will wait until loop() returns.  The
+	  <function>Thread::isRunning()</function> function can
+	  be used to check if loop() is being executed or not.
+	</para>
+	<note>
+	  <para>The <classname>RTT::Activity</classname> 
+	  provides a better integrated implementation for
+	  SingleThread and should be favourably used.</para>
+	</note>
+	<para>
+	  Common uses of non periodic threads are :
+	  <itemizedlist>
+	  <listitem>
+	    <para>Listening for data on a network socket.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Reading a file or files from hard-disk.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Waiting for user input.</para>
+	  </listitem>
+	  <listitem>
+	    <para>Execute a lengthy calculation.</para>
+	  </listitem>
+	  <listitem>
+	    <para>React to asynchronous events.</para>
+	  </listitem>
+	</itemizedlist>
+	</para>
+      </section>
+      <section>
+	<title>Setting the Scheduler and Priorities.</title>
+	<para>
+	  The Orocos thread priorities are set during thread
+	  construction time and can be changed later on with
+	  <function>setPriority</function>. Priorities are integer
+	  numbers which are passed directly to the underlying OS. One
+	  can use priorities portably by using the
+	  <classname>RTT::os::LowestPriority</classname>,
+	  <classname>RTT::os::HighestPriority</classname> and
+	  <classname>RTT::os::IncreasePriority</classname> variables
+	  which are defined for each OS.
+	</para>
+	<para>
+	  OSes that support multiple schedulers can use the
+	  <function>setScheduler</function> function to influence
+	  the scheduling policy of a given thread. Orocos guarantees
+	  that the <classname>ORO_SCHED_RT</classname> and
+	  <classname>ORO_SCHED_OTHER</classname> variables are 
+	  defined and can be used portably. The former `hints'
+	  a real-time scheduling policy, while the latter `hints'
+	  a not real-time scheduling policy. Each OS may define
+	  additional variables which map more appropriately to
+	  its scheduler policies. When only one scheduling policy
+	  is available, both variables map to the same scheduler.
+	</para>
+      </section>
+      <section>
+	<title>ThreadScope: Oscilloscope Monitoring of Orocos Threads</title>
+	<para>
+	  You can configure the OS layer at compilation time using CMake to
+	  report thread execution as block-waves on the parallel port
+	  or any other digital output device.  Monitoring through the
+	  parallel port requires that a parallel port Device Driver is
+	  installed, and for Linux based OSes, that you execute the
+	  Orocos program as root.
+	</para>
+	<para>
+	  If the Logger is active, it will log the mapping of
+	  Threads to the device's output pins to the <filename>orocos.log</filename>
+	  file. Just before step() is entered, the pin will be set
+	  high, and when step() is left, the pin is set low again.
+	  From within any RTT activity function, you may then additionally use the
+	  ThreadScope driver as such :
+	</para>
+	<programlisting>  <classname>RTT::DigitalOutInterface</classname>* pp = DigitalOutInterface::nameserver.getObject("ThreadScope");
+if ( pp )
+    pp->setBit( this->getTask()->thread()->threadNumber(), value );
+  	</programlisting>
+	<para>
+	  which sets the corresponding bit to a boolean value. The
+	  main thread claims pin zero, the other pins are assigned
+	  incrementally as each new Orocos thread is created.
+	</para>
+      </section>
+    </section>
+    <section>
+      <title>Synchronisation Primitives</title>
+      <para>
+	Orocos OS only provides a few synchronisation primitives,
+	mainly for guarding critical sections.
+      </para>
+      <section>
+	<title>Mutexes</title>
+	<para>
+	  There are two kinds of Mutexes : <classname>RTT::os::Mutex</classname>
+	  and <classname>RTT::os::MutexRecursive</classname>. To lock a mutex, it
+	  has a method <methodname>lock()</methodname>, to unlock, the method is <methodname>unlock()</methodname> and to
+	  try to lock, it is <methodname>trylock()</methodname>.
+	  A lock() and trylock() on a recursive mutex from the same
+	  thread will always succeed, otherwise, it blocks.
+	</para>
+	<para>
+	  For ease of use, there is a <classname>RTT::os::MutexLock</classname> which
+	  gets a Mutex as argument in the constructor. As long as the
+	  MutexLock object exists, the given Mutex is locked. This is
+	  called a scoped lock.
+	</para>
+	<example>
+	  <title>Locking a Mutex</title>
+	  <para>The first listing shows a complete lock over a function :</para>
+	  <programlisting>  <classname>RTT::os::Mutex</classname> m;
+  void foo() {
+     int i;
+     <classname>RTT::os::MutexLock</classname> lock(m);
+     // m is locked.
+     // ...
+  } // when leaving foo(), m is unlocked.  </programlisting>
+	  <para>
+	    Any scope is valid, so if the critical section is smaller than
+	    the size of the function, you can :
+	  </para>
+	  <programlisting>  <classname>RTT::os::Mutex</classname> m;
+  void bar() {
+     int i;
+     // non critical section
+     {
+        <classname>RTT::os::MutexLock</classname> lock(m);
+        // m is locked.
+        // critical section
+     } //  m is unlocked.
+     // non critical section
+     //...
+  }  </programlisting>
+	</example>
+      </section>
+      <section>
+	<title>Signals and Semaphores</title>
+	<para>
+	  Orocos provides a C++ semaphore abstraction class
+	  <classname>RTT::os::Semaphore</classname>. It is used mainly for 
+	  non periodic, blocking tasks or threads. The higher level
+	  Event implementation in CoreLib can be used for thread safe
+	  signalling and data exchange in periodic tasks.
+	</para>
+	  <programlisting>  <classname>RTT::os::Semaphore</classname> sem(0); // initial value is zero.
+  void foo() {
+     // Wait on sem, decrement value (blocking ):
+     sem.wait()
+     // awake : another thread did signal().
+
+     // Signal sem, increment value (non blocking):
+     sem.signal();
+
+     // try wait on sem (non blocking):
+     bool result = sem.trywait();
+     if (result == false ) {
+         // sem.value() was zero
+     } else {
+         // sem.value() was non-zero and is now decremented.
+     }
+  }  </programlisting>
+      </section>
+      <section>
+	<title>Compare And Swap ( CAS )</title>
+	<para>
+	  CAS is a fundamental building block of the CoreLib classes
+	  for inter-thread communication and must be implemented for
+	  each OS target. See the Lock-Free sections of the CoreLib manual
+	  for Orocos classes which use this primitive.
+	</para>
+      </section>
+    </section>
+  </section>
+</article>

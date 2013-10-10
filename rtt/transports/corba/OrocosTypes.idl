@@ -1,0 +1,29 @@
+#ifndef ORO_OROCOS_TYPES_IDL
+#define ORO_OROCOS_TYPES_IDL
+
+#ifdef CORBA_IS_TAO
+//resolves LNK2005
+#include <tao/orb.idl>
+#endif
+
+module RTT
+{
+  module corba
+  {
+
+    // use to convert std::pair
+    struct Pair {
+      any t1;
+      any t2;
+    };
+
+    // Classical Orocos type
+    typedef sequence<any> CAnySequence;
+    // use to convert std::map
+    typedef sequence<Pair> PairSeq;
+  };
+
+};
+
+
+#endif
