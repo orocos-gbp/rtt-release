@@ -45,17 +45,11 @@ if(OROCOS-RTT_FOUND)
     #  endif()
     #  rosbuild_init()
     #endif()
-  elseif(EXISTS "${PROJECT_SOURCE_DIR}/package.xml")
-    if(NOT catkin_FOUND)
-      find_package(catkin)
-    endif()
-
-    if(catkin_FOUND)
-      message(STATUS "[UseOrocos] Building package ${PROJECT_NAME} with catkin develspace support.")
-      set(ORO_USE_CATKIN True CACHE BOOL "Build packages with Catkin develspace support.")
-    else()
-      message(STATUS "[UseOrocos] Building package ${PROJECT_NAME} without an external buildtool like rosbuild or Catkin")
-    endif()
+  elseif(catkin_FOUND)
+    message(STATUS "[UseOrocos] Building package ${PROJECT_NAME} with catkin develspace support.")
+    set(ORO_USE_CATKIN True CACHE BOOL "Build packages with Catkin develspace support.")
+  else()
+    message(STATUS "[UseOrocos] Building package ${PROJECT_NAME} without an external buildtool like rosbuild or Catkin")
   endif()
 
   # This is for not allowing undefined symbols when using gcc
@@ -139,6 +133,13 @@ if(OROCOS-RTT_FOUND)
   elseif(ORO_USE_CATKIN)
     # Disable auto-linking
     set(OROCOS_NO_AUTO_LINKING True)
+    # Make sure a devel prefix's pkgconfig path is available if it hasn't already been source'd
+    if (NOT $ENV{PKG_CONFIG_PATH} MATCHES "${CATKIN_DEVEL_PREFIX}/lib/pkgconfig")
+      set(ENV{PKG_CONFIG_PATH} "${CATKIN_DEVEL_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
+    endif()
+    if("$ENV{VERBOSE}")
+      message(STATUS "[UseOrocos] PKG_CONFIG_PATH: $ENV{PKG_CONFIG_PATH}")
+    endif()
     # Get catkin build_depend dependencies
     orocos_get_catkin_deps( DEPS )
     #message("orocos_get_manifest_deps are: ${DEPS}")
@@ -259,6 +260,7 @@ if(OROCOS-RTT_FOUND)
 
     # Necessary for .pc file generation
     list(APPEND OROCOS_DEFINED_COMPS " -l${COMPONENT_LIB_NAME}")
+    list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS "${COMPONENT_NAME}")
   endmacro( orocos_component )
 
 # Utility libraries should add themselves by calling 'orocos_library()' 
@@ -334,6 +336,7 @@ macro( orocos_library LIB_TARGET_NAME )
 
     # Necessary for .pc file generation
     list(APPEND OROCOS_DEFINED_LIBS " -l${LIB_NAME}")
+    list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS "${LIB_TARGET_NAME}")
   endmacro( orocos_library )
 
   # Executables should add themselves by calling 'orocos_executable()'
@@ -525,6 +528,7 @@ macro( orocos_library LIB_TARGET_NAME )
 
     # Necessary for .pc file generation
     list(APPEND OROCOS_DEFINED_TYPES " -l${LIB_NAME}")
+    list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS "${LIB_TARGET_NAME}")
   endmacro( orocos_typekit )
 
   # plugin libraries should add themselves by calling 'orocos_plugin()' 
@@ -609,6 +613,7 @@ macro( orocos_library LIB_TARGET_NAME )
 
     # Necessary for .pc file generation
     list(APPEND OROCOS_DEFINED_PLUGINS " -l${LIB_NAME}")
+    list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS "${LIB_TARGET_NAME}")
   endmacro( orocos_plugin )
 
   # service libraries should add themselves by calling 'orocos_service()' 
@@ -792,6 +797,16 @@ Cflags: -I\${includedir} \@PC_EXTRA_INCLUDE_DIRS\@
       string(CONFIGURE "${PC_CONTENTS}" CATKIN_PC_CONTENTS @ONLY)
       file(WRITE ${CATKIN_DEVEL_PREFIX}/lib/pkgconfig/${PC_NAME}.pc ${CATKIN_PC_CONTENTS})
 
+    endif()
+
+    # Store a list of exported targets and include directories on the cache so that other packages within the same workspace can link to them.
+    if(${PROJECT_NAME}_EXPORTED_TARGETS)
+      message(STATUS "[UseOrocos] Exporting targets ${${PROJECT_NAME}_EXPORTED_TARGETS}.")
+      set(${PC_NAME}_EXPORTED_OROCOS_TARGETS ${${PROJECT_NAME}_EXPORTED_TARGETS} CACHE STRING "Targets exported by package ${PC_NAME}")
+    endif()
+    if(${PROJECT_NAME}_EXPORTED_INCLUDE_DIRS)
+      message(STATUS "[UseOrocos] Exporting include directories ${${PROJECT_NAME}_EXPORTED_INCLUDE_DIRS}.")
+      set(${PC_NAME}_EXPORTED_OROCOS_INCLUDE_DIRS ${${PROJECT_NAME}_EXPORTED_INCLUDE_DIRS} CACHE STRING "Include directories exported by package ${PC_NAME}")
     endif()
 
     # Also set the uninstall target:
