@@ -14,8 +14,8 @@ tracks:
     patches: null
     release_inc: '1'
     release_repo_url: null
-    release_tag: v2.7.0-rc2
+    release_tag: :{ask}
     ros_distro: hydro
     vcs_type: git
-    vcs_uri: https://git.gitorious.org/orocos-toolchain/rtt.git
-    version: 2.7.0
+    vcs_uri: git://git.gitorious.org/orocos-toolchain/rtt.git
+    version: :{ask}
