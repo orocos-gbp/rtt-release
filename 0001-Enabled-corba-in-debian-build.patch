@@ -1,4 +1,4 @@
-From 6c82eb8777c4ae4014a08acce659c60b78bdc01f Mon Sep 17 00:00:00 2001
+From 2d2c9a9d5e669803c057785a044b666eb49c549e Mon Sep 17 00:00:00 2001
 From: Ruben Smits <ruben.smits@intermodalics.eu>
 Date: Thu, 10 Oct 2013 21:29:06 +0200
 Subject: [PATCH] Enabled corba in debian build
