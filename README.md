@@ -1,3 +1,22 @@
+## rtt - 2.7.0-7
+
+User `rsmits@im-desktop-01` released the packages in the `rtt` repository by running `/usr/bin/bloom-release -t hydro -r hydro rtt` on `Mon, 17 Feb 2014 13:55:27 -0000`
+
+The `rtt` package was released.
+
+Version of package(s) in repository `rtt`:
+- rosdistro version: `2.7.0-6`
+- old version: `2.7.0-6`
+- new version: `2.7.0-7`
+
+Versions of tools used:
+- bloom version: `0.4.9`
+- catkin_pkg version: `0.1.26`
+- rosdep version: `0.10.25`
+- rosdistro version: `0.3.4`
+- vcstools version: `0.1.33`
+
+
 ## rtt - 2.7.0-6
 
 User `rsmits@im-desktop-01` released the packages in the `rtt` repository by running `/usr/bin/bloom-release -t hydro -r hydro rtt` on `Wed, 12 Feb 2014 15:56:19 -0000`
