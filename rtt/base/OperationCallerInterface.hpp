@@ -20,6 +20,11 @@ namespace RTT
              */
             typedef boost::shared_ptr<OperationCallerInterface> shared_ptr;
 
+            /**
+             * Initializes an empty OperationCallerInterface with owner,
+             * executor and caller set to zero and the ExecutionThread type
+             * to OwnThread.
+             */
             OperationCallerInterface();
 
             OperationCallerInterface(OperationCallerInterface const& orig);
@@ -38,16 +43,6 @@ namespace RTT
              * owns this operation.
              */
             void setOwner(ExecutionEngine* ee);
-
-            /**
-             * Set an executor which will execute this method
-             * when it is called or sent. If ee is set to 0,
-             * the method will be executed in the client's thread or
-             * the GlobalExecutionEngine.
-             * @param ee The ExecutionEngine of the component that
-             * is executing this operation.
-             */
-            void setExecutor(ExecutionEngine* ee);
 
             /**
              * Sets the caller's engine of this operation.
@@ -69,6 +64,8 @@ namespace RTT
             bool setThread(ExecutionThread et,
                            ExecutionEngine* executor);
 
+            ExecutionThread getThread() const { return met; }
+
             /**
              * Executed when the operation execution resulted in a
              * C++ exception. Must report the error to the ExecutionEngine
@@ -80,10 +77,12 @@ namespace RTT
              * Helpful function to tell us if this operations is to be sent or not.
              */
             bool isSend() { return met == OwnThread && myengine != caller; }
+
+            ExecutionEngine* getMessageProcessor() const;
+
         protected:
             ExecutionEngine* myengine;
             ExecutionEngine* caller;
-            ExecutionEngine* ownerEngine;
             ExecutionThread met;
         };
     }
