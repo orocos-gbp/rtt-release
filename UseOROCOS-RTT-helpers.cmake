@@ -82,7 +82,7 @@ function( orocos_get_manifest_deps RESULT)
       message(SEND_ERROR "Error: xpath found but returned non-zero:${DEPS}")
     endif (NOT RES EQUAL 0)
 
-    string(REGEX REPLACE "${REGEX_STR}" "\\1;" RR_RESULT ${DEPS})
+    string(REGEX REPLACE "${REGEX_STR}" "\\1;" RR_RESULT "${DEPS}")
 
     #message("Deps are: '${DEPS}'")
     set(${RESULT} ${RR_RESULT} PARENT_SCOPE)
@@ -90,47 +90,6 @@ function( orocos_get_manifest_deps RESULT)
   endif (NOT XPATH_EXE)
 
 endfunction( orocos_get_manifest_deps RESULT)
-
-#
-# Parses a Catkin package.xml file and stores the dependencies in RESULT.
-# Relies on xpath. If no file is found, returns an empty RESULT.
-#
-# Usage: orocos_get_catkin_deps DEPS)
-#
-function( orocos_get_catkin_deps RESULT)
-
-  set(_PACKAGE_XML_PATH "${PROJECT_SOURCE_DIR}/package.xml")
-
-  if ( NOT EXISTS ${_PACKAGE_XML_PATH} )
-    message("Note: this package has no Catkin package.xml file. No dependencies can be auto-configured.")
-    return()
-  endif ( NOT EXISTS ${_PACKAGE_XML_PATH} )
-
-  find_program(XPATH_EXE xpath )
-  if (NOT XPATH_EXE)
-    message("Warning: xpath not found. Can't read dependencies in manifest.xml file.")
-  else(NOT XPATH_EXE)
-    IF (APPLE)
-      execute_process(COMMAND ${XPATH_EXE} ${_PACKAGE_XML_PATH} "package/build_depend/text()" RESULT_VARIABLE RES OUTPUT_VARIABLE DEPS)
-    ELSE (APPLE)
-      execute_process(COMMAND ${XPATH_EXE} -q -e "package/build_depend/text()" ${_PACKAGE_XML_PATH} RESULT_VARIABLE RES OUTPUT_VARIABLE DEPS)
-    ENDIF (APPLE)
-
-    if (NOT RES EQUAL 0)
-      message(SEND_ERROR "Error: xpath found but returned non-zero:${DEPS}")
-    endif (NOT RES EQUAL 0)
-
-    if(DEPS)
-      string(REPLACE "\n" ";" DEPS ${DEPS})
-    endif()
-
-    if("$ENV{VERBOSE}")
-      message(STATUS "[UseOrocos] Deps from Catkin package ${_PACKAGE_XML_PATH} are: '${DEPS}'")
-    endif()
-    set(${RESULT} ${DEPS} PARENT_SCOPE)
-  endif (NOT XPATH_EXE)
-
-endfunction( orocos_get_catkin_deps RESULT)
 
 #
 # Find a package, pick up its compile and link flags. It does this by locating
@@ -200,23 +159,23 @@ macro( orocos_find_package PACKAGE )
       unset(${PACKAGE}_LIBRARIES)
       foreach(COMP_LIB ${${PACKAGE}_COMP_${OROCOS_TARGET}_LIBRARIES})
         # Two options: COMP_LIB is an absolute path-to-lib (must start with ':') or just a libname:
-        if ( ${COMP_LIB} MATCHES "^:(.+)" OR EXISTS ${COMP_LIB})
+        if ( ${COMP_LIB} MATCHES "^:(.+)" )
           if (EXISTS "${CMAKE_MATCH_1}" )
             # absolute path (shared lib):
             set( ${PACKAGE}_${COMP_LIB}_LIBRARY "${CMAKE_MATCH_1}" )
           endif()
-          if (EXISTS "${COMP_LIB}" )
-            # absolute path (static lib):
-            set( ${PACKAGE}_${COMP_LIB}_LIBRARY "${COMP_LIB}" )
-          endif()
+        elseif (EXISTS "${COMP_LIB}" )
+          # absolute path (static lib):
+          set( ${PACKAGE}_${COMP_LIB}_LIBRARY "${COMP_LIB}" )
         else()
           # libname:
           find_library(${PACKAGE}_${COMP_LIB}_LIBRARY NAMES ${COMP_LIB} HINTS ${${PACKAGE}_COMP_${OROCOS_TARGET}_LIBRARY_DIRS})
         endif()
-        if(${PACKAGE}_${COMP_LIB}_LIBRARY)
-        else(${PACKAGE}_${COMP_LIB}_LIBRARY)
+
+        if(NOT ${PACKAGE}_${COMP_LIB}_LIBRARY)
           message(SEND_ERROR "In package >>>${PACKAGE}<<< : could not find library ${COMP_LIB} in directory ${${PACKAGE}_COMP_${OROCOS_TARGET}_LIBRARY_DIRS}, although its .pc file says it should be there.\n\n Try to do 'make clean; rm -rf lib' and then 'make' in the package >>>${PACKAGE}<<<.\n\n")
-        endif(${PACKAGE}_${COMP_LIB}_LIBRARY)
+        endif()
+
         list(APPEND ${PACKAGE}_LIBRARIES "${${PACKAGE}_${COMP_LIB}_LIBRARY}")
       endforeach(COMP_LIB ${${PACKAGE}_COMP_${OROCOS_TARGET}_LIBRARIES})
 
@@ -283,8 +242,9 @@ macro( orocos_use_package PACKAGE )
 
   # Check a flag so we don't over-link
   if(NOT ${PACKAGE}_${OROCOS_TARGET}_USED)
-    # Check if ${PACKAGE}_EXPORTED_OROCOS_TARGETS is defined in this workspace
-    if(DEFINED ${PACKAGE}_EXPORTED_OROCOS_TARGETS OR DEFINED ${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_TARGETS)
+
+    # Check if ${PACKAGE}_OROCOS_PACKAGE is defined in this workspace
+    if((${PACKAGE}_OROCOS_PACKAGE AND NOT ORO_USE_OROCOS_ONLY) OR ${PACKAGE}-${OROCOS_TARGET}_OROCOS_PACKAGE)
       message(STATUS "[UseOrocos] Found orocos package '${PACKAGE}' in the same workspace.")
 
       # The package has been generated in the same workspace. Just use the exported targets and include directories.
@@ -292,9 +252,12 @@ macro( orocos_use_package PACKAGE )
       set(${PACKAGE}_FOUND True)
       set(${PACKAGE}_INCLUDE_DIRS ${${PACKAGE}_EXPORTED_OROCOS_INCLUDE_DIRS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_INCLUDE_DIRS})
       set(${PACKAGE}_LIBRARY_DIRS "")
-      set(${PACKAGE}_LIBRARIES ${${PACKAGE}_EXPORTED_OROCOS_TARGETS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_TARGETS})
+      set(${PACKAGE}_LIBRARIES ${${PACKAGE}_EXPORTED_OROCOS_LIBRARIES} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_LIBRARIES})
 
-      list(APPEND USE_OROCOS_EXPORTED_TARGETS ${${PACKAGE}_LIBRARIES})
+      # Use add_dependencies(target ${USE_OROCOS_EXPORTED_TARGETS}) to make sure that a target is built AFTER
+      # all targets created by other packages that have been orocos_use_package'd in the current scope.
+      list(APPEND USE_OROCOS_EXPORTED_TARGETS ${${PACKAGE}_EXPORTED_OROCOS_TARGETS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_TARGETS})
+
     else()
       # Get the package and dependency build flags
       orocos_find_package(${PACKAGE} ${ARGN})
