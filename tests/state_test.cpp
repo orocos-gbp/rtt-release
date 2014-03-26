@@ -31,6 +31,7 @@
 #include <OperationCaller.hpp>
 #include <Port.hpp>
 #include <scripting/ScriptingService.hpp>
+#include <rt_string.hpp>
 #include "operations_fixture.hpp"
 
 #include <string>
@@ -49,11 +50,23 @@ public:
     InputPort<double> d_event;
     InputPort<bool>   b_event;
     InputPort<int>    t_event;
+    Operation<void(void)>   v_event;
     Operation<void(double)> o_event;
+    Operation<void(void)>   v1_event;
+    Operation<void(void)>   v2_event;
+    Operation<void(void)>   v3_event;
     OutputPort<double> d_event_source;
     OutputPort<bool>   b_event_source;
     OutputPort<int>    t_event_source;
     ScriptingService::shared_ptr sa;
+
+    RTT::Operation<void(RTT::rt_string)>    setState_op;
+    void setState(RTT::rt_string state) {
+        mrt_state = state;
+        //cout << "State = " << mrt_state.c_str() << endl;
+    }
+
+    RTT::rt_string mrt_state;
 
     void log(const std::string& msg) {
         Logger::log(Logger::Info) << msg << endlog();
@@ -68,9 +81,11 @@ public:
 public:
     StateTest()
         :
-         d_event("d_event"), b_event("b_event"), t_event("t_event"), o_event("o_event"),
+         d_event("d_event"), b_event("b_event"), t_event("t_event"), v_event("v_event"),o_event("o_event"),
+         v1_event("v1_event"),v2_event("v2_event"),v3_event("v3_event"),
          d_event_source("d_event_source"), b_event_source("b_event_source"), t_event_source("t_event_source")
-         ,sa( ScriptingService::Create(tc) )
+         ,sa( ScriptingService::Create(tc) ),
+         setState_op("setState", &StateTest::setState, this, RTT::OwnThread)
     {
         tc->stop();
         tc->setActivity( new SimulationActivity(0.001) );
@@ -78,7 +93,22 @@ public:
         tc->ports()->addPort( d_event );
         tc->ports()->addPort( b_event );
         tc->ports()->addPort( t_event );
+#ifdef ORO_SIGNALLING_OPERATIONS
+        tc->provides()->addEventOperation( v_event );
+        tc->provides()->addEventOperation( v1_event );
+        tc->provides()->addEventOperation( v2_event );
+        tc->provides()->addEventOperation( v3_event );
+        tc->provides()->addEventOperation( o_event );
+#else
+        tc->provides()->addOperation( v_event );
+        tc->provides()->addOperation( v1_event );
+        tc->provides()->addOperation( v2_event );
+        tc->provides()->addOperation( v3_event );
         tc->provides()->addOperation( o_event );
+#endif
+
+        tc->provides()->addOperation(setState_op).doc("Communicates state from SM").arg("state", "Name of state");
+
         tc->ports()->addPort( d_event_source );
         tc->ports()->addPort( b_event_source );
         tc->ports()->addPort( t_event_source );
@@ -458,6 +488,222 @@ BOOST_AUTO_TEST_CASE( testStateComments)
     this->finishState( "x", tc);
 }
 
+BOOST_AUTO_TEST_CASE( testStateOperations)
+{
+    // test processing of operations (OwnThread + ClientThread):
+    string prog = string("StateMachine X {\n")
+        + " initial state INIT {\n"
+        + "   entry {\n"
+        + "   setState( rt_string(\"INIT-ENTRY\") )\n"
+        + " }\n"
+        + " transitions {\n"
+        + "     select TEST;\n" // only a transition
+        + " }\n"
+        + " }\n"
+        + " state TEST {\n"
+        + "   var double dret\n"
+        + "   entry {\n"
+        + "   setState( rt_string(\"TEST-ENTRY\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   }\n"
+        + "   run {"
+        + "   setState( rt_string(\"TEST-RUN\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   }\n"
+        + "   exit {"
+        + "   setState( rt_string(\"TEST-EXIT\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   }\n"
+        + " transitions {\n"
+        + "     if true then \n"
+        + "   {"
+        + "   setState( rt_string(\"TEST-TRANSIT\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   } select TEST2;\n"
+        + " }\n"
+        + " }\n"
+        + " state TEST2 {\n"
+        + "   entry {\n"
+        + "   setState( rt_string(\"TEST-ENTRY\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   }\n"
+        + "   run {"
+        + "   setState( rt_string(\"TEST-RUN\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   }\n"
+        + "   exit {"
+        + "   setState( rt_string(\"TEST-EXIT\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   }\n"
+        + " transitions {\n"
+        + "     if true then \n"
+        + "   {"
+        + "   setState( rt_string(\"TEST-TRANSIT\") )\n"
+        + "   methods.m0()\n"
+        + "   methods.m1(1)\n"
+        + "   methods.m2(1,2.0)\n"
+        + "   methods.m3(1,2.0,true)\n"
+        + "   methods.m4(1,2.0,true,\"hello\")\n"
+        + "   methods.m5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.m6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.m7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   methods.o0()\n"
+        + "   methods.o1(1)\n"
+        + "   methods.o2(1,2.0)\n"
+        + "   methods.o3(1,2.0,true)\n"
+        + "   methods.o4(1,2.0,true,\"hello\")\n"
+        + "   methods.o5(1,2.0,true,\"hello\",5.0)\n"
+        + "   methods.o6(1,2.0,true,\"hello\",5.0,'a')\n"
+        + "   dret = methods.o7(1,2.0,true,\"hello\",5.0,'a',7)\n"
+        + "   test.assert( dret == -8.0 )\n"
+        + "   } select FINI;\n"
+        + " }\n"
+        + " }\n"
+        + " final state FINI {\n" // completely empty
+        + " }\n"
+        + " }\n"
+        + " RootMachine X x\n" // instantiate a non hierarchical SC
+        ;
+     parseState( prog, tc, true);
+
+     tc->stop();
+     tc->setActivity( new Activity(0, 0.001) ); // deliberately test with real thread instead of simulation.
+     tc->start();
+
+     StateMachinePtr sm = sa->getStateMachine("x");
+     BOOST_REQUIRE( sm );
+     sm->trace(true);
+     OperationCaller<bool(StateMachine*)> act = tc->provides("x")->getOperation("activate");
+     OperationCaller<bool(StateMachine*)> autom = tc->provides("x")->getOperation("automatic");
+     BOOST_CHECK( act(sm.get()) );
+     BOOST_CHECK( autom(sm.get()) );
+
+     sleep(1); // we must allow the thread to transition...
+
+     checkState( "x", tc);
+     BOOST_CHECK( sa->getStateMachine( "x" )->inState("FINI") );
+     this->finishState( "x", tc, false); // don't test
+}
+
+
 BOOST_AUTO_TEST_CASE( testStateTransitions)
 {
     // test processing of transition statements.
@@ -785,6 +1031,197 @@ BOOST_AUTO_TEST_CASE( testStateOperationSignalTransition )
     this->finishState("x", tc);
 }
 
+BOOST_AUTO_TEST_CASE( testStateOperationSignalTransition2 )
+{
+    // test event reception in sub states.
+    string prog = string("StateMachine X {\n")
+    + " initial state INIT {\n"
+    + "    transitions { select STATE1 }\n"
+    + " }\n"
+    + " state STATE1 {\n"
+    + "    transition v_event() select STATE2\n" // test signal transition
+    + " }\n"
+    + " state STATE2 {\n"
+    + "    transition v_event() select FINI\n"   // test signal transition
+    + " }\n"
+    + " final state FINI {} \n"
+    + "}\n"
+    + "RootMachine X x()\n";
+    this->parseState( prog, tc );
+    StateMachinePtr sm = sa->getStateMachine("x");
+    BOOST_REQUIRE( sm );
+    sm->trace(true);
+    // into STATE1
+    this->runState("x", tc);
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE1", sm->getCurrentStateName() );
+    // remain in STATE1
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE1", sm->getCurrentStateName() );
+    // into STATE2
+    OperationCaller<void(void)> mo( tc->provides()->getOperation("v_event"), tc->engine());
+    BOOST_REQUIRE( mo.ready() );
+    mo();
+    BOOST_CHECK( SimulationThread::Instance()->run(1) ); // allow to transition
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE2", sm->getCurrentStateName() );
+    // remain in STATE2
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE2", sm->getCurrentStateName() );
+    // into FINI
+    mo();
+    BOOST_CHECK( SimulationThread::Instance()->run(1) ); // allow to transition
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "FINI", sm->getCurrentStateName() );
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "FINI", sm->getCurrentStateName() );
+    this->checkState("x",tc);
+    this->finishState("x", tc);
+}
+
+BOOST_AUTO_TEST_CASE( testStateOperationSignalTransition3 )
+{
+    // test event reception in sub states.
+    string prog = string("StateMachine X {\n")
+    + " initial state INIT {\n"
+    + "    transitions { select STATE1 }\n"
+    + " }\n"
+    + " state STATE1 {\n"
+    + "    var double d;\n"       
+    + "    transition v_event() select STATE2\n" // test signal transition
+    + "    transition v_event() select ERROR\n"   // This one should not be taken.
+    + "    transition o_event(d) select ERROR\n"   // This one should not be taken.
+    + "    transition v_event() select ERROR\n"   // This one should not be taken.
+    + " }\n"
+    + " state STATE2 {\n"
+    + "    transition v_event() select FINI\n"   // test signal transition
+    + "    transition v_event() select ERROR\n"   // This one should not be taken.
+    + "    transition o_event(d) select ERROR\n"   // This one should not be taken.
+    + "    transition v_event() select ERROR\n"   // This one should not be taken.
+    + " }\n"
+    + " state ERROR {} \n"
+    + " final state FINI {} \n"
+    + "}\n"
+    + "RootMachine X x()\n";
+    this->parseState( prog, tc );
+    StateMachinePtr sm = sa->getStateMachine("x");
+    BOOST_REQUIRE( sm );
+    sm->trace(true);
+    // into STATE1
+    this->runState("x", tc);
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE1", sm->getCurrentStateName() );
+    // remain in STATE1
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE1", sm->getCurrentStateName() );
+    // into STATE2
+    OperationCaller<void(void)> mo( tc->provides()->getOperation("v_event"), tc->engine());
+    OperationCaller<void(double)> mo2( tc->provides()->getOperation("o_event"), tc->engine());
+    BOOST_REQUIRE( mo.ready() );
+    mo();
+    mo();
+    mo2(3);
+    mo2(3);
+    BOOST_CHECK( SimulationThread::Instance()->run(1) ); // allow to transition
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE2", sm->getCurrentStateName() );
+    // remain in STATE2
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "STATE2", sm->getCurrentStateName() );
+    // into FINI
+    mo();
+    mo();
+    mo2(3);
+    mo2(3);
+    BOOST_CHECK( SimulationThread::Instance()->run(1) ); // allow to transition
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "FINI", sm->getCurrentStateName() );
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "FINI", sm->getCurrentStateName() );
+    this->checkState("x",tc);
+    this->finishState("x", tc);
+}
+
+BOOST_AUTO_TEST_CASE( testStateOperationSignalTransition4 )
+{
+    // test event reception in sub states.
+    string prog = string("StateMachine X {\n")
+    + " initial state INIT {\n"
+    + "    transitions { select IDLE }\n"
+    + " }\n"
+    + " state IDLE {\n"
+    + "    transition v1_event() select STATE1\n"
+    + "    transition v2_event() select STATE2\n"
+    + "    transition v3_event() select STATE3\n"
+    + " }\n"
+    + " state STATE1 {\n"
+    + "    transition v_event()  select IDLE\n"
+    + "    transition v2_event() select STATE2\n"
+    + "    transition v3_event() select STATE3\n"
+    + " }\n"
+    + " state STATE2 {\n"
+    + "    transition v_event()  select IDLE\n"
+    + "    transition v1_event() select STATE1\n"
+    + "    transition v3_event() select STATE3\n"
+    + " }\n"
+    + " state STATE3 {\n"
+    + "    transition v_event()  select IDLE\n"
+    + "    transition v1_event() select STATE1\n"
+    + "    transition v2_event() select STATE2\n"
+    + " }\n"
+    + " final state FINI {} \n"
+    + "}\n"
+    + "RootMachine X x()\n";
+    this->parseState( prog, tc );
+    StateMachinePtr sm = sa->getStateMachine("x");
+    BOOST_REQUIRE( sm );
+    this->runState("x", tc);
+    // into IDLE
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "IDLE", sm->getCurrentStateName() );
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );
+    checkState( "x", tc);
+    BOOST_CHECK_EQUAL( "IDLE", sm->getCurrentStateName() );
+
+    OperationCaller<void(void)> v( tc->provides()->getOperation("v_event"), tc->engine());
+    BOOST_REQUIRE( v.ready() );
+    OperationCaller<void(void)> v1( tc->provides()->getOperation("v1_event"), tc->engine());
+    BOOST_REQUIRE( v1.ready() );
+    OperationCaller<void(void)> v2( tc->provides()->getOperation("v2_event"), tc->engine());
+    BOOST_REQUIRE( v2.ready() );
+    OperationCaller<void(void)> v3( tc->provides()->getOperation("v3_event"), tc->engine());
+    BOOST_REQUIRE( v3.ready() );
+
+#define DO_EVENT(event, name)                               \
+    event();                                                \
+    BOOST_CHECK( SimulationThread::Instance()->run(1) );  \
+    checkState( "x", tc);                                   \
+    BOOST_CHECK_EQUAL( name, sm->getCurrentStateName() );   \
+    BOOST_CHECK( SimulationThread::Instance()->run(100) );  \
+    checkState( "x", tc);                                   \
+    BOOST_CHECK_EQUAL( name, sm->getCurrentStateName() )
+
+    DO_EVENT(v2, "STATE2");
+    DO_EVENT(v1, "STATE1");
+    DO_EVENT(v1, "STATE1");     // no change
+    DO_EVENT(v3, "STATE3");
+    DO_EVENT(v,  "IDLE");
+    DO_EVENT(v3, "STATE3");
+    DO_EVENT(v,  "IDLE");
+    DO_EVENT(v1, "STATE1");
+
+#undef DO_EVENT
+
+    this->checkState("x",tc);
+    this->finishState("x", tc);
+}
+
 BOOST_AUTO_TEST_CASE( testStateOperationSignalTransitionProgram )
 {
     string prog = string("StateMachine X {\n")
@@ -863,8 +1300,8 @@ BOOST_AUTO_TEST_CASE( testStateEvents)
         + " }\n"
         + " state ISPOSITIVE {\n"
         + "   entry { do log(\"ISPOSITIVE\");}\n"
-        + "   transition b_event(eb)\n"
-        + "      if (eb == true) then { do log(\"Local ISPOSITIVE->INIT Transition for b_event\");} select INIT\n" // 20
+        + "   transition b_event(eb)\n" // 20
+        + "      if (eb == true) then { do log(\"Local ISPOSITIVE->INIT Transition for b_event\");} select INIT\n"
 #ifdef ORO_SIGNALLING_OPERATIONS
         + "   transition o_event(et)\n"
         + "      if ( et == 3.0 ) then { do log(\"Local ISPOSITIVE->INIT Transition for o_event\");} select INIT\n"
@@ -923,7 +1360,7 @@ BOOST_AUTO_TEST_CASE( testStateEvents)
         + "     do test.assert( y1.inState(\"ISPOSITIVE\") )\n"
         + "     do test.assert( !y1.inState(\"ISNEGATIVE\") )\n"
         + "     if ( !y1.inState(\"ISPOSITIVE\") ) then\n"
-        + "          do test.assertMsg( false, \"Not ISNEGATIVE but \" + y1.getState() )\n"
+        + "          do test.assertMsg( false, \"Not ISPOSITIVE but \" + y1.getState() )\n"
         + "     do test.assert( y1.inState(\"ISPOSITIVE\") )\n"
         + "     do o_event( 3.0 )\n" // go to INIT.
         + "     do yield\n"
