@@ -1,3 +1,22 @@
+## rtt (hydro) - 2.7.0-9
+
+The packages in the `rtt` repository were released into the `hydro` distro by running `/usr/bin/bloom-release --track hydro --ros-distro hydro --edit rtt` on `Sun, 15 Jun 2014 16:35:07 -0000`
+
+The `rtt` package was released.
+
+Version of package(s) in repository `rtt`:
+- rosdistro version: `2.7.0-8`
+- old version: `2.7.0-8`
+- new version: `2.7.0-9`
+
+Versions of tools used:
+- bloom version: `0.5.9`
+- catkin_pkg version: `0.2.2`
+- rosdep version: `0.10.27`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.35`
+
+
 ## rtt (hydro) - 2.7.0-8
 
 User `meyer@fliegtfix` released the packages in the `rtt` repository into the `hydro` distro by running `/usr/bin/bloom-release rtt --track hydro --ros-distro hydro` on `Wed, 26 Mar 2014 21:26:12 -0000`
