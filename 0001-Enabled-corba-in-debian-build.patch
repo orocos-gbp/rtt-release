@@ -1,4 +1,4 @@
-From 271acf703fb2914aeee9d18becb9940d10bdad68 Mon Sep 17 00:00:00 2001
+From 53c8536068483f9ba539237f61d6f2d853345645 Mon Sep 17 00:00:00 2001
 From: Ruben Smits <ruben.smits@intermodalics.eu>
 Date: Thu, 10 Oct 2013 21:29:06 +0200
 Subject: [PATCH] Enabled corba in debian build
@@ -9,7 +9,7 @@ Signed-off-by: Ruben Smits <ruben.smits@intermodalics.eu>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/debian/rules.em b/debian/rules.em
-index d45dd5f..5d2a7f8 100755
+index 06777bd..c2b90a8 100755
 --- a/debian/rules.em
 +++ b/debian/rules.em
 @@ -27,7 +27,8 @@ override_dh_auto_configure:
