@@ -4,7 +4,7 @@ Date: Fri, 23 Jan 2015 16:58:37 +0100
 Subject: [PATCH] Enabled corba in debian build
 
 ---
- debian/rules.em |    3 ++-
+ debian/rules.em | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/debian/rules.em b/debian/rules.em
@@ -22,5 +22,5 @@ index 991c991..53598d5 100755
  override_dh_auto_build:
  	# In case we're installing to a non-standard location, look for a setup.sh
 -- 
-1.7.9.5
+1.9.1
 
