@@ -40,12 +40,14 @@
 #include "MutexLock.hpp"
 #include "../Activity.hpp"
 #include "../Logger.hpp"
+#include "../os/fosi.h"
 
 namespace RTT {
     using namespace base;
     using namespace os;
 
     bool Timer::initialize() {
+        mdo_quit = false;
         // only start if non periodic.
         return this->getThread()->getPeriod() == 0;
     }
@@ -71,8 +73,8 @@ namespace RTT {
                 // represent as much in the future (until 2038) // XXX Year-2038 Bug
                 wake_up_time = (TimeService::InfiniteNSecs/4)-1;
                 for (TimerIds::iterator it = mtimers.begin(); it != mtimers.end(); ++it) {
-                    if ( it->first != 0 && it->first < wake_up_time  ) {
-                        wake_up_time = it->first;
+                    if ( it->expires != 0 && it->expires < wake_up_time  ) {
+                        wake_up_time = it->expires;
                         next_timer_id = it - mtimers.begin();
                     }
                 }
@@ -80,7 +82,7 @@ namespace RTT {
 
             // Wait
             int ret = 0;
-            if ( wake_up_time > mTimeserv->getNSecs() )
+            if ( wake_up_time > rtos_get_time_ns() )
                 ret = msem.waitUntil( wake_up_time ); // case of no timers or running timers
             else
                 ret = -1; // case of timer overrun.
@@ -88,25 +90,32 @@ namespace RTT {
             // Timeout handling
             if (ret == -1) {
                 // a timer expired
-                // First: reset/reprogram the timer that expired:
+                // expires: reset/reprogram the timer that expired:
                 {
                     MutexLock locker(m);
                     // detect corner case for resize:
                     if ( next_timer_id < int(mtimers.size()) ) {
                         // now clear or reprogram it.
                         TimerIds::iterator tim = mtimers.begin() + next_timer_id;
-                        if ( tim->second ) {
+                        if ( tim->period ) {
                             // periodic timer
-                            tim->first += tim->second;
+                            tim->expires += tim->period;
                         } else {
                             // aperiodic timer
-                            tim->first = 0;
+                            tim->expires = 0;
                         }
                     }
                 }
-                // Second: send the timeout signal and allow (within the callback)
+
+                // Second: notify waiting threads
+                {// This scope is for MutexLock.
+                    MutexLock locker(m);
+                    mtimers[next_timer_id].expired.broadcast();
+                }// MutexLock
+
+                // Third: send the timeout signal and allow (within the callback)
                 // to reprogram the timer.
-                // If we would first call timeout(), the code above would overwrite
+                // If we would expires call timeout(), the code above would overwrite
                 // user settings.
                 timeout( next_timer_id );
             }
@@ -117,13 +126,16 @@ namespace RTT {
     {
         mdo_quit = true;
         msem.signal();
+        // kill all timers to abort all threads blocking in waitFor()
+        for (TimerId i = 0; i < (int) mtimers.size(); ++i) {
+            killTimer(i);
+        }
         return true;
     }
 
     Timer::Timer(TimerId max_timers, int scheduler, int priority)
         : mThread(0), msem(0), mdo_quit(false)
     {
-        mTimeserv = TimeService::Instance();
         mtimers.resize(max_timers);
         if (scheduler != -1) {
             mThread = new Activity(scheduler, priority, 0.0, this, "Timer");
@@ -145,23 +157,23 @@ namespace RTT {
     void Timer::setMaxTimers(TimerId max)
     {
         MutexLock locker(m);
-        mtimers.resize(max, std::make_pair(Time(0), Time(0)) );
+        mtimers.resize(max, TimerInfo() );
     }
 
     bool Timer::startTimer(TimerId timer_id, double period)
     {
-        if ( timer_id < 0 || timer_id > int(mtimers.size()) || period < 0.0)
+        if ( timer_id < 0 || timer_id >= int(mtimers.size()) || period < 0.0)
         {
             log(Error) << "Invalid timer id or period" << endlog();
             return false;
         }
 
-        Time due_time = mTimeserv->getNSecs() + Seconds_to_nsecs( period );
+        Time due_time = rtos_get_time_ns() + Seconds_to_nsecs( period );
 
         {
             MutexLock locker(m);
-            mtimers[timer_id].first = due_time;
-            mtimers[timer_id].second = Seconds_to_nsecs( period );
+            mtimers[timer_id].expires = due_time;
+            mtimers[timer_id].period = Seconds_to_nsecs( period );
         }
         msem.signal();
         return true;
@@ -169,19 +181,19 @@ namespace RTT {
 
     bool Timer::arm(TimerId timer_id, double wait_time)
     {
-        if ( timer_id < 0 || timer_id > int(mtimers.size()) || wait_time < 0.0)
+        if ( timer_id < 0 || timer_id >= int(mtimers.size()) || wait_time < 0.0)
         {
             log(Error) << "Invalid timer id or wait time" << endlog();
             return false;
         }
 
-        Time now = mTimeserv->getNSecs();
+        Time now = rtos_get_time_ns();
         Time due_time = now + Seconds_to_nsecs( wait_time );
 
         {
             MutexLock locker(m);
-            mtimers[timer_id].first  = due_time;
-            mtimers[timer_id].second = 0;
+            mtimers[timer_id].expires  = due_time;
+            mtimers[timer_id].period = 0;
         }
         msem.signal();
         return true;
@@ -190,24 +202,24 @@ namespace RTT {
     bool Timer::isArmed(TimerId timer_id) const
     {
         MutexLock locker(m);
-        if (timer_id < 0 || timer_id > int(mtimers.size()) )
+        if (timer_id < 0 || timer_id >= int(mtimers.size()) )
         {
             log(Error) << "Invalid timer id" << endlog();
             return false;
         }
-        return mtimers[timer_id].first != 0;
+        return mtimers[timer_id].expires != 0;
     }
 
     double Timer::timeRemaining(TimerId timer_id) const
     {
         MutexLock locker(m);
-        if (timer_id < 0 || timer_id > int(mtimers.size()) )
+        if (timer_id < 0 || timer_id >= int(mtimers.size()) )
         {
             log(Error) << "Invalid timer id" << endlog();
             return 0.0;
         }
-        Time now = mTimeserv->getNSecs();
-        Time result = mtimers[timer_id].first - now;
+        Time now = rtos_get_time_ns();
+        Time result = mtimers[timer_id].expires - now;
         // detect corner cases.
         if ( result < 0 )
             return 0.0;
@@ -217,14 +229,41 @@ namespace RTT {
     bool Timer::killTimer(TimerId timer_id)
     {
         MutexLock locker(m);
-        if (timer_id < 0 || timer_id > int(mtimers.size()) )
+        if (timer_id < 0 || timer_id >= int(mtimers.size()) )
         {
             log(Error) << "Invalid timer id" << endlog();
             return false;
         }
-        mtimers[timer_id].first = 0;
-        mtimers[timer_id].second = 0;
+        mtimers[timer_id].expires = 0;
+        mtimers[timer_id].period = 0;
+        mtimers[timer_id].expired.broadcast();
         return true;
+    }
+
+    bool Timer::waitFor(TimerId timer_id)
+    {
+        MutexLock locker(m);
+        if (timer_id < 0 || timer_id >= int(mtimers.size()) )
+        {
+            log(Error) << "Invalid timer id" << endlog();
+            return false;
+        }
+        if (mtimers[timer_id].expires == 0) return false;
+
+        return mtimers[timer_id].expired.wait(m);
+    }
+
+    bool Timer::waitForUntil(TimerId timer_id, nsecs abs_time)
+    {
+        MutexLock locker(m);
+        if (timer_id < 0 || timer_id >= int(mtimers.size()) )
+        {
+            log(Error) << "Invalid timer id" << endlog();
+            return false;
+        }
+        if (mtimers[timer_id].expires == 0) return false;
+
+        return mtimers[timer_id].expired.wait_until(m, abs_time);
     }
 
 

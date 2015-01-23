@@ -219,7 +219,7 @@ namespace RTT
         {
             if (this->impl && this->impl == implementation)
                 return *this;
-            OperationCaller<Signature> tmp(implementation);
+            OperationCaller<Signature> tmp(implementation, mcaller);
             *this = tmp;
             return *this;
         }
@@ -241,7 +241,7 @@ namespace RTT
             }
             if (this->impl && this->impl == part->getLocalOperation() )
                 return *this;
-            OperationCaller<Signature> tmp(part);
+            OperationCaller<Signature> tmp(part, mcaller);
             *this = tmp;
             return *this;
         }
@@ -263,7 +263,7 @@ namespace RTT
                 log(Error) << "Can't initialise unnamed OperationCaller from service '"<<service->getName() <<"'."<<endlog();
                 return *this;
             }
-            OperationCaller<Signature> tmp(mname,service);
+            OperationCaller<Signature> tmp(mname, service, mcaller);
             *this = tmp;
             return *this;
         }
@@ -360,7 +360,7 @@ namespace RTT
         /**
          * Sets the internal implementation of the OperationCaller object.
          */
-        void setOperationCallerImpl( OperationCallerBasePtr new_impl) const {
+        void setOperationCallerImpl( OperationCallerBasePtr new_impl) {
             this->impl = new_impl;
         }
 

@@ -352,7 +352,9 @@ namespace RTT
 #endif
         }
         new_act->stop();
-        our_act->stop();
+        if(our_act){
+            our_act->stop();
+        }
         new_act->run( this->engine() );
         our_act = ActivityInterface::shared_ptr( new_act );
         our_act->start();
@@ -364,7 +366,9 @@ namespace RTT
     	if (!new_act)
     		return;
     	new_act->stop();
-        our_act->stop();
+        if(our_act){
+            our_act->stop();
+        }
         our_act.reset( new_act );
         our_act->run( this->engine() );
         our_act->start();
@@ -380,6 +384,7 @@ namespace RTT
     void TaskContext::clear()
     {
         tcservice->clear();
+        tcrequests->clear();
     }
 
     bool TaskContext::ready()
@@ -420,8 +425,14 @@ namespace RTT
 
     void TaskContext::dataOnPort(PortInterface* port)
     {
-        portqueue->enqueue( port );
-        this->getActivity()->trigger();
+        if ( this->dataOnPortHook(port) ) {
+            portqueue->enqueue( port );
+            this->getActivity()->trigger();
+        }
+    }
+
+    bool TaskContext::dataOnPortHook( base::PortInterface* ) {
+        return this->isRunning();
     }
 
     void TaskContext::dataOnPortCallback(InputPortInterface* port, TaskContext::SlotFunction callback) {
