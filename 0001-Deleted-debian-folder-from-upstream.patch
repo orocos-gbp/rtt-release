@@ -1,0 +1,897 @@
+From b8722d77fc3d16badf1b34a02091682515360323 Mon Sep 17 00:00:00 2001
+From: Johannes Meyer <johannes@intermodalics.eu>
+Date: Fri, 23 Jan 2015 17:00:03 +0100
+Subject: [PATCH] Deleted debian/ folder from upstream
+
+---
+ debian/README.Debian                            |   8 --
+ debian/changelog                                | 120 ------------------------
+ debian/clean-control.sh                         |  11 ---
+ debian/compat                                   |   1 -
+ debian/control-gnulinux.in                      |   0
+ debian/control-lxrt.in                          |   0
+ debian/control-template.in                      |  92 ------------------
+ debian/control-xenomai.in                       |   0
+ debian/control.common                           |  67 -------------
+ debian/copyright                                |  34 -------
+ debian/create-control.sh                        |  67 -------------
+ debian/docs                                     |   3 -
+ debian/liborocos-rtt-common-dev.install         | 100 --------------------
+ debian/liborocos-rtt-corba-common-dev.install   |   1 -
+ debian/liborocos-rtt-corba-template-dev.install |   3 -
+ debian/liborocos-rtt-corba-template.install     |   2 -
+ debian/liborocos-rtt-template-dev.install       |  13 ---
+ debian/liborocos-rtt-template.install           |   6 --
+ debian/orocos-rtt.doc-base.EX                   |  22 -----
+ debian/rules                                    | 114 ----------------------
+ debian/rules.gnulinux                           |  15 ---
+ debian/rules.lxrt                               |  15 ---
+ debian/rules.xenomai                            |  15 ---
+ 23 files changed, 709 deletions(-)
+ delete mode 100644 debian/README.Debian
+ delete mode 100644 debian/changelog
+ delete mode 100755 debian/clean-control.sh
+ delete mode 100644 debian/compat
+ delete mode 100644 debian/control-gnulinux.in
+ delete mode 100644 debian/control-lxrt.in
+ delete mode 100644 debian/control-template.in
+ delete mode 100644 debian/control-xenomai.in
+ delete mode 100644 debian/control.common
+ delete mode 100644 debian/copyright
+ delete mode 100755 debian/create-control.sh
+ delete mode 100644 debian/docs
+ delete mode 100644 debian/liborocos-rtt-common-dev.install
+ delete mode 100644 debian/liborocos-rtt-corba-common-dev.install
+ delete mode 100644 debian/liborocos-rtt-corba-template-dev.install
+ delete mode 100644 debian/liborocos-rtt-corba-template.install
+ delete mode 100644 debian/liborocos-rtt-template-dev.install
+ delete mode 100644 debian/liborocos-rtt-template.install
+ delete mode 100644 debian/orocos-rtt.doc-base.EX
+ delete mode 100755 debian/rules
+ delete mode 100644 debian/rules.gnulinux
+ delete mode 100644 debian/rules.lxrt
+ delete mode 100644 debian/rules.xenomai
+
+diff --git a/debian/README.Debian b/debian/README.Debian
+deleted file mode 100644
+index f893444..0000000
+--- a/debian/README.Debian
++++ /dev/null
+@@ -1,8 +0,0 @@
+-orocos-rtt for Debian
+----------------------
+-
+-The initial package was created from orocos-rtt 1.1.0, without CORBA
+-support and using the internal TinyXML marshaller. All other CMAKE
+-options are left to the default.
+-
+- -- Peter Soetens <peter.soetens@fmtc.be>, Fri, 20 Apr 2007 08:12:38 +0200
+diff --git a/debian/changelog b/debian/changelog
+deleted file mode 100644
+index ab60eb7..0000000
+--- a/debian/changelog
++++ /dev/null
+@@ -1,120 +0,0 @@
+-orocos-rtt (2.6.0-0) precise; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Thu, 29 Nov 2012 23:27:00 +0100
+-
+-orocos-rtt (2.5.0-1) natty; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Thu, 29 Sep 2011 21:59:21 +0200
+-
+-orocos-rtt (2.4.0-1) unstable; urgency=low
+-
+-  * New upstream releaes
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Sat, 30 Apr 2011 01:12:22 +0200
+-
+-orocos-rtt (2.3.2-1) maverick; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Tue, 03 May 2011 18:08:41 +0200
+-
+-orocos-rtt (2.3.1-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Wed, 30 Mar 2011 15:50:28 +0200
+-
+-orocos-rtt (2.3.0-1) unstable; urgency=low
+-
+-  * New upstrem release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Fri, 25 Feb 2011 14:43:30 +0100
+-
+-orocos-rtt (2.2.1-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Fri, 28 Jan 2011 10:19:42 +0100
+-
+-orocos-rtt (2.2.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Mon, 06 Dec 2010 17:35:43 +0100
+-
+-orocos-rtt (2.1.1-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Tue, 16 Nov 2010 12:51:56 +0100
+-
+-orocos-rtt (2.1.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Tue, 12 Oct 2010 11:00:45 +0200
+-
+-orocos-rtt (2.0.2-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Thu, 30 Sep 2010 17:16:00 +0200
+-
+-orocos-rtt (2.0.1-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Mon, 13 Sep 2010 17:22:42 +0200
+-
+-orocos-rtt (2.0.0-1) karmic; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Mon, 06 Sep 2010 13:40:46 +0200
+-
+-orocos-rtt (1.99.2-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter@thesourceworks.com>  Fri, 02 Apr 2010 11:33:04 +0200
+-
+-orocos-rtt (1.91.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <kaltan@vader>  Fri, 11 Sep 2009 09:56:13 +0200
+-
+-orocos-rtt (1.8.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter.soetens@fmtc.be>  Fri, 13 Feb 2009 22:05:52 +0100
+-
+-orocos-rtt (1.6.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter.soetens@fmtc.be>  Sun, 04 May 2008 23:07:56 +0200
+-
+-orocos-rtt (1.4.0-1) unstable; urgency=low
+-
+-  * New upstream release
+-
+- -- Leopold Palomo Avellaneda <lepalom@wol.es>  Mon, 15 Oct 2007 12:07:13 +0200
+-
+-orocos-rtt (1.2.1-1) feisty; urgency=low
+-
+-  * New upstream release
+-
+- -- Peter Soetens <peter.soetens@fmtc.be>  Thu, 26 Jul 2007 14:04:37 +0200
+-
+-orocos-rtt (1.1.0-1) unstable; urgency=low
+-
+-  * Initial release
+-
+- -- Peter Soetens <peter.soetens@fmtc.be>  Fri, 20 Apr 2007 08:12:38 +0200
+-
+diff --git a/debian/clean-control.sh b/debian/clean-control.sh
+deleted file mode 100755
+index 5c9a050..0000000
+--- a/debian/clean-control.sh
++++ /dev/null
+@@ -1,11 +0,0 @@
+-#!/bin/bash
+-
+-major=$(head -1 changelog | sed "s/.*(\([0-9]\+\.[0-9]\+\).*/\1/g")
+-
+-echo "Detected RTT Major version: $major"
+-
+-rm -f control
+-rm -f orocos*$major*install liborocos*$major*install
+-rm -f rules.targets
+-
+-echo "Done!"
+\ No newline at end of file
+diff --git a/debian/compat b/debian/compat
+deleted file mode 100644
+index 7ed6ff8..0000000
+--- a/debian/compat
++++ /dev/null
+@@ -1 +0,0 @@
+-5
+diff --git a/debian/control-gnulinux.in b/debian/control-gnulinux.in
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/debian/control-lxrt.in b/debian/control-lxrt.in
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/debian/control-template.in b/debian/control-template.in
+deleted file mode 100644
+index 18c9cd4..0000000
+--- a/debian/control-template.in
++++ /dev/null
+@@ -1,92 +0,0 @@
+-Package: liborocos-rtt-corba-@TARGET@@LIBVER@-dev
+-Section: libdevel
+-Architecture: any
+-Depends: liborocos-rtt-corba-@TARGET@@LIBVER@ (= ${Source-Version}), liborocos-rtt-corba-common@LIBVER@-dev, liborocos-rtt-@TARGET@@LIBVER@-dev
+-Conflicts: liborocos-rtt-dev, liborocos-rtt-corba-@TARGET@-dev
+-Replaces:  liborocos-rtt-corba-@TARGET@-dev
+-Provides: liborocos-rtt-corba-@TARGET@-dev
+-Description: Orocos Real-Time Toolkit for CORBA development files (@TARGET@)
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the headers for developing Orocos applications.
+-
+-Package: liborocos-rtt-corba-@TARGET@@LIBVER@
+-Section: libs
+-Architecture: any
+-Depends: ${shlibs:Depends}, liborocos-rtt-@TARGET@@LIBVER@
+-Conflicts: liborocos-rtt1
+-Description: Orocos Real-Time Toolkit for CORBA library (@TARGET@)
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the RTT library.
+-
+-Package: liborocos-rtt-@TARGET@@LIBVER@-dev
+-Section: libdevel
+-Architecture: any
+-Depends: liborocos-rtt-@TARGET@@LIBVER@ (= ${Source-Version}), liborocos-rtt-common@LIBVER@-dev @TARGET-DEV@
+-Conflicts: liborocos-rtt-dev, liborocos-rtt-@TARGET@-dev
+-Replaces:  liborocos-rtt-@TARGET@-dev
+-Provides:  liborocos-rtt-@TARGET@-dev
+-Description: Orocos Real-Time Toolkit for CORBA development files (@TARGET@)
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the headers for developing Orocos applications.
+-
+-Package: liborocos-rtt-@TARGET@@LIBVER@
+-Section: libs
+-Architecture: any
+-Depends: ${shlibs:Depends}
+-Conflicts: liborocos-rtt1
+-Description: Orocos Real-Time Toolkit for CORBA library (@TARGET@)
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the RTT library.
+-
+diff --git a/debian/control-xenomai.in b/debian/control-xenomai.in
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/debian/control.common b/debian/control.common
+deleted file mode 100644
+index e63282c..0000000
+--- a/debian/control.common
++++ /dev/null
+@@ -1,67 +0,0 @@
+-Source: orocos-rtt
+-Priority: optional
+-Maintainer: Peter Soetens <peter.soetens@fmtc.be>
+-Build-Depends: debhelper (>= 5), cmake (>=2.6.0), libboost-dev | libboost1.35-dev | libboost1.36-dev | libboost1.37-dev | libboost1.38-dev | libboost1.39-dev | libboost1.40-dev, libboost-graph-dev |  libboost-graph1.35-dev | libboost-graph1.36-dev | libboost-graph1.37-dev | libboost-graph1.38-dev | libboost-graph1.39-dev | libboost-graph1.40-dev, libboost-thread-dev | libboost-thread1.35-dev | libboost-thread1.36-dev | libboost-thread1.37-dev | libboost-thread1.38-dev | libboost-thread1.39-dev | libboost-thread1.40-dev,  libboost-test-dev | libboost-test1.35-dev | libboost-test1.36-dev | libboost-test1.37-dev | libboost-test1.38-dev | libboost-test1.39-dev | libboost-test1.40-dev,  libboost-filesystem-dev | libboost-filesystem1.35-dev | libboost-filesystem1.36-dev | libboost-filesystem1.37-dev | libboost-filesystem1.38-dev | libboost-filesystem1.39-dev | libboost-filesystem1.40-dev, libtao-dev, libtao-orbsvcs-dev, tao-idl, gperf-ace @BUILD_DEPS@
+-Standards-Version: 3.7.2
+-Section: libs
+-
+-Package: orocos-rtt-dbg@LIBVER@
+-Section: libdevel
+-Priority: extra
+-Architecture: any
+-Depends: liborocos-rtt-common@LIBVER@-dev (= ${binary:Version})
+-Conflicts: orocos-rtt-dbg
+-Replaces:  orocos-rtt-dbg
+-Provides:  orocos-rtt-dbg
+-Description: Orocos Real-Time Toolkit (debug symbols)
+- .
+- This package contains the debugging symbols.
+-
+-Package: liborocos-rtt-common@LIBVER@-dev
+-Section: libs
+-Architecture: any
+-Depends: libboost-dev | libboost1.35-dev | libboost1.36-dev | libboost1.37-dev | libboost1.38-dev | libboost1.39-dev | libboost1.40-dev, libboost-graph-dev |  libboost-graph1.35-dev | libboost-graph1.36-dev | libboost-graph1.37-dev | libboost-graph1.38-dev | libboost-graph1.39-dev | libboost-graph1.40-dev, libboost-thread-dev | libboost-thread1.35-dev | libboost-thread1.36-dev | libboost-thread1.37-dev | libboost-thread1.38-dev | libboost-thread1.39-dev | libboost-thread1.40-dev, libboost-filesystem-dev | libboost-filesystem1.35-dev | libboost-filesystem1.36-dev | libboost-filesystem1.37-dev | libboost-filesystem1.38-dev | libboost-filesystem1.39-dev | libboost-filesystem1.40-dev
+-Conflicts: liborocos-rtt-dev, liborocos-rtt-common-dev
+-Replaces:  liborocos-rtt-common-dev
+-Provides:  liborocos-rtt-common-dev
+-Description: Orocos Real-Time Toolkit common development files
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the RTT library.
+-
+-Package: liborocos-rtt-corba-common@LIBVER@-dev
+-Section: libs
+-Architecture: any
+-Depends: liborocos-rtt-common@LIBVER@-dev, libtao-dev, libtao-orbsvcs-dev 
+-Conflicts: liborocos-rtt-dev, liborocos-rtt-corba-common-dev
+-Replaces: liborocos-rtt-corba-common-dev
+-Provides: liborocos-rtt-corba-common-dev
+-Description: Orocos Real-Time Toolkit common CORBA development files
+- Orocos (http://www.orocos.org) is the acronym of the
+- Open Robot Control Software project. The project's aim is to develop
+- a general-purpose, free software, and modular framework
+- for robotand machine control.
+- The Orocos project supports 4 C++ libraries: the Real-Time Toolkit, the
+- Kinematics and Dynamics Library, the Bayesian Filtering Library and
+- the Orocos Component Library.
+- .
+- The Orocos Real-Time Toolkit (RTT) is not an application
+- in itself, but it provides the infrastructure and the
+- functionalities to build robotics applications in C++. The
+- emphasis is on real-time, online interactive and
+- component based applications.
+- .
+- This package provides the RTT library.
+-
+diff --git a/debian/copyright b/debian/copyright
+deleted file mode 100644
+index 7dbed19..0000000
+--- a/debian/copyright
++++ /dev/null
+@@ -1,34 +0,0 @@
+-This package was debianized by Peter Soetens <peter.soetens@fmtc.be> on
+-Fri, 20 Apr 2007 08:12:38 +0200.
+-
+-It was downloaded from http://www.orocos.org/devel/rtt/v1.1.0
+-
+-Upstream Author: Peter Soetens
+-
+-Copyright: 2001-2004, (c) Peter Soetens, 2005-2007 (c) FMTC
+-
+-License:
+-
+-   This library is free software; you can redistribute it and/or        
+-   modify it under the terms of the GNU General Public                  
+-   License as published by the Free Software Foundation;                
+-   version 2 of the License. (see: /usr/share/common-licenses/GPL-2)
+-
+-   For each source file in this package, the following exception is
+-   attached:
+-
+-   As a special exception, you may use <source file> as part of a free      
+-   software library without restriction.  Specifically, if other files  
+-   instantiate templates or use macros or inline functions from <source file>,
+-   or you compile <source file> and link it with other files to       
+-   produce an executable, <source file> does not by itself cause the        
+-   resulting executable to be covered by the GNU General Public         
+-   License.  This exception does not however invalidate any other       
+-   reasons why the executable file might be covered by the GNU General  
+-   Public License.                                                      
+-                                                                        
+-
+-The Debian packaging is (C) 2007, Peter Soetens <peter.soetens@fmtc.be> and
+-is licensed under the GPL, see `/usr/share/common-licenses/GPL'.
+-
+-
+diff --git a/debian/create-control.sh b/debian/create-control.sh
+deleted file mode 100755
+index 43b11eb..0000000
+--- a/debian/create-control.sh
++++ /dev/null
+@@ -1,67 +0,0 @@
+-#!/bin/bash
+-
+-echo "This scripts creates the debian/control and debian/*.install files from several template files."
+-
+-major=$(head -1 changelog | sed "s/.*(\([0-9]\+\.[0-9]\+\).*/\1/g")
+-
+-echo "Detected RTT Major version: $major"
+-
+-if test x$1 = x; then
+-    targets="gnulinux"
+-else
+-    targets="$@"
+-fi
+-
+-echo "Building scripts for targets: $targets"
+-
+-# Prepare control file:
+-rm -f control control.targets
+-
+-echo "Creating control ..."
+-for t in $targets; do 
+-    # append control-template.in to control file
+-    if test $t = xenomai; then tdev=", xenomai-dev | libxenomai-dev"; bdeps="$tdev"; fi
+-    if test $t = lxrt; then tdev=", librtai-dev"; bdeps="$tdev"; fi
+-    cat control-template.in | sed -e"s/@TARGET@/$t/g;s/@TARGET-DEV@/$tdev/g;s/@LIBVER@/$major/g" >> control.targets
+-    cat control-$t.in >> control.targets
+-done
+-# generate final control file = common + targets
+-cat control.common | sed -e"s/@LIBVER@/$major/g;s/@BUILD_DEPS@/$bdeps/g" > control
+-cat control.targets >> control
+-
+-# Prepare *.install files:
+-for i in $(ls *template*install); do
+-    for t in $targets; do
+-	# Replace contents and write to *-target.install files:
+-	fname=$(echo "$i" | sed -e"s/template/$t$major/g")
+-	echo "Creating $fname ..."
+-	cat $i | sed -e"s/@TARGET@/$t/g" > $fname
+-    done
+-done
+-
+-# Prepare *common-dev.install files:
+-for i in $(ls *common-dev*install); do
+-    # Replace contents and write to *-target.install files:
+-    fname=$(echo "$i" | sed -e"s/common/common$major/g")
+-    echo "Creating $fname..."
+-    cat $i > $fname
+-done
+-
+-echo "Creating rules files..."
+-# Prepare rules files:
+-rm -f rules.targets
+-for t in $targets; do
+-    CONFIGURE_TARGETS="$CONFIGURE_TARGETS configure-$t"
+-    BUILD_TARGETS="$BUILD_TARGETS build-$t"
+-    INSTALL_TARGETS="$INSTALL_TARGETS install-$t"
+-    INCLUDES=$(echo -e "$INCLUDES\ninclude debian/rules.$t")
+-done
+-cat >> rules.targets <<EOF
+-CONFIGURE_TARGETS=$CONFIGURE_TARGETS
+-BUILD_TARGETS=$BUILD_TARGETS
+-INSTALL_TARGETS=$INSTALL_TARGETS
+-
+-$INCLUDES
+-EOF
+-
+-echo "Done!"
+\ No newline at end of file
+diff --git a/debian/docs b/debian/docs
+deleted file mode 100644
+index 5b6f9c6..0000000
+--- a/debian/docs
++++ /dev/null
+@@ -1,3 +0,0 @@
+-CMakeLists.txt
+-NEWS
+-README
+diff --git a/debian/liborocos-rtt-common-dev.install b/debian/liborocos-rtt-common-dev.install
+deleted file mode 100644
+index 5e036ff..0000000
+--- a/debian/liborocos-rtt-common-dev.install
++++ /dev/null
+@@ -1,100 +0,0 @@
+-usr/include/rtt/os/rtt-os-fwd.hpp
+-usr/include/rtt/os/Atomic.hpp
+-usr/include/rtt/os/CAS.hpp
+-usr/include/rtt/os/MainThread.hpp
+-usr/include/rtt/os/Mutex.hpp
+-usr/include/rtt/os/MutexLock.hpp
+-usr/include/rtt/os/OS.hpp
+-usr/include/rtt/os/Semaphore.hpp
+-usr/include/rtt/os/StartStopManager.hpp
+-usr/include/rtt/os/ThreadInterface.hpp
+-usr/include/rtt/os/Time.hpp
+-usr/include/rtt/os/Timer.hpp
+-usr/include/rtt/os/TimeService.hpp
+-usr/include/rtt/os/fosi.h
+-usr/include/rtt/os/fosi_interface.h
+-usr/include/rtt/os/fosi_internal_interface.hpp
+-usr/include/rtt/os/main.h
+-usr/include/rtt/os/oro_arch.h
+-usr/include/rtt/os/oro_i386
+-usr/include/rtt/os/oro_i386/oro_arch.h
+-usr/include/rtt/os/oro_limits.h
+-usr/include/rtt/os/oro_powerpc
+-usr/include/rtt/os/oro_powerpc/oro_arch.h
+-usr/include/rtt/os/oro_x86_64
+-usr/include/rtt/os/oro_x86_64/oro_arch.h
+-usr/include/rtt/os/oro_noasm
+-usr/include/rtt/os/oro_noasm/oro_arch.h
+-usr/include/rtt/os/oro_gcc
+-usr/include/rtt/os/oro_gcc/oro_arch.h
+-usr/include/rtt/os/rtconversions.hpp
+-usr/include/rtt/os/rtstreambufs.hpp
+-usr/include/rtt/os/rtstreams.hpp
+-usr/include/rtt/os/startstop.h
+-usr/include/rtt/os/threads.hpp
+-usr/include/rtt/os/rt_list.hpp
+-usr/include/rtt/os/rint.h
+-usr/include/rtt/os/oro_allocator.hpp
+-usr/include/rtt/os/Thread.hpp
+-usr/include/rtt/os/oro_malloc.h
+-usr/include/rtt/os/Condition.hpp
+-usr/include/rtt/os/tlsf/tlsf.h
+-usr/include/rtt/os/targets/rtt-target.h
+-usr/include/rtt/base
+-usr/include/rtt/transports/mqueue/TransportPlugin.hpp
+-usr/include/rtt/transports/mqueue/MQTemplateProtocol.hpp
+-usr/include/rtt/transports/mqueue/MQSerializationProtocol.hpp
+-usr/include/rtt/transports/mqueue/rtt-mqueue-config.h
+-usr/include/rtt/transports/mqueue/rtt-mqueue-fwd.hpp
+-usr/include/rtt/transports/mqueue/MQChannelElement.hpp
+-usr/include/rtt/transports/mqueue/MQSendRecv.hpp
+-usr/include/rtt/transports/mqueue/MQLib.hpp
+-usr/include/rtt/transports/mqueue/binary_data_archive.hpp
+-usr/include/rtt/transports/mqueue/Dispatcher.hpp
+-usr/include/rtt/deployment/ComponentLoader.hpp
+-usr/include/rtt/marsh
+-usr/include/rtt/types
+-usr/include/rtt/typekit
+-usr/include/rtt/extras
+-usr/include/rtt/plugin
+-usr/include/rtt/scripting
+-usr/include/rtt/internal
+-usr/include/rtt/deployment
+-usr/include/rtt/Activity.hpp
+-usr/include/rtt/ArgumentDescription.hpp
+-usr/include/rtt/Attribute.hpp
+-usr/include/rtt/Component.hpp
+-usr/include/rtt/ConfigurationInterface.hpp
+-usr/include/rtt/ConnPolicy.hpp
+-usr/include/rtt/DataFlowInterface.hpp
+-usr/include/rtt/ExecutionEngine.hpp
+-usr/include/rtt/FactoryExceptions.hpp
+-usr/include/rtt/FlowStatus.hpp
+-usr/include/rtt/Handle.hpp
+-usr/include/rtt/InputPort.hpp
+-usr/include/rtt/Logger.hpp
+-usr/include/rtt/Logger.inl
+-usr/include/rtt/OperationCaller.hpp
+-usr/include/rtt/Operation.hpp
+-usr/include/rtt/OperationInterface.hpp
+-usr/include/rtt/OperationInterfacePart.hpp
+-usr/include/rtt/OutputPort.hpp
+-usr/include/rtt/Port.hpp
+-usr/include/rtt/PropertyBag.hpp
+-usr/include/rtt/Property.hpp
+-usr/include/rtt/rt_string.hpp
+-usr/include/rtt/rtt-detail-fwd.hpp
+-usr/include/rtt/rtt-fwd.hpp
+-usr/include/rtt/RTT.hpp
+-usr/include/rtt/SendHandle.hpp
+-usr/include/rtt/SendStatus.hpp
+-usr/include/rtt/Service.hpp
+-usr/include/rtt/ServiceRequester.hpp
+-usr/include/rtt/TaskContext.hpp
+-usr/include/rtt/Time.hpp
+-usr/include/rtt/rtt-config.h
+-usr/lib/cmake/orocos-rtt/orocos-rtt-config-version.cmake
+-usr/lib/cmake/orocos-rtt/UseOROCOS-RTT.cmake
+-usr/lib/cmake/orocos-rtt/UseOROCOS-RTT-helpers.cmake
+-usr/lib/cmake/orocos-rtt/orocos-rtt-config.cmake
+-usr/lib/cmake/orocos-rtt/cmake_uninstall.cmake.in
+diff --git a/debian/liborocos-rtt-corba-common-dev.install b/debian/liborocos-rtt-corba-common-dev.install
+deleted file mode 100644
+index a11651b..0000000
+--- a/debian/liborocos-rtt-corba-common-dev.install
++++ /dev/null
+@@ -1 +0,0 @@
+-usr/include/rtt/transports/corba
+diff --git a/debian/liborocos-rtt-corba-template-dev.install b/debian/liborocos-rtt-corba-template-dev.install
+deleted file mode 100644
+index a8f1097..0000000
+--- a/debian/liborocos-rtt-corba-template-dev.install
++++ /dev/null
+@@ -1,3 +0,0 @@
+-usr/lib/liborocos-rtt-corba-@TARGET@.so
+-usr/lib/orocos/@TARGET@/types/librtt-transport-corba-@TARGET@.so
+-usr/lib/pkgconfig/orocos-rtt-corba-@TARGET@.pc
+diff --git a/debian/liborocos-rtt-corba-template.install b/debian/liborocos-rtt-corba-template.install
+deleted file mode 100644
+index 416ee3a..0000000
+--- a/debian/liborocos-rtt-corba-template.install
++++ /dev/null
+@@ -1,2 +0,0 @@
+-usr/lib/liborocos-rtt-corba-@TARGET@*.so.*
+-usr/lib/orocos/@TARGET@/types/librtt-transport-corba-@TARGET@*.so.*
+diff --git a/debian/liborocos-rtt-template-dev.install b/debian/liborocos-rtt-template-dev.install
+deleted file mode 100644
+index 7a2d19e..0000000
+--- a/debian/liborocos-rtt-template-dev.install
++++ /dev/null
+@@ -1,13 +0,0 @@
+-usr/lib/liborocos-rtt-@TARGET@.so
+-usr/lib/liborocos-rtt-mqueue-@TARGET@.so
+-usr/lib/orocos/@TARGET@/types/librtt-typekit-@TARGET@.so
+-usr/lib/orocos/@TARGET@/types/librtt-transport-mqueue-@TARGET@.so
+-usr/lib/orocos/@TARGET@/plugins/librtt-scripting-@TARGET@.so
+-usr/lib/orocos/@TARGET@/plugins/librtt-marshalling-@TARGET@.so
+-usr/lib/pkgconfig/orocos-rtt-@TARGET@.pc
+-usr/lib/pkgconfig/orocos-rtt-mqueue-@TARGET@.pc
+-usr/include/rtt/os/targets/@TARGET@-config.h
+-usr/include/rtt/os/@TARGET@
+-usr/lib/cmake/orocos-rtt/orocos-rtt-@TARGET@-libraries-relwithdebinfo.cmake
+-usr/lib/cmake/orocos-rtt/orocos-rtt-@TARGET@-libraries.cmake
+-usr/lib/cmake/orocos-rtt/orocos-rtt-config-@TARGET@.cmake
+diff --git a/debian/liborocos-rtt-template.install b/debian/liborocos-rtt-template.install
+deleted file mode 100644
+index 492fe8e..0000000
+--- a/debian/liborocos-rtt-template.install
++++ /dev/null
+@@ -1,6 +0,0 @@
+-usr/lib/liborocos-rtt-@TARGET@*.so.*
+-usr/lib/liborocos-rtt-mqueue-@TARGET@*.so.*
+-usr/lib/orocos/@TARGET@/types/librtt-typekit-@TARGET@*.so.*
+-usr/lib/orocos/@TARGET@/types/librtt-transport-mqueue-@TARGET@*.so.*
+-usr/lib/orocos/@TARGET@/plugins/librtt-scripting-@TARGET@*.so.*
+-usr/lib/orocos/@TARGET@/plugins/librtt-marshalling-@TARGET@*.so.*
+diff --git a/debian/orocos-rtt.doc-base.EX b/debian/orocos-rtt.doc-base.EX
+deleted file mode 100644
+index 74a7a8e..0000000
+--- a/debian/orocos-rtt.doc-base.EX
++++ /dev/null
+@@ -1,22 +0,0 @@
+-Document: orocos-rtt
+-Title: Debian orocos-rtt Manual
+-Author: <insert document author here>
+-Abstract: This manual describes what orocos-rtt is
+- and how it can be used to
+- manage online manuals on Debian systems.
+-Section: unknown
+-
+-Format: debiandoc-sgml
+-Files: /usr/share/doc/orocos-rtt/orocos-rtt.sgml.gz
+-
+-Format: postscript
+-Files: /usr/share/doc/orocos-rtt/orocos-rtt.ps.gz
+-
+-Format: text
+-Files: /usr/share/doc/orocos-rtt/orocos-rtt.text.gz
+-
+-Format: HTML
+-Index: /usr/share/doc/orocos-rtt/html/index.html
+-Files: /usr/share/doc/orocos-rtt/html/*.html
+-
+-  
+diff --git a/debian/rules b/debian/rules
+deleted file mode 100755
+index ebe08c2..0000000
+--- a/debian/rules
++++ /dev/null
+@@ -1,114 +0,0 @@
+-#!/usr/bin/make -f
+-# -*- makefile -*-
+-# Sample debian/rules that uses debhelper.
+-# This file was originally written by Joey Hess and Craig Small.
+-# As a special exception, when this file is copied by dh-make into a
+-# dh-make output file, you may use that output file without restriction.
+-# This special exception was added by Craig Small in version 0.37 of dh-make.
+-
+-# Uncomment this to turn on verbose mode.
+-#export DH_VERBOSE=1
+-
+-
+-# These are used for cross-compiling and for saving the configure script
+-# from having to guess our platform (since we know it already)
+-DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+-DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+-
+-
+-CFLAGS = -Wall -g
+-
+-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+-	CFLAGS += -O0
+-else
+-	CFLAGS += -O2
+-endif
+-
+-# allow parallel build using recommended approach from 
+-# http://www.de.debian.org/doc/debian-policy/ch-source.html@s-debianrules-options
+-#
+-# For Bash type:
+-#
+-# export DEB_BUILD_OPTIONS="parallel=2"
+-# svn-buildpackage ...
+-#
+-ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+-	NUMJOBS=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
+-	MAKE_FLAGS += -j$(NUMJOBS)
+-endif
+-
+-# shared library versions, option 1
+-#version=1.1.0
+-#major=1.4
+-version=`grep orocos-rtt debian/changelog | head -1 | awk '{print substr($$2,2,length($$2)-2)}'`
+-major=`grep orocos-rtt debian/changelog | head -1 | awk '{print substr($$2,2,length($$2)-2)}' | sed "s/.*\(\w\+\)\.\(\w\+\)\.\(\w\+\)-.*/\1.\2/g"`
+-# option 2, assuming the library is created as build/src/libfoo.so.2.0.5 or so
+-#version=`find . -name liborocos-rtt-gnulinux*.so.* | awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}' | head -1`
+-#major=`find . -name liborocos-rtt-gnulinux*.so.* | awk '{if (match($$0,/\.so\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART+4)}' | head -1`
+-
+-include debian/rules.targets
+-
+-configure: configure-stamp $(CONFIGURE_TARGETS)
+-configure-stamp:
+-	dh_testdir
+-	touch configure-stamp
+-
+-build: build-stamp $(BUILD_TARGETS)
+-build-stamp: configure
+-	dh_testdir
+-	touch build-stamp
+-
+-clean:
+-	dh_testdir
+-	dh_testroot
+-	rm -f build-stamp*
+-	rm -f configure-stamp*
+-
+-# Add here commands to clean up after the build process.
+-	-rm -rf dbuild.*
+-
+-	dh_clean 
+-
+-install: build $(INSTALL_TARGETS)
+-	dh_testdir
+-	dh_testroot
+-	dh_installdirs
+-
+-
+-# Build architecture-independent files here.
+-binary-indep: build install
+-# We have nothing to do by default.
+-
+-# Build architecture-dependent files here.
+-binary-arch: build install
+-	dh_testdir
+-	dh_testroot
+-	dh_installchangelogs ChangeLog
+-	dh_installdocs
+-	dh_installexamples
+-	dh_install --sourcedir=debian/tmp --list-missing
+-#	dh_installmenu
+-#	dh_installdebconf	
+-#	dh_installlogrotate
+-#	dh_installemacsen
+-#	dh_installpam
+-#	dh_installmime
+-#	dh_installinit
+-#	dh_installcron
+-#	dh_installinfo
+-	dh_installman
+-	dh_link
+-	dh_strip --dbg-package=orocos-rtt-dbg$(major)
+-	dh_compress
+-	dh_fixperms
+-#	dh_perl
+-#	dh_python
+-	dh_makeshlibs
+-	dh_installdeb
+-	dh_shlibdeps
+-	dh_gencontrol
+-	dh_md5sums
+-	dh_builddeb
+-
+-binary: binary-indep binary-arch
+-.PHONY: build clean binary-indep binary-arch binary install 
+diff --git a/debian/rules.gnulinux b/debian/rules.gnulinux
+deleted file mode 100644
+index 2e9673d..0000000
+--- a/debian/rules.gnulinux
++++ /dev/null
+@@ -1,15 +0,0 @@
+-
+-configure-gnulinux: configure-stamp-gnulinux
+-configure-stamp-gnulinux:
+-	mkdir -p dbuild.gnulinux
+-	cd  dbuild.gnulinux; \
+-	unset ACE_ROOT TAO_ROOT; CXXFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs" cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_CORBA=ON -DOROCOS_TARGET=gnulinux
+-	touch configure-stamp-gnulinux
+-
+-build-gnulinux: build-stamp-gnulinux
+-build-stamp-gnulinux: configure-stamp-gnulinux
+-	cd dbuild.gnulinux; $(MAKE) idl ;$(MAKE) $(MAKE_FLAGS); # $(MAKE) docapi dochtml VERBOSE=1
+-	touch build-stamp-gnulinux
+-
+-install-gnulinux: build-gnulinux
+-	cd dbuild.gnulinux; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+diff --git a/debian/rules.lxrt b/debian/rules.lxrt
+deleted file mode 100644
+index 3548fab..0000000
+--- a/debian/rules.lxrt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-
+-configure-lxrt: configure-stamp-lxrt
+-configure-stamp-lxrt:
+-	mkdir -p dbuild.lxrt
+-	cd  dbuild.lxrt; \
+-	unset ACE_ROOT TAO_ROOT; CXXFLAGS="$(CFLAGS)" CMAKE_INCLUDE_PATH=/usr/realtime/include CMAKE_LIBRARY_PATH=/usr/realtime/lib cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_CORBA=ON -DOROCOS_TARGET=lxrt
+-	touch configure-stamp-lxrt
+-
+-build-lxrt: build-stamp-lxrt
+-build-stamp-lxrt: configure-stamp-lxrt
+-	cd dbuild.lxrt; $(MAKE) idl ;$(MAKE) $(MAKE_FLAGS); # $(MAKE) docapi dochtml VERBOSE=1
+-	touch build-stamp-lxrt
+-
+-install-lxrt: build-lxrt
+-	cd dbuild.lxrt; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+diff --git a/debian/rules.xenomai b/debian/rules.xenomai
+deleted file mode 100644
+index 9802416..0000000
+--- a/debian/rules.xenomai
++++ /dev/null
+@@ -1,15 +0,0 @@
+-
+-configure-xenomai: configure-stamp-xenomai
+-configure-stamp-xenomai:
+-	mkdir -p dbuild.xenomai
+-	cd  dbuild.xenomai; \
+-	unset ACE_ROOT TAO_ROOT; CXXFLAGS="$(CFLAGS)" cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DENABLE_CORBA=ON -DOROCOS_TARGET=xenomai
+-	touch configure-stamp-xenomai
+-
+-build-xenomai: build-stamp-xenomai
+-build-stamp-xenomai: configure-stamp-xenomai
+-	cd dbuild.xenomai; $(MAKE) idl ;$(MAKE) $(MAKE_FLAGS); # $(MAKE) docapi dochtml VERBOSE=1
+-	touch build-stamp-xenomai
+-
+-install-xenomai: build-xenomai
+-	cd dbuild.xenomai; $(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+-- 
+1.9.1
+
