@@ -1,4 +1,4 @@
-From 2a4e490efa3618028dd99620c1b2b4962910e80e Mon Sep 17 00:00:00 2001
+From d3cf8d24861ce55053c819f1177a3ab920b6be88 Mon Sep 17 00:00:00 2001
 From: Johannes Meyer <johannes@intermodalics.eu>
 Date: Fri, 23 Jan 2015 16:58:37 +0100
 Subject: [PATCH] Enabled corba in debian build
