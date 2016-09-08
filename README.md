@@ -1,3 +1,26 @@
+## rtt (jade) - 2.8.3-1
+
+The packages in the `rtt` repository were released into the `jade` distro by running `/usr/bin/bloom-release rtt --track jade --rosdistro jade` on `Thu, 08 Sep 2016 14:34:31 -0000`
+
+The `rtt` package was released.
+
+Version of package(s) in repository `rtt`:
+
+- upstream repository: https://github.com/orocos-toolchain/rtt.git
+- release repository: https://github.com/orocos-gbp/rtt-release.git
+- rosdistro version: `2.8.3-0`
+- old version: `2.8.3-0`
+- new version: `2.8.3-1`
+
+Versions of tools used:
+
+- bloom version: `0.5.22`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.4.7`
+- vcstools version: `0.1.39`
+
+
 ## rtt (indigo) - 2.8.3-1
 
 The packages in the `rtt` repository were released into the `indigo` distro by running `/usr/bin/bloom-release rtt --track indigo --rosdistro indigo` on `Thu, 08 Sep 2016 14:24:38 -0000`
