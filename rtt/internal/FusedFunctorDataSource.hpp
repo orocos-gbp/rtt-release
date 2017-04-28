@@ -54,6 +54,9 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/make_shared.hpp>
 
+#include <iostream>
+using namespace std;
+
 namespace RTT
 {
     namespace internal
@@ -332,30 +335,41 @@ namespace RTT
          */
         template<typename Signature>
         struct FusedMSendDataSource
-        : public DataSource<SendHandle<Signature> >
+        : public AssignableDataSource<SendHandle<Signature> >
           {
               typedef SendHandle<Signature> result_type;
               typedef result_type value_t;
-              typedef typename DataSource<value_t>::const_reference_t const_reference_t;
+              typedef typename AssignableDataSource<value_t>::param_t param_t;
+              typedef typename AssignableDataSource<value_t>::const_reference_t const_reference_t;
+              typedef typename AssignableDataSource<value_t>::reference_t reference_t;
               typedef create_sequence<
                       typename boost::function_types::parameter_types<Signature>::type> SequenceFactory;
               typedef typename SequenceFactory::type DataSourceSequence;
               typename base::OperationCallerBase<Signature>::shared_ptr ff;
               DataSourceSequence args;
               mutable SendHandle<Signature> sh; // mutable because of get() const
+              mutable bool isqueued;
           public:
               typedef boost::intrusive_ptr<FusedMSendDataSource<Signature> >
                       shared_ptr;
 
               FusedMSendDataSource(typename base::OperationCallerBase<Signature>::shared_ptr g,
                                      const DataSourceSequence& s = DataSourceSequence() ) :
-                  ff(g), args(s)
+                  ff(g), args(s), sh(), isqueued(false)
               {
               }
 
               void setArguments(const DataSourceSequence& a1)
               {
                   args = a1;
+              }
+
+              virtual void set( param_t t ) {
+                  sh = t;
+              }
+
+              reference_t set() {
+                  return sh;
               }
 
               value_t value() const
@@ -370,21 +384,38 @@ namespace RTT
 
               value_t get() const
               {
+                  if (isqueued)
+                      return sh;
                   // put the member's object as first since SequenceFactory does not know about the OperationCallerBase type.
                   sh = bf::invoke(&base::OperationCallerBase<Signature>::send, bf::cons<base::OperationCallerBase<Signature>*, typename SequenceFactory::data_type>(ff.get(), SequenceFactory::data(args)));
+                  if ( sh.ready() ) // only queued if sh contains a collectable operation
+                      isqueued = true;
                   return sh;
+              }
+
+              void reset() {
+                  isqueued = false;
               }
 
               virtual FusedMSendDataSource<Signature>* clone() const
               {
                   return new FusedMSendDataSource<Signature> (ff, args);
               }
+
               virtual FusedMSendDataSource<Signature>* copy(
                                                           std::map<
                                                                   const base::DataSourceBase*,
                                                                   base::DataSourceBase*>& alreadyCloned) const
               {
-                  return new FusedMSendDataSource<Signature> (ff, SequenceFactory::copy(args, alreadyCloned));
+                  // we need copy semantics because FusedMCollectDataSource tracks us.
+                  if ( alreadyCloned[this] != 0 ) {
+                      assert( dynamic_cast<FusedMSendDataSource<Signature>*>( alreadyCloned[this] ) == static_cast<FusedMSendDataSource<Signature>*>( alreadyCloned[this] ) );
+                      return static_cast<FusedMSendDataSource<Signature>*>( alreadyCloned[this] );
+                  }
+                  // Other pieces in the code rely on insertion in the map :
+                  alreadyCloned[this] = new FusedMSendDataSource<Signature>(ff, SequenceFactory::copy(args, alreadyCloned));
+                  // return copy
+                  return static_cast<FusedMSendDataSource<Signature>*>( alreadyCloned[this] );
               }
           };
 
@@ -451,18 +482,32 @@ namespace RTT
               {
                   return new FusedMCollectDataSource<Signature> ( args, isblocking);
               }
+
               virtual FusedMCollectDataSource<Signature>* copy(
                                                           std::map<
                                                                   const base::DataSourceBase*,
                                                                   base::DataSourceBase*>& alreadyCloned) const
               {
-                  return new FusedMCollectDataSource<Signature> ( SequenceFactory::copy(args, alreadyCloned), isblocking);
+                  // we need copy semantics because CmdCollectCondition tracks us.
+                  // WARNING: This is a tricky precedent... should all DataSources with state + multiple living references then implement this ? Should we assert on this ?
+                  if ( alreadyCloned[this] != 0 ) {
+                      assert ( dynamic_cast<FusedMCollectDataSource<Signature>*>( alreadyCloned[this] ) == static_cast<FusedMCollectDataSource<Signature>*>( alreadyCloned[this] ) );
+                      return static_cast<FusedMCollectDataSource<Signature>*>( alreadyCloned[this] );
+                  }
+                  // Other pieces in the code rely on insertion in the map :
+                  alreadyCloned[this] = new FusedMCollectDataSource<Signature>(SequenceFactory::copy(args, alreadyCloned), isblocking);
+                  // return copy
+                  return static_cast<FusedMCollectDataSource<Signature>*>( alreadyCloned[this] );
               }
           };
 
         /**
          * A Function object that reacts to a Signal by writing the arguments in
          * data sources and calling an action object.
+         *
+         * Implementation note: this class does not require copy/clone semantics because
+         * it is re-created for each SM instantiation, so it already gets the copy/cloned
+         * Data Sources in its constructor.
          */
         template<typename Signature>
         struct FusedMSignal : public base::DisposableInterface
@@ -474,6 +519,9 @@ namespace RTT
                     typename boost::function_types::parameter_types<Signature>::type> SequenceFactory;
             typedef typename SequenceFactory::atype DataSourceSequence;
             boost::shared_ptr<base::ActionInterface> mact;
+            // We need the arg_cache to store data similar to BindStorage,
+            // such that we can safely access it during execute().
+            typename SequenceFactory::data_store_type arg_cache;
             DataSourceSequence args;
             ExecutionEngine* subscriber;
             /**
@@ -507,12 +555,11 @@ namespace RTT
              * puts them into the assignable data sources and
              * executes the associated action.
              */
-            result_type invoke(typename SequenceFactory::data_type seq) {
+            result_type invoke(const typename SequenceFactory::data_type& seq) const {
                 if ( subscriber ) {
                     // asynchronous
                     shared_ptr sg = this->cloneRT();
-                    SequenceFactory::set( seq, sg->args );
-                  
+                    sg->arg_cache = SequenceFactory::store(seq);
                     sg->self = sg;
                     if ( subscriber->process( sg.get() ) ) {
                         // all ok
@@ -529,6 +576,7 @@ namespace RTT
             }
 
             void executeAndDispose() {
+                SequenceFactory::load( this->arg_cache, this->args );
                 mact->execute();
                 dispose();
             }

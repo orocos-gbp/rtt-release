@@ -79,6 +79,7 @@ namespace RTT
 	{
         pthread_attr_destroy( &(main_task->attr) );
         free(main_task->name);
+        main_task->name = NULL;
 	    return 0;
 	}
 
@@ -160,6 +161,7 @@ namespace RTT
             return rv;
         }
 
+#ifdef ORO_HAVE_PTHREAD_SETNAME_NP
         // Set thread name to match task name, to help with debugging
         {
             // trim the name to fit 16 bytes restriction (including terminating
@@ -176,6 +178,7 @@ namespace RTT
                            << strerror(result) << endlog();
             }
         }
+#endif // ORO_HAVE_PTHREAD_SETNAME_NP
 
         if ( cpu_affinity != (unsigned)~0 ) {
             log(Debug) << "Setting CPU affinity to " << cpu_affinity << endlog();
@@ -248,7 +251,7 @@ namespace RTT
 	    // set period
 	    mytask->period = nanosecs;
 	    // set next wake-up time.
-	    mytask->periodMark = ticks2timespec( nano2ticks( rtos_get_time_ns() + nanosecs ) );
+	    mytask->periodMark = ticks2timespec( nano2ticks( rtos_get_time_monotonic_ns() + nanosecs ) );
 	}
 
 	INTERNAL_QUAL void rtos_task_set_period( RTOS_TASK* mytask, NANO_TIME nanosecs )
@@ -267,11 +270,11 @@ namespace RTT
             return 0;
 
         // record this to detect overrun.
-	    NANO_TIME now = rtos_get_time_ns();
+	    NANO_TIME now = rtos_get_time_monotonic_ns();
 	    NANO_TIME wake= task->periodMark.tv_sec * 1000000000LL + task->periodMark.tv_nsec;
 
         // inspired by nanosleep man page for this construct:
-        while ( clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &(task->periodMark), NULL) != 0 && errno == EINTR ) {
+        while ( clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &(task->periodMark), NULL) != 0 && errno == EINTR ) {
             errno = 0;
         }
 
@@ -295,7 +298,7 @@ namespace RTT
         else
         {
           TIME_SPEC ts = ticks2timespec( nano2ticks( task->period) );
-          TIME_SPEC now = ticks2timespec( rtos_get_time_ns() );
+          TIME_SPEC now = ticks2timespec( rtos_get_time_monotonic_ns() );
           NANO_TIME tn = (now.tv_nsec + ts.tv_nsec);
           task->periodMark.tv_nsec = tn % 1000000000LL;
           task->periodMark.tv_sec = ts.tv_sec + now.tv_sec + tn / 1000000000LL;
@@ -308,6 +311,7 @@ namespace RTT
         pthread_join( mytask->thread, 0);
         pthread_attr_destroy( &(mytask->attr) );
 	    free(mytask->name);
+        mytask->name = NULL;
 	}
 
     INTERNAL_QUAL int rtos_task_check_scheduler(int* scheduler)
@@ -461,7 +465,7 @@ namespace RTT
 
 	INTERNAL_QUAL const char * rtos_task_get_name(const RTOS_TASK* task)
 	{
-	    return task->name;
+        return task->name ? task->name : "(destroyed)";
 	}
 
     }

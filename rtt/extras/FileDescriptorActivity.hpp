@@ -39,6 +39,7 @@
 #ifndef FILEDESCRIPTOR_ACTIVITY_HPP
 #define FILEDESCRIPTOR_ACTIVITY_HPP
 
+#include "FileDescriptorActivityInterface.hpp"
 #include "../Activity.hpp"
 #include <set>
 
@@ -100,7 +101,8 @@ namespace RTT { namespace extras {
      * }
      * </code>
      */
-    class RTT_API FileDescriptorActivity : public Activity
+    class RTT_API FileDescriptorActivity : public extras::FileDescriptorActivityInterface,
+                                           public Activity
     {
         std::set<int> m_watched_fds;
         bool m_running;
@@ -188,20 +190,18 @@ namespace RTT { namespace extras {
         virtual bool setPeriod(Seconds period);
 
         /** Sets the file descriptor the activity should be listening to.
-         * @arg close_on_stop { if true, the file descriptor will be closed by the
-         * activity when stop() is called. Otherwise, the file descriptor is
-         * left as-is.}
          *
          * This method is thread-safe, i.e. it can be called from any thread
          *
          * @param fd the file descriptor
-         * @param close_on_stop if true, the FD will be closed automatically when the activity is stopped
          */
         void watch(int fd);
 
         /** Removes a file descriptor from the set of watched FDs
          *
          * This method is thread-safe, i.e. it can be called from any thread
+         *
+         * @param fd the file descriptor
          */
         void unwatch(int fd);
 
@@ -209,6 +209,8 @@ namespace RTT { namespace extras {
         void clearAllWatches();
 
         /** True if this specific FD is being watched by the activity
+         *
+         * @param fd the file descriptor
          */
         bool isWatched(int fd) const;
 
@@ -217,6 +219,8 @@ namespace RTT { namespace extras {
          * This should only be used from within the base::RunnableInterface this
          * activity is driving, i.e. in TaskContext::updateHook() or
          * TaskContext::errorHook().
+         *
+         * @param fd the file descriptor
          */
         bool isUpdated(int fd) const;
 
@@ -242,6 +246,8 @@ namespace RTT { namespace extras {
          * for blocking behaviour (no timeout).
 		 * @pre 0 <= timeout (otherwise an error is logged and \a timeout
 		 * is ignored)
+         *
+         * @param timeout The timeout (milliseconds)
          */
         void setTimeout(int timeout);
 
@@ -249,16 +255,22 @@ namespace RTT { namespace extras {
          * for blocking behaviour (no timeout).
 		 * @pre 0 <= timeout (otherwise an error is logged and \a timeout_us
 		 * is ignored)
+         *
+         * @param timeout The timeout (microseconds)
          */
         void setTimeout_us(int timeout_us);
 
         /** Get the timeout, in milliseconds, for waiting on the IO. Set to 0
          * for blocking behaviour (no timeout).
+         *
+         * @return The timeout (milliseconds)
          */
         int getTimeout() const;
 
         /** Get the timeout, in microseconds, for waiting on the IO. Set to 0
          * for blocking behaviour (no timeout).
+         *
+         * @return The timeout (microseconds)
          */
         int getTimeout_us() const;
 
@@ -272,10 +284,20 @@ namespace RTT { namespace extras {
          */
         virtual void step();
 
+        /** Called by loop() when data is available on the file descriptor. By
+         * default, it calls step() on the associated runner interface (if any)
+         */
+        virtual void work(base::RunnableInterface::WorkReason reason);
+
         /** Force calling step() even if no data is available on the file
          * descriptor, and returns true if the signalling was successful
          */
         virtual bool trigger();
+
+        /**
+         * Always returns false.
+         */
+        virtual bool timeout();
     };
 }}
 
