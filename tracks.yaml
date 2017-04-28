@@ -82,7 +82,7 @@ tracks:
       :{release_inc}
     devel_branch: toolchain-2.9
     name: upstream
-    patches: null
+    patches: patches
     release_inc: -1
     release_repo_url: git@github.com:orocos-gbp/rtt-release.git
     release_tag: :{ask}
