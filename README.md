@@ -1,3 +1,26 @@
+## rtt (kinetic) - 2.9.0-2
+
+The packages in the `rtt` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release --track kinetic --ros-distro kinetic rtt` on `Fri, 28 Apr 2017 16:58:50 -0000`
+
+The `rtt` package was released.
+
+Version of package(s) in repository `rtt`:
+
+- upstream repository: https://github.com/orocos-toolchain/rtt.git
+- release repository: https://github.com/orocos-gbp/rtt-release.git
+- rosdistro version: `2.9.0-1`
+- old version: `2.9.0-1`
+- new version: `2.9.0-2`
+
+Versions of tools used:
+
+- bloom version: `0.5.26`
+- catkin_pkg version: `0.3.1`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.6.2`
+- vcstools version: `0.1.39`
+
+
 ## rtt (kinetic) - 2.9.0-1
 
 The packages in the `rtt` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release --track kinetic --ros-distro kinetic rtt` on `Fri, 28 Apr 2017 16:37:29 -0000`
