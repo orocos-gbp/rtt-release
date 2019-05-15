@@ -43,6 +43,7 @@
 #include "DataObjectInterface.hpp"
 #include "../Logger.hpp"
 #include "../types/Types.hpp"
+#include "../internal/DataSourceTypeInfo.hpp"
 
 namespace RTT
 { namespace base {
@@ -80,6 +81,10 @@ namespace RTT
         : public DataObjectInterface<T>
     {
     public:
+        typedef typename DataObjectInterface<T>::value_t value_t;
+        typedef typename DataObjectInterface<T>::reference_t reference_t;
+        typedef typename DataObjectInterface<T>::param_t param_t;
+
         typedef typename DataObjectBase::Options Options;
         typedef typename DataObjectInterface<T>::DataType DataType;
 
@@ -185,10 +190,13 @@ namespace RTT
          * no memory will be allocated.
          *
          * @param pull A copy of the data.
+         * @param copy_old_data If true, also copy the data if the data object
+         *                      has not been updated since the last call.
+         * @param copy_sample   If true, copy the data unconditionally.
          */
-        virtual FlowStatus Get( DataType& pull, bool copy_old_data = true ) const
+        FlowStatus Get( DataType& pull, bool copy_old_data, bool copy_sample ) const
         {
-            if (!initialized) {
+            if (!initialized && !copy_sample) {
                 return NoData;
             }
 
@@ -212,13 +220,27 @@ namespace RTT
             if (result == NewData) {
                 pull = reading->data;               // takes some time
                 reading->status = OldData;          // CAS?
-            } else if ((result == OldData) && copy_old_data) {
+            } else if (((result == OldData) && copy_old_data) || copy_sample) {
                 pull = reading->data;               // takes some time
             }
 
             // XXX smp_mb
             oro_atomic_dec(&reading->counter);       // release buffer
             return result;
+        }
+
+        /**
+         * Get a copy of the Data (non allocating).
+         * If pull has reserved enough memory to store the copy,
+         * no memory will be allocated.
+         *
+         * @param pull A copy of the data.
+         * @param copy_old_data If true, also copy the data if the data object
+         *                      has not been updated since the last call.
+         */
+        virtual FlowStatus Get( reference_t pull, bool copy_old_data = true ) const
+        {
+            return Get( pull, copy_old_data, /* copy_sample = */ false );
         }
 
         /**
@@ -238,8 +260,7 @@ namespace RTT
              */
 
             if (!initialized) {
-                types::TypeInfo *ti = types::Types()->getTypeInfo<DataType>();
-                log(Error) << "You set a lock-free data object of type " << (ti ? ti->getTypeName() : "(unknown)") << " without initializing it with a data sample. "
+                log(Error) << "You set a lock-free data object of type " << internal::DataSourceTypeInfo<T>::getType() << " without initializing it with a data sample. "
                            << "This might not be real-time safe." << endlog();
                 data_sample(DataType(), true);
             }
@@ -278,6 +299,15 @@ namespace RTT
             } else {
                 return initialized;
             }
+        }
+
+        /**
+         * Reads back a data sample.
+         */
+        value_t data_sample() const {
+            value_t sample;
+            (void) Get(sample, /* copy_old_data = */ true, /* copy_sample = */ true);
+            return sample;
         }
 
         // This is actually a copy of Get(), but it only sets the status to NoData once a valid buffer has been found.

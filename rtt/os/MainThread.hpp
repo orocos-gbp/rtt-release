@@ -136,6 +136,8 @@ namespace RTT
 
         virtual void yield();
 
+        unsigned getCpuAffinity() const;
+
         /**
          * Returns zero, the number of the main() thread.
          */
