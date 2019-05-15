@@ -174,13 +174,13 @@ namespace RTT
             }
             int result = pthread_setname_np(task->thread, thread_name);
             if (result != 0) {
-                log(Error) << "Failed to set thread name for " << task->name << ": "
-                           << strerror(result) << endlog();
+                log(Warning) << "Failed to set thread name for " << task->name << ": "
+                             << strerror(result) << endlog();
             }
         }
 #endif // ORO_HAVE_PTHREAD_SETNAME_NP
 
-        if ( cpu_affinity != (unsigned)~0 ) {
+        if ( cpu_affinity != 0 ) {
             log(Debug) << "Setting CPU affinity to " << cpu_affinity << endlog();
             int result = rtos_task_set_cpu_affinity(task, cpu_affinity);
             if (result != 0) {
@@ -308,7 +308,12 @@ namespace RTT
 	}
 
 	INTERNAL_QUAL void rtos_task_delete(RTOS_TASK* mytask) {
-        pthread_join( mytask->thread, 0);
+        int ret = pthread_join( mytask->thread, 0);
+        if (ret != 0) {
+            log(Error) << "Failed to join thread " << mytask->name << ": "
+                       << strerror(ret) << endlog();
+            return;
+        }
         pthread_attr_destroy( &(mytask->attr) );
 	    free(mytask->name);
         mytask->name = NULL;

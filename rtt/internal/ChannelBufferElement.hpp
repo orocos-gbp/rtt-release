@@ -64,9 +64,9 @@ namespace RTT { namespace internal {
         const ConnPolicy policy;
 
     public:
+        typedef typename base::ChannelElement<T>::value_t value_t;
         typedef typename base::ChannelElement<T>::param_t param_t;
         typedef typename base::ChannelElement<T>::reference_t reference_t;
-        typedef typename base::ChannelElement<T>::value_t value_t;
 
         ChannelBufferElement(typename base::BufferInterface<T>::shared_ptr buffer, const ConnPolicy& policy = ConnPolicy())
             : buffer(buffer), last_sample_p(0), policy(policy) {}

@@ -175,12 +175,18 @@ BOOST_AUTO_TEST_CASE( testPortTaskInterface )
 BOOST_AUTO_TEST_CASE(testPortConnectionInitialization)
 {
     OutputPort<int> wp("WriterName", true);
-    InputPort<int> rp("ReaderName", ConnPolicy::data(true));
+    InputPort<int> rp("ReaderName", ConnPolicy::data(ConnPolicy::LOCK_FREE, true));
+
+    wp.setDataSample(-1);
 
     BOOST_CHECK( wp.createConnection(rp) );
     int value = 0;
     BOOST_CHECK( !rp.read(value) );
+    BOOST_CHECK_EQUAL( value, 0 );
     BOOST_CHECK( !wp.getLastWrittenValue(value) );
+    rp.getDataSample(value);
+    BOOST_CHECK_EQUAL( -1, value );
+
     BOOST_CHECK_EQUAL( wp.write(10), WriteSuccess );
     BOOST_CHECK( rp.read(value) );
     BOOST_CHECK_EQUAL( 10, value );
@@ -916,10 +922,10 @@ BOOST_AUTO_TEST_CASE(testEventPortSignalling)
     OutputPort<double> wp1("Write");
     InputPort<double>  rp1("Read");
 
-    BOOST_ASSERT(tce->configure());
-    BOOST_ASSERT(tce->isConfigured());
+    BOOST_REQUIRE(tce->configure());
+    BOOST_REQUIRE(tce->isConfigured());
 
-    BOOST_ASSERT(slsim->isActive());
+    BOOST_REQUIRE(slsim->isActive());
 
 
     tce->start();

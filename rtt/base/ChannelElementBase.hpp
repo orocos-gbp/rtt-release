@@ -140,7 +140,7 @@ namespace RTT { namespace base {
          * Returns the last output channel element of this connection.
          * Will return the channel element the furthest away from the output port,
          * or \a this if none.
-         * @return getOutput() ? getOutput()->getInputEndPoint() : this
+         * @return getOutput() ? getOutput()->getOutputEndPoint() : this
          */
         virtual shared_ptr getOutputEndPoint();
 
@@ -172,7 +172,7 @@ namespace RTT { namespace base {
         /** Signals that there is new data available on this channel
          * Forwards to \ref signal() unless overwritten in a derived class.
          */
-        virtual bool signalFrom(ChannelElementBase *caller) { return signal(); }
+        virtual bool signalFrom(ChannelElementBase *) { return signal(); }
 
         /**
          * This is called on the output half of a new connection by the connection

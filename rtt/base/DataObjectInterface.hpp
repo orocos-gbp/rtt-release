@@ -40,6 +40,7 @@
 
 #include "DataObjectBase.hpp"
 #include "../FlowStatus.hpp"
+#include <boost/call_traits.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace RTT
@@ -57,6 +58,10 @@ namespace RTT
     class DataObjectInterface : public DataObjectBase
     {
     public:
+        typedef T value_t;
+        typedef typename boost::call_traits<T>::param_type param_t;
+        typedef typename boost::call_traits<T>::reference reference_t;
+
         /**
          * Used for shared_ptr management.
          */
@@ -81,6 +86,8 @@ namespace RTT
          * Get a copy of the Data of this data object.
          *
          * @param pull A copy of the data.
+         * @param copy_old_data If true, also copy the data if the data object
+         *                      has not been updated since the last call.
          */
         virtual FlowStatus Get( DataType& pull, bool copy_old_data = true ) const = 0;
 
