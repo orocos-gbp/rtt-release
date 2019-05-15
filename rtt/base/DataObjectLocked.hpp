@@ -57,6 +57,10 @@ namespace RTT
     class DataObjectLocked
         : public DataObjectInterface<T>
     {
+        typedef typename DataObjectInterface<T>::value_t value_t;
+        typedef typename DataObjectInterface<T>::reference_t reference_t;
+        typedef typename DataObjectInterface<T>::param_t param_t;
+
         mutable os::Mutex lock;
 
         /**
@@ -120,6 +124,14 @@ namespace RTT
             } else {
                 return initialized;
             }
+        }
+
+        /**
+         * Reads back a data sample.
+         */
+        value_t data_sample() const {
+            os::MutexLock locker(lock);
+            return data;
         }
 
         virtual void clear() {

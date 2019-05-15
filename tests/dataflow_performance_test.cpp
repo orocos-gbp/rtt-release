@@ -294,18 +294,28 @@ template <typename T, PortTypes> struct Adaptor;
 
 #if !RTT_VERSION_GTE(2,8,99)
     typedef enum { WriteSuccess, WriteFailure, NotConnected } WriteStatus;
-    typedef enum { UnspecifiedReadPolicy, ReadUnordered, ReadShared } ReadPolicy;
-    typedef enum { UnspecifiedWritePolicy, WritePrivate, WriteShared } WritePolicy;
+    typedef enum { UnspecifiedBufferPolicy, PerConnection, PerInputPort, PerOutputPort, Shared } BufferPolicy;
 
     // dummy RTT v2.8.99 compatible ConnPolicy
     struct ConnPolicy : public RTT::ConnPolicy {
         static const bool PUSH = false;
         static const bool PULL = true;
 
-        ReadPolicy read_policy;
-        WritePolicy write_policy;
-        bool mandatory;
+        int buffer_policy;
         int max_threads;
+        bool mandatory;
+
+        ConnPolicy() :  RTT::ConnPolicy(), buffer_policy(), max_threads(), mandatory() {}
+        explicit ConnPolicy(int type) : RTT::ConnPolicy(type), buffer_policy(), max_threads(), mandatory() {}
+        explicit ConnPolicy(int type, int lock_policy) : RTT::ConnPolicy(type, lock_policy), buffer_policy(), max_threads(), mandatory() {}
+
+        ConnPolicy &operator==(const RTT::ConnPolicy &other) {
+            static_cast<RTT::ConnPolicy&>(*this) = other;
+            buffer_policy = 0;
+            max_threads = 0;
+            mandatory = false;
+            return *this;
+        }
     };
 
 #else
@@ -410,9 +420,9 @@ template <typename T, PortTypes> struct Adaptor;
         }
 
         std::string pull;
-        switch(cp.pull) {
-            case ConnPolicy::PUSH: pull = "PUSH"; break;
-            case ConnPolicy::PULL: pull = "PULL"; break;
+        switch(int(cp.pull)) {
+            case int(ConnPolicy::PUSH): pull = "PUSH"; break;
+            case int(ConnPolicy::PULL): pull = "PULL"; break;
         }
 
         os << pull << " ";
@@ -432,7 +442,11 @@ template <typename T, PortTypes> struct Adaptor;
 #endif
 
 struct CopyAndAssignmentCountedDetails {
-    CopyAndAssignmentCountedDetails() { oro_atomic_set(&copies, 0); oro_atomic_set(&assignments, 0); oro_atomic_set(&refcount, 0); }
+    CopyAndAssignmentCountedDetails() {
+        oro_atomic_set(&copies, 0);
+        oro_atomic_set(&assignments, 0);
+        oro_atomic_set(&refcount, 0);
+    }
     oro_atomic_t copies;
     oro_atomic_t assignments;
     oro_atomic_t refcount;
@@ -448,11 +462,35 @@ public:
     typedef Derived value_type;
     typedef CopyAndAssignmentCounted<Derived> this_type;
 
-    CopyAndAssignmentCounted() : Derived(), _counter_details(new CopyAndAssignmentCountedDetails) {}
-    CopyAndAssignmentCounted(const value_type &value) : Derived(value), _counter_details(new CopyAndAssignmentCountedDetails) {}
-    CopyAndAssignmentCounted(const this_type &other) : Derived(other), _counter_details(other._counter_details) { oro_atomic_inc(&(_counter_details->copies)); }
+    CopyAndAssignmentCounted()
+        : Derived(), _counter_details(new CopyAndAssignmentCountedDetails)
+    {
+        ORO_ATOMIC_SETUP(&_write_guard, 1);
+    }
+    CopyAndAssignmentCounted(const value_type &value)
+        : Derived(value), _counter_details(new CopyAndAssignmentCountedDetails)
+    {
+      ORO_ATOMIC_SETUP(&_write_guard, 1);
+    }
+    CopyAndAssignmentCounted(const this_type &other)
+        : Derived(other), _counter_details(other._counter_details)
+    {
+      ORO_ATOMIC_SETUP(&_write_guard, 1);
+        oro_atomic_inc(&(_counter_details->copies));
+    }
+    ~CopyAndAssignmentCounted() {
+        ORO_ATOMIC_CLEANUP(&_write_guard);
+    }
+
     this_type &operator=(const value_type &) { throw std::runtime_error("Cannot assign CopyAndAssignmentCounted type from its value_type directly!"); }
-    this_type &operator=(const this_type &other) { static_cast<value_type &>(*this) = other; _counter_details = other._counter_details; oro_atomic_inc(&(_counter_details->assignments)); return *static_cast<this_type *>(this); }
+    this_type &operator=(const this_type &other) {
+        BOOST_ASSERT_MSG(oro_atomic_dec_and_test(&_write_guard), "Conflicting assignment detected!");
+        static_cast<value_type &>(*this) = other;
+        _counter_details = other._counter_details;
+        oro_atomic_inc(&(_counter_details->assignments));
+        oro_atomic_inc(&_write_guard);
+        return *static_cast<this_type *>(this);
+    }
 
     int getCopyCount() { return oro_atomic_read(&(_counter_details->copies)); }
     int getAssignmentCount() { return oro_atomic_read(&(_counter_details->assignments)); }
@@ -465,6 +503,7 @@ public:
 
 private:
     boost::intrusive_ptr<CopyAndAssignmentCountedDetails> _counter_details;
+    oro_atomic_t _write_guard;
 };
 
 template <typename T>
@@ -1191,6 +1230,21 @@ public:
                   << " " << std::setw(9) << ""
                   << "  " << std::setw(9) << total_write_timer_by_status[WriteSuccess].count()
                   << " " << std::setw(9) << total_write_timer_by_status[WriteFailure].count()
+                  << std::endl;
+        std::cout << std::left
+                  << " " << std::setw(30) << "Average"
+                  << " " << std::setw(16) << ""
+                  << " " << std::setw(9)  << total_write_timer.count() / writers.size()
+                  << " " << std::setw(12) << total_write_timer.total().monotonic / writers.size()
+                  << " " << std::setw(12) << (total_write_timer.total().monotonic / total_write_timer.count()) / writers.size()
+                  << " " << std::setw(12) << total_write_timer.max().monotonic / writers.size()
+                  << " " << std::setw(12) << total_write_timer.total().cputime / writers.size()
+                  << " " << std::setw(12) << (total_write_timer.total().cputime / total_write_timer.count()) / writers.size()
+                  << " " << std::setw(12) << total_write_timer.max().cputime / writers.size()
+                  << " " << std::setw(9) << ""
+                  << " " << std::setw(9) << ""
+                  << "  " << std::setw(9) << total_write_timer_by_status[WriteSuccess].count() / writers.size()
+                  << " " << std::setw(9) << total_write_timer_by_status[WriteFailure].count() / writers.size()
                   << std::endl;
         std::cout << std::endl;
 

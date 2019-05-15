@@ -55,6 +55,10 @@ namespace RTT
     class DataObjectUnSync
         : public DataObjectInterface<T>
     {
+        typedef typename DataObjectInterface<T>::value_t value_t;
+        typedef typename DataObjectInterface<T>::reference_t reference_t;
+        typedef typename DataObjectInterface<T>::param_t param_t;
+
         /**
          * One element of Data.
          */
@@ -114,7 +118,10 @@ namespace RTT
             }
         }
 
-        virtual T data_sample() const
+        /**
+         * Reads back a data sample.
+         */
+        T data_sample() const
         {
             return data;
         }

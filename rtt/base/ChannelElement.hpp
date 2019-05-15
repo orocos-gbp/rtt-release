@@ -162,11 +162,7 @@ namespace RTT { namespace base {
         {
             FlowStatus result = NoData;
             // read and iterate if necessary.
-#ifdef USE_CPP11
-            select_reader_channel( bind( &MultipleInputsChannelElement<T>::do_read, this, boost::ref(sample), boost::ref(result), _1, _2), copy_old_data );
-#else
-            select_reader_channel( boost::bind( &MultipleInputsChannelElement<T>::do_read, this, boost::ref(sample), boost::ref(result), ::_1, ::_2), copy_old_data );
-#endif
+            select_reader_channel( boost::bind( &MultipleInputsChannelElement<T>::do_read, this, boost::ref(sample), boost::ref(result), _1, _2), copy_old_data );
             return result;
         }
 
@@ -285,13 +281,6 @@ namespace RTT { namespace base {
 
             {
                 RTT::os::SharedMutexLock lock(outputs_lock);
-#ifndef NDEBUG
-                {
-                    RTT::os::SharedMutexLock lock2(buffer_policy_lock);
-                    assert((buffer_policy != PerOutputPort && buffer_policy != Shared) || (outputs.size() <= 1));
-                }
-#endif
-
                 if (outputs.empty()) return WriteSuccess;
                 for(Outputs::iterator it = outputs.begin(); it != outputs.end(); ++it)
                 {
@@ -328,13 +317,6 @@ namespace RTT { namespace base {
 
             {
                 RTT::os::SharedMutexLock lock(outputs_lock);
-#ifndef NDEBUG
-                {
-                    RTT::os::SharedMutexLock lock2(buffer_policy_lock);
-                    assert((buffer_policy != PerOutputPort && buffer_policy != Shared) || (outputs.size() <= 1));
-                }
-#endif
-
                 if (outputs.empty()) return NotConnected;
                 for(Outputs::iterator it = outputs.begin(); it != outputs.end(); ++it)
                 {

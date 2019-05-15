@@ -44,7 +44,9 @@
 #include "Exceptions.hpp"
 #include <vector>
 
-namespace RTT {
+namespace RTT
+{ namespace internal {
+
     using namespace detail;
 
 
@@ -60,7 +62,6 @@ namespace RTT {
         DataSourceBase::shared_ptr s;
 
         void checkAndCreate() {
-            Logger::In in("OperationCallerC");
             if ( ofp ) {
                 size_t sz = ofp->arity();
                 if ( sz == args.size() ) {
@@ -78,6 +79,7 @@ namespace RTT {
                         try {
                             m = new DataSourceCommand( rta->updateAction( m.get() ) );
                         } catch( bad_assignment& /*ba*/ ) {
+                            Logger::In in("OperationCallerC");
                             log(Error) << "Error in OperationCallerC::ret : can not convert return value of type "<< m->getType() << " to given type "<< rta->getType()<<endlog();
                         }
 
@@ -280,4 +282,5 @@ namespace RTT {
 
     DataSourceBase::shared_ptr OperationCallerC::getCallDataSource() { return m; }
     DataSourceBase::shared_ptr OperationCallerC::getSendDataSource() { return s; }
-}
+
+}}
