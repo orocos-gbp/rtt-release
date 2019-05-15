@@ -55,19 +55,19 @@ namespace RTT
 
     Activity::Activity(RunnableInterface* _r, const std::string& name )
         : ActivityInterface(_r), os::Thread(ORO_SCHED_OTHER, RTT::os::LowestPriority, 0.0, 0, name ),
-          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(false)
+          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
     {
     }
 
     Activity::Activity(int priority, RunnableInterface* r, const std::string& name )
         : ActivityInterface(r), os::Thread(ORO_SCHED_RT, priority, 0.0, 0, name ),
-          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(false)
+          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
     {
     }
 
     Activity::Activity(int priority, Seconds period, RunnableInterface* r, const std::string& name )
         : ActivityInterface(r), os::Thread(ORO_SCHED_RT, priority, period, 0, name ),
-          update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(false)
+          update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
     {
         // We pass the requested period to the constructor to not confuse users with log messages.
         // Then we clear it immediately again in order to force the Thread implementation to
@@ -75,14 +75,15 @@ namespace RTT
         Thread::setPeriod(0,0);
     }
 
-    Activity::Activity(int scheduler, int priority, RunnableInterface* r, const std::string& name )
-        : ActivityInterface(r), os::Thread(scheduler, priority, 0.0, 0, name )
-    {
-    }
+     Activity::Activity(int scheduler, int priority, RunnableInterface* r, const std::string& name )
+         : ActivityInterface(r), os::Thread(scheduler, priority, 0.0, 0, name ),
+           update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+     {
+     }
 
      Activity::Activity(int scheduler, int priority, Seconds period, RunnableInterface* r, const std::string& name )
          : ActivityInterface(r), os::Thread(scheduler, priority, period, 0, name ),
-           update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(false)
+           update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
      {
          // We pass the requested period to the constructor to not confuse users with log messages.
          // Then we clear it immediately again in order to force the Thread implementation to
@@ -92,7 +93,7 @@ namespace RTT
 
      Activity::Activity(int scheduler, int priority, Seconds period, unsigned cpu_affinity, RunnableInterface* r, const std::string& name )
      : ActivityInterface(r), os::Thread(scheduler, priority, period, cpu_affinity, name ),
-       update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(false)
+       update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
      {
          // We pass the requested period to the constructor to not confuse users with log messages.
          // Then we clear it immediately again in order to force the Thread implementation to
@@ -229,8 +230,8 @@ namespace RTT
                     else if (overruns != 0) {
                         --overruns;
                     }
-                    if ( !mabswaitpolicy && wakeup < now ) {
-                        wakeup = wakeup + ((now-wakeup)/nsperiod+1)*nsperiod; // assumes that (now-wakeup)/nsperiod rounds down !
+                    if ( !mabswaitpolicy ) {
+                        wakeup = now + nsperiod;
                     }
                     mtimeout = true;
                 }
