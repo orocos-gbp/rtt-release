@@ -1,0 +1,29 @@
+From 817ae8365a638015c926aed8122d0a650ef7e24b Mon Sep 17 00:00:00 2001
+From: Johannes Meyer <johannes@intermodalics.eu>
+Date: Mon, 3 Jun 2019 14:35:56 +0200
+Subject: [PATCH] debian: use debian/rules.em template for catkin packages (set
+ CATKIN_BUILD_BINARY_PACKAGE)
+
+---
+ debian/rules.em | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/debian/rules.em b/debian/rules.em
+index aa010fa..1c02dd4 100755
+--- a/debian/rules.em
++++ b/debian/rules.em
+@@ -26,7 +26,10 @@ override_dh_auto_configure:
+ 	# in the install tree that was dropped by catkin, and source it.  It will
+ 	# set things like CMAKE_PREFIX_PATH, PKG_CONFIG_PATH, and PYTHONPATH.
+ 	if [ -f "@(InstallationPrefix)/setup.sh" ]; then . "@(InstallationPrefix)/setup.sh"; fi && \
+-	dh_auto_configure -- -DCMAKE_INSTALL_PREFIX="@(InstallationPrefix)"
++	dh_auto_configure -- \
++		-DCATKIN_BUILD_BINARY_PACKAGE="1" \
++		-DCMAKE_INSTALL_PREFIX="@(InstallationPrefix)" \
++		-DCMAKE_PREFIX_PATH="@(InstallationPrefix)"
+ 
+ override_dh_auto_build:
+ 	# In case we're installing to a non-standard location, look for a setup.sh
+-- 
+2.7.4
+
