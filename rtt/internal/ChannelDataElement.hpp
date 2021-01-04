@@ -41,9 +41,6 @@
 
 #include "../base/ChannelElement.hpp"
 #include "../base/DataObjectInterface.hpp"
-#include "../base/DataObjectLocked.hpp"
-#include "../base/DataObjectLockFree.hpp"
-#include "../base/DataObjectUnSync.hpp"
 #include "../ConnPolicy.hpp"
 
 namespace RTT { namespace internal {
@@ -96,24 +93,9 @@ namespace RTT { namespace internal {
             return base::ChannelElement<T>::data_sample(sample, reset);
         }
 
-        virtual T data_sample()
+        virtual value_t data_sample()
         {
-            // Workaround to fix https://github.com/orocos-toolchain/rtt/issues/231 without breaking the ABI:
-            // base::DataObjectInterface<T>::data_sample() cannot be added as a new virtual method. Use
-            // dynamic_casts instead.
-            {
-                base::DataObjectLockFree<T> *_data = dynamic_cast<base::DataObjectLockFree<T>*>(data.get());
-                if (_data) return _data->data_sample();
-            }
-            {
-                base::DataObjectLocked<T> *_data = dynamic_cast<base::DataObjectLocked<T>*>(data.get());
-                if (_data) return _data->data_sample();
-            }
-            {
-                base::DataObjectUnSync<T> *_data = dynamic_cast<base::DataObjectUnSync<T>*>(data.get());
-                if (_data) return _data->data_sample();
-            }
-            return data->Get();
+            return data->data_sample();
         }
 
         /** Returns a pointer to the ConnPolicy that has been used to construct the underlying data object.

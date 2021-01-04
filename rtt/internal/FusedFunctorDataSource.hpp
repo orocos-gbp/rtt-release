@@ -45,6 +45,7 @@
 #include "BindStorage.hpp"
 #include "../ExecutionEngine.hpp"
 #include "../os/oro_allocator.hpp"
+#include "UnMember.hpp"
 #include <boost/bind.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/function.hpp>
@@ -53,9 +54,6 @@
 #include <boost/fusion/include/invoke_procedure.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/make_shared.hpp>
-
-#include <iostream>
-using namespace std;
 
 namespace RTT
 {

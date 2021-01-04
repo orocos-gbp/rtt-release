@@ -66,7 +66,7 @@ function( orocos_get_manifest_deps RESULT)
   find_program(XPATH_EXE xpath )
   if (NOT XPATH_EXE)
     if (ORO_USE_ROSBUILD OR ORO_USE_CATKIN)
-      message(SEND_ERROR "[orocos_get_manifest_deps] xpath not found. Can't read dependencies in manifest.xml or package.xml file.")
+      message(SEND_ERROR "[orocos_get_manifest_deps] xpath not found. Can't read dependencies in manifest.xml file.")
     else ()
       message(WARNING "[orocos_get_manifest_deps] xpath not found. Can't read dependencies in manifest.xml file.")
     endif ()
@@ -263,13 +263,13 @@ macro( orocos_use_package PACKAGE )
       # The package has been generated in the same workspace. Just use the exported targets and include directories.
       set(ORO_${PACKAGE}_FOUND True)
       set(${PACKAGE}_FOUND True)
-      set(${PACKAGE}_INCLUDE_DIRS ${${PACKAGE}_EXPORTED_OROCOS_INCLUDE_DIRS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_INCLUDE_DIRS})
-      set(${PACKAGE}_LIBRARY_DIRS ${${PACKAGE}_EXPORTED_OROCOS_LIBRARY_DIRS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_LIBRARY_DIRS})
-      set(${PACKAGE}_LIBRARIES ${${PACKAGE}_EXPORTED_OROCOS_LIBRARIES} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_LIBRARIES})
+      set(${PACKAGE}_INCLUDE_DIRS ${${PACKAGE}_EXPORTED_INCLUDE_DIRS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_INCLUDE_DIRS})
+      set(${PACKAGE}_LIBRARY_DIRS ${${PACKAGE}_EXPORTED_LIBRARY_DIRS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_LIBRARY_DIRS})
+      set(${PACKAGE}_LIBRARIES ${${PACKAGE}_EXPORTED_LIBRARIES} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_LIBRARIES})
 
       # Use add_dependencies(target ${USE_OROCOS_EXPORTED_TARGETS}) to make sure that a target is built AFTER
       # all targets created by other packages that have been orocos_use_package'd in the current scope.
-      list(APPEND USE_OROCOS_EXPORTED_TARGETS ${${PACKAGE}_EXPORTED_OROCOS_TARGETS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_OROCOS_TARGETS})
+      list(APPEND USE_OROCOS_EXPORTED_TARGETS ${${PACKAGE}_EXPORTED_TARGETS} ${${PACKAGE}-${OROCOS_TARGET}_EXPORTED_TARGETS})
 
     else()
       # Get the package and dependency build flags

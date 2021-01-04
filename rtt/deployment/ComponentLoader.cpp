@@ -760,7 +760,7 @@ RTT::TaskContext *ComponentLoader::loadComponent(const std::string & name, const
     return instance;
 }
 
-bool ComponentLoader::unloadComponent( RTT::TaskContext* tc, std::string const& ) {
+bool ComponentLoader::unloadComponent( RTT::TaskContext* tc ) {
     if (!tc)
         return false;
     CompList::iterator it = comps.begin();

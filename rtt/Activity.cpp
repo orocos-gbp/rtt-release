@@ -43,6 +43,7 @@
 #include "Time.hpp"
 #include "Activity.hpp"
 #include "os/MutexLock.hpp"
+#include "os/traces.h"
 #include "Logger.hpp"
 #include "rtt-fwd.hpp"
 #include "os/fosi_internal_interface.hpp"
@@ -55,19 +56,19 @@ namespace RTT
 
     Activity::Activity(RunnableInterface* _r, const std::string& name )
         : ActivityInterface(_r), os::Thread(ORO_SCHED_OTHER, RTT::os::LowestPriority, 0.0, 0, name ),
-          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+          update_period(0.0), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
     {
     }
 
     Activity::Activity(int priority, RunnableInterface* r, const std::string& name )
         : ActivityInterface(r), os::Thread(ORO_SCHED_RT, priority, 0.0, 0, name ),
-          update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+          update_period(0.0), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
     {
     }
 
     Activity::Activity(int priority, Seconds period, RunnableInterface* r, const std::string& name )
         : ActivityInterface(r), os::Thread(ORO_SCHED_RT, priority, period, 0, name ),
-          update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+          update_period(period), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
     {
         // We pass the requested period to the constructor to not confuse users with log messages.
         // Then we clear it immediately again in order to force the Thread implementation to
@@ -77,13 +78,13 @@ namespace RTT
 
      Activity::Activity(int scheduler, int priority, RunnableInterface* r, const std::string& name )
          : ActivityInterface(r), os::Thread(scheduler, priority, 0.0, 0, name ),
-           update_period(0.0), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+           update_period(0.0), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
      {
      }
 
      Activity::Activity(int scheduler, int priority, Seconds period, RunnableInterface* r, const std::string& name )
          : ActivityInterface(r), os::Thread(scheduler, priority, period, 0, name ),
-           update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+           update_period(period), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
      {
          // We pass the requested period to the constructor to not confuse users with log messages.
          // Then we clear it immediately again in order to force the Thread implementation to
@@ -93,7 +94,7 @@ namespace RTT
 
      Activity::Activity(int scheduler, int priority, Seconds period, unsigned cpu_affinity, RunnableInterface* r, const std::string& name )
      : ActivityInterface(r), os::Thread(scheduler, priority, period, cpu_affinity, name ),
-       update_period(period), mtimeout(false), mstopRequested(false), mabswaitpolicy(true)
+       update_period(period), mtimeout(false), mstopRequested(false), mwaitpolicy(ORO_WAIT_ABS)
      {
          // We pass the requested period to the constructor to not confuse users with log messages.
          // Then we clear it immediately again in order to force the Thread implementation to
@@ -144,6 +145,7 @@ namespace RTT
     }
 
     bool Activity::trigger() {
+        tracepoint(orocos_rtt, Activity_trigger, getName());
         if ( ! Thread::isActive() )
             return false;
         //a trigger is always allowed when active
@@ -213,14 +215,17 @@ namespace RTT
                 return;
             } else {
                 // If periodic, sleep until wakeup time or a message comes in.
-                // when wakeup time passed, wait_until will return false and we recalculate wakeup + mtimeout
+                // when wakeup time passed, wait_until will return false and we recalculate wakeup + update_period
                 bool time_elapsed = ! msg_cond.wait_until(msg_lock,wakeup);
 
                 if (time_elapsed) {
+                    nsecs now = os::TimeService::Instance()->getNSecs();
+
+                    // calculate next wakeup point
                     nsecs nsperiod = Seconds_to_nsecs(update_period);
                     wakeup = wakeup + nsperiod;
-                    // calculate next wakeup point, overruns causes skips:
-                    nsecs now = os::TimeService::Instance()->getNSecs();
+
+                    // detect overruns
                     if ( wakeup < now )
                     {
                         ++overruns;
@@ -230,7 +235,9 @@ namespace RTT
                     else if (overruns != 0) {
                         --overruns;
                     }
-                    if ( !mabswaitpolicy ) {
+
+                    // ORO_WAIT_REL: reset next wakeup time to now (before step) + period
+                    if ( mwaitpolicy == ORO_WAIT_REL ) {
                         wakeup = now + nsperiod;
                     }
                     mtimeout = true;
@@ -342,10 +349,7 @@ namespace RTT
 
     void Activity::setWaitPeriodPolicy(int p)
     {
-        if ( p == ORO_WAIT_ABS)
-            mabswaitpolicy = true;
-        else
-            mabswaitpolicy = false;
+        mwaitpolicy = p;
     }
 
 }

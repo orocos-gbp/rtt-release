@@ -149,17 +149,6 @@ namespace RTT
         void waitForMessages(const boost::function<bool(void)>& pred);
 
         /**
-         * Call this if you wish to block on a function completing in the Execution Engine.
-         * Each time a function completes, waitForFunctions will return
-         * when pred() returns true.
-         * @param pred As long as !pred() blocks the calling thread. If pred() == true
-         * when entering this function, returns immediately.
-         *
-         * This function is for internal use only and is required for asynchronous function invocations.
-         */
-        void waitForFunctions(const boost::function<bool(void)>& pred);
-
-        /**
          * Stops executing the updateHook of \a task.
          * This is an explicit synchronisation point, which guarantees
          * that updateHook is no longer executed when this function returns true.
@@ -176,20 +165,13 @@ namespace RTT
         void setExceptionTask();
 
         /**
-         * Set the master ExecutionEngine.
-         * If set, all incoming messages are forwarded to the master.
-         *
-         * @param master The new master ExecutionEngine.
+         * Check if the thread that processes messages send to this engine is the same as the calling thread.
+         * This method is typically used to check if operation or function calls can be inlined or even must
+         * be inlined to resolve potential dead-locks.
+         * @return true if it is safe to process messages directly that otherwise would have been passed
+         *              to ExecutionEngine::process(base::DisposableInterface *)
          */
-        void setMaster(ExecutionEngine *master);
-
-        /**
-         * Overridden version of RTT::base::RunnableInterface::setActivity().
-         * This version will also set the master ExecutionEngine if the new activity is a SlaveActivity that runs an ExecutionEngine.
-         *
-         * @param task The ActivityInterface running this interface.
-         */
-        virtual void setActivity( base::ActivityInterface* task );
+        bool isSelf() const;
 
     protected:
         /**
@@ -222,20 +204,6 @@ namespace RTT
         void waitAndProcessMessages(boost::function<bool(void)> const& pred);
 
         /**
-         * Call this if you wish to block on a function completing in the Execution Engine
-         * and execute it.
-         * @param pred As long as !pred() waits and processes functions. If pred() == true
-         * when entering this function, then no functions will be processed and this function
-         * returns immediately.
-         *
-         * This function is for internal use only and is required for asynchronous function invocations.
-         *
-         * @note waitAndProcessFunctions will call in turn this->processFunctions() and may as a consequence
-         * recurse if we get an asynchronous call-back.
-         */
-        void waitAndProcessFunctions(boost::function<bool(void)> const& pred);
-
-        /**
          * The parent or 'owner' of this ExecutionEngine, may be null.
          */
         base::TaskCore*     taskc;
@@ -258,12 +226,6 @@ namespace RTT
         os::Mutex msg_lock;
         os::Condition msg_cond;
 
-        /**
-         * A master ExecutionEngine which should process our messages.
-         * This is used for ExecutionEngines running in a SlaveActivity which forward incoming messages to their master engine.
-         */
-        ExecutionEngine *mmaster;
-
         void processMessages();
         void processPortCallbacks();
         void processFunctions();
@@ -284,7 +246,6 @@ namespace RTT
         virtual void finalize();
 
         virtual bool hasWork();
-
     };
 
 }

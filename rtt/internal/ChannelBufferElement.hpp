@@ -152,7 +152,7 @@ namespace RTT { namespace internal {
             return base::ChannelElement<T>::data_sample(sample, reset);
         }
 
-        virtual T data_sample()
+        virtual value_t data_sample()
         {
             return buffer->data_sample();
         }
