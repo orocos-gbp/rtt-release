@@ -1,0 +1,25 @@
+From efaa1f327ceacd1daa0c4d7eee8cc7cf9ae0c015 Mon Sep 17 00:00:00 2001
+From: Johannes Meyer <johannes@intermodalics.eu>
+Date: Mon, 4 Jan 2021 11:51:25 +0100
+Subject: [PATCH] debian/rules.em: add CATKIN_BUILD_BINARY_PACKAGE cmake
+ argument (for build type cmake)
+
+---
+ debian/rules.em | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/debian/rules.em b/debian/rules.em
+index 12ccb14..9e68416 100755
+--- a/debian/rules.em
++++ b/debian/rules.em
+@@ -27,6 +27,7 @@ override_dh_auto_configure:
+ 	# CMAKE_PREFIX_PATH, PKG_CONFIG_PATH, and PYTHONPATH.
+ 	if [ -f "@(InstallationPrefix)/setup.sh" ]; then . "@(InstallationPrefix)/setup.sh"; fi && \
+ 	dh_auto_configure -- \
++		-DCATKIN_BUILD_BINARY_PACKAGE="1" \
+ 		-DCMAKE_INSTALL_PREFIX="@(InstallationPrefix)" \
+ 		-DCMAKE_PREFIX_PATH="@(InstallationPrefix)"
+ 
+-- 
+2.29.2
+
